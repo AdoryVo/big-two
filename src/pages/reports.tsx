@@ -17,7 +17,6 @@ export default function Reports(props: Props) {
 
   return (
     <>
-
       {props.feed.map((report) => (
         <div key={report.id}>
           {report.id}
