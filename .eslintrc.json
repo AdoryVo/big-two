@@ -16,6 +16,7 @@
       "arrays": "always-multiline",
       "objects": "always-multiline"
     }],
+    "comma-spacing": "error",
     "jsx-quotes": ["error", "prefer-double"],
     "no-trailing-spaces": "error",
     "object-curly-newline": ["error", {
@@ -28,6 +29,8 @@
     }],
     "semi": ["error", "never"],
     "quotes": ["error", "single", { "avoidEscape": true, "allowTemplateLiterals": true }],
+    "react/jsx-equals-spacing": "error",
+    "react/jsx-tag-spacing": "error",
 
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error"

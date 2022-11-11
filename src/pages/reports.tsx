@@ -1,15 +1,14 @@
+import { Container, Heading, VStack } from '@chakra-ui/react'
+import { Report as ReportType } from '@prisma/client'
 import { GetStaticProps } from 'next'
 
+import Report from '../components/Report'
 import prisma from '../lib/prisma'
 import { makeSerializable } from '../lib/util'
 
 
 interface Props {
-  feed: Report[]
-}
-
-interface Report {
-  id: string
+  feed: ReportType[]
 }
 
 export default function Reports(props: Props) {
@@ -17,11 +16,14 @@ export default function Reports(props: Props) {
 
   return (
     <>
-      {props.feed.map((report) => (
-        <div key={report.id}>
-          {report.id}
-        </div>
-      ))}
+      <Container p={5}>
+        <Heading mb={5}>Reports</Heading>
+        <VStack spacing={5}>
+          {props.feed.map((report) => (
+            <Report key={report.id} report={report} />
+          ))}
+        </VStack>
+      </Container>
     </>
   )
 }
