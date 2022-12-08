@@ -1,6 +1,9 @@
-import { Container, Heading, VStack } from '@chakra-ui/react'
+import {
+  Button, Container, Heading, VStack
+} from '@chakra-ui/react'
 import { Report as ReportType } from '@prisma/client'
 import { GetStaticProps } from 'next'
+import Link from 'next/link'
 
 import Report from '../components/Report'
 import prisma from '../lib/prisma'
@@ -12,11 +15,12 @@ interface Props {
 }
 
 export default function Reports(props: Props) {
-  console.log(props.feed)
-
   return (
     <>
       <Container p={5}>
+        <Link href="/" passHref>
+          <Button colorScheme="facebook" mb={4}>Home</Button>
+        </Link>
         <Heading mb={5}>Reports</Heading>
         <VStack spacing={5}>
           {props.feed.map((report) => (

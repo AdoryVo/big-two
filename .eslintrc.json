@@ -17,6 +17,7 @@
       "objects": "always-multiline"
     }],
     "comma-spacing": "error",
+    "eol-last": "error",
     "jsx-quotes": ["error", "prefer-double"],
     "no-trailing-spaces": "error",
     "object-curly-newline": ["error", {
@@ -29,6 +30,8 @@
     }],
     "semi": ["error", "never"],
     "quotes": ["error", "single", { "avoidEscape": true, "allowTemplateLiterals": true }],
+    "react/no-children-prop": "off",
+    "react/jsx-curly-spacing": ["error", {"when": "never", "children": true}],
     "react/jsx-equals-spacing": "error",
     "react/jsx-tag-spacing": "error",
 
