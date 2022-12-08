@@ -4,11 +4,11 @@ import {
 import { Report as ReportType } from '@prisma/client'
 import { GetStaticProps } from 'next'
 import Link from 'next/link'
+import { NextSeo } from 'next-seo'
 
 import Report from '../components/Report'
 import prisma from '../lib/prisma'
 import { makeSerializable } from '../lib/util'
-
 
 interface Props {
   feed: ReportType[]
@@ -17,6 +17,10 @@ interface Props {
 export default function Reports(props: Props) {
   return (
     <>
+      <NextSeo
+        title="Reports - Streetspot"
+        description="Infrastructure reports from local citizens."
+      />
       <Container p={5}>
         <Link href="/" passHref>
           <Button colorScheme="facebook" mb={4}>Home</Button>
