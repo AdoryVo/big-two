@@ -16,6 +16,7 @@
 /build
 
 # misc
+/.yarn
 .DS_Store
 *.pem
 

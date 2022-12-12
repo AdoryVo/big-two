@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,15 +8,15 @@ datasource db {
 }
 
 model Report {
-  id            String     @default(cuid()) @id
-  title         String
-  description   String?
-  category      String
-  image         Bytes?
-  lat           Float
-  lng           Float
-  author        String?
-  likes         Int
-  dislikes      Int
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  category    String
+  image       Bytes?
+  lat         Float
+  lng         Float
+  author      String?
+  likes       Int
+  dislikes    Int
+  createdAt   DateTime @default(now()) @map("created_at")
 }

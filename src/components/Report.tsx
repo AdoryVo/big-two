@@ -2,7 +2,8 @@ import {
   Button, Container, Heading, HStack, Text
 } from '@chakra-ui/react'
 import { Report as ReportType } from '@prisma/client'
-import { MdThumbDown, MdThumbUp } from 'react-icons/md'
+import Link from 'next/link'
+import { MdMap, MdThumbDown, MdThumbUp } from 'react-icons/md'
 
 export default function Report({ report }: { report: ReportType }) {
   return (
@@ -26,6 +27,11 @@ export default function Report({ report }: { report: ReportType }) {
           {report.dislikes}
         </Button>
       </HStack>
+      <Link href={`/map?lat=${report.lat}&lng=${report.lng}`} passHref>
+        <Button leftIcon={<MdMap />} colorScheme="blue" mt={5}>
+        View in map
+        </Button>
+      </Link>
     </Container>
   )
 }
