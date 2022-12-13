@@ -10,11 +10,11 @@ export default function App({ Component, pageProps }: AppProps) {
           type: 'website',
           locale: 'en_US',
           url: 'https://streetspot.vercel.app/',
-          siteName: 'SiteName',
+          siteName: 'Streetspot',
         }}
         twitter={{
-          handle: '@handle',
-          site: '@site',
+          handle: '@AdoryVo',
+          site: '@AdoryVo',
           cardType: 'summary_large_image',
         }}
       />
