@@ -36,7 +36,7 @@ export default function Map() {
   return (
     <>
       <NextSeo
-        title="Map - Streetspot"
+        title="Map | Streetspot"
         description="Report local infrastructure issues to raise awareness and improve your city."
       />
       <Container p={5}>

@@ -18,7 +18,7 @@ export default function Reports(props: Props) {
   return (
     <>
       <NextSeo
-        title="Reports - Streetspot"
+        title="Reports | Streetspot"
         description="Infrastructure reports from local citizens."
       />
       <Container p={5}>

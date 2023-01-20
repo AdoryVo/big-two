@@ -1,31 +1,32 @@
 # 🏙️ streetspot
 
 A platform for citizens to report local infrastructure issues and improve their city.  
+*Idea from SD Hacks 2021 project (https://github.com/AdoryVo/streetspot-2021)*
 
 ## 🚀 Getting Started
 
 ### Installation
 
-1. Download [Node.js](https://nodejs.org/en/) LTS (Recommend [NVM for Windows](https://github.com/coreybutler/nvm-windows), a Node.js version manager)
-    1. (Optional) Install [Yarn v3](https://yarnpkg.com/getting-started/install) (alternative to Node's default NPM)
-2. Download [VS Code](https://code.visualstudio.com/)
+1. Download [Node.js](https://nodejs.org/en/) LTS. (Recommend installing via [NVM for Windows](https://github.com/coreybutler/nvm-windows), a Node.js version manager)
+    1. (Optional) Install [pnpm](https://pnpm.io/installation#using-corepack) (alternative to Node's default NPM)
+2. Download [VS Code](https://code.visualstudio.com/).
     1. Install the ESLint extension by Microsoft
     2. Install the IntelliCode extension by Microsoft
     3. (Optional) Install the IntelliCode API Usage Examples extension by Microsoft
-3. Download [Docker Desktop](https://www.docker.com/products/docker-desktop)
+3. Download [Docker Desktop](https://www.docker.com/products/docker-desktop).
     - ❗If you are on Windows, Docker Desktop will require installing WSL 2 (Windows Subsystem for Linux). 
       - To check if you have WSL, `wsl --list` in your terminal should return something. 
       - To install WSL, simply run `wsl --install` in an administrator PowerShell or Command Prompt & then restart your computer. 
-4. Download [Git](https://git-scm.com/downloads)
+4. Download [Git](https://git-scm.com/downloads).
 
 ### Setup
 
 1. Clone the repo (`git clone https://github.com/AdoryVo/streetspot.git`)
 2. Open your local repo folder in VS Code
-3. Open a new terminal (`` Ctrl+` ``) & run `yarn install` (or `npm install`) to install dependencies
+3. Open a new terminal (`` Ctrl+` ``) & run `pnpm install` (or `npm install`) to install dependencies
 4. Add a `.env` file to the root directory & add the contents received from Discord
 5. Run `docker compose up` & leave the terminal open
-6. Open a new terminal (`` Ctrl+Shift+` ``) and run `yarn prisma migrate dev` (or `npx prisma migrate dev`) to hook up Prisma to your database
+6. Open a new terminal (`` Ctrl+Shift+` ``) and run `pnpm prisma migrate dev` (or `npx prisma migrate dev`) to hook up Prisma to your database
 7. Send `Ctrl+C` to your terminal running docker to stop the process
 
 ## 👷 Development Process
@@ -42,6 +43,8 @@ Next, run the development server:
 
 ```bash
 npm run dev
+# or
+pnpm dev
 # or
 yarn dev
 ```
