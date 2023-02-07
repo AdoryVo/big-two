@@ -66,7 +66,7 @@ export default function Map() {
         <Button colorScheme="facebook" mt={5} onClick={onOpen}>Create Report</Button>
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
-          <ReportForm />
+          <ReportForm onClose={onClose} />
         </Modal>
 
         <br />
