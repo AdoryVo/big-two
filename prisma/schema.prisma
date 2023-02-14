@@ -15,7 +15,6 @@ model Report {
   image       Bytes?
   lat         Float
   lng         Float
-  author      String?
   likes       Int
   dislikes    Int
   createdAt   DateTime @default(now()) @map("created_at")
