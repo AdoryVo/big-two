@@ -1,7 +1,6 @@
 import {
   Button,
   FormControl,
-  FormHelperText,
   FormLabel,
   Input,
   ModalBody,
@@ -12,8 +11,45 @@ import {
   Select,
   Textarea
 } from '@chakra-ui/react'
+import { useFormik } from 'formik'
+import ky from 'ky'
+import { useState } from 'react'
 
-export default function ReportForm({ onClose }: { onClose: () => void }) {
+interface ReportFormProps {
+  onClose: () => void,
+  lat: number,
+  lng: number
+}
+
+export default function ReportForm({ onClose, lat, lng }: ReportFormProps) {
+  const [image, setImage] = useState<File|null>(null)
+
+  const formik = useFormik({
+    initialValues: {
+      title: '',
+      description: '',
+      category: '',
+      lat,
+      lng,
+    },
+    onSubmit: async (values) => {
+      const formData = new FormData()
+
+      Object.entries({ ...values, lat, lng }).forEach(([key, value]) => {
+        formData.append(key, JSON.stringify(value))
+      })
+
+      formData.append('image', image || JSON.stringify(null))
+
+      const report = await ky.post('api/report', { body: formData }).json()
+
+      // TODO: Redirect user or prompt modal once done w/ report information
+      console.log(report)
+
+      onClose()
+    },
+  })
+
   return (
     <ModalContent>
       <ModalHeader>Report an Issue</ModalHeader>
@@ -21,48 +57,78 @@ export default function ReportForm({ onClose }: { onClose: () => void }) {
 
       {/* Modal Body */}
       <ModalBody>
-        <FormControl mt={-5} mb={5}>
-          <FormHelperText>What&apos;s Wrong?</FormHelperText>
-        </FormControl>
+        <form id="reportForm" onSubmit={formik.handleSubmit}>
+          {/* Title input */}
+          <FormControl>
+            <FormLabel htmlFor="title">Title</FormLabel>
+            <Input
+              placeholder="Ex: Pothole Near Highway 55"
+              id="title"
+              name="title"
+              onChange={formik.handleChange}
+              value={formik.values.title}
+              required
+            />
+          </FormControl>
 
-        {/* Title input */}
-        <FormControl>
-          <FormLabel>Title</FormLabel>
-          <Input placeholder="Ex: Pothole Near Highway 55" />
-        </FormControl>
-
-        {/* Description input */}
-        <FormControl>
-          <FormLabel mt={5}>
+          {/* Description input */}
+          <FormControl mt={5}>
+            <FormLabel htmlFor="description">
             Description
-          </FormLabel>
-          <Textarea placeholder="Ex: Around 10 cm in diameter..." />
-        </FormControl>
+            </FormLabel>
+            <Textarea
+              placeholder="Ex: Around 10 cm in diameter..."
+              id="description"
+              name="description"
+              onChange={formik.handleChange}
+              value={formik.values.description}
+            />
+          </FormControl>
 
-        {/* File Input */}
-        <FormControl mt={5}>
-          <FormLabel>
-            Take a Picture
-          </FormLabel>
+          {/* File Input */}
+          <FormControl mt={5}>
+            <FormLabel htmlFor="image">
+            Picture
+            </FormLabel>
 
-          <input type="file" accept="image/*" />
-        </FormControl>
+            <input
+              type="file"
+              accept="image/*"
+              id="image"
+              name="image"
+              onChange={(e) => {
+                const files = e.currentTarget.files
+                if (files)
+                  setImage(files[0])
+              }}
+            />
+          </FormControl>
 
-        {/* Category Selection */}
-        <FormControl>
-          <FormLabel mt={5}>
+          {/* Category Selection */}
+          <FormControl mt={5}>
+            <FormLabel htmlFor="category">
             Category
-          </FormLabel>
-          <Select placeholder="Select option">
-            <option value="option1">Road</option>
-            <option value="option2">Sidewalk</option>
-            <option value="option3">Off-Road</option>
-          </Select>
-        </FormControl>
+            </FormLabel>
+            <Select
+              placeholder="Select option"
+              id="category"
+              name="category"
+              onChange={formik.handleChange}
+              value={formik.values.category}
+              required
+            >
+              <option value="Road">Road</option>
+              <option value="Sidewalk">Sidewalk</option>
+              <option value="Off-road">Off-road</option>
+            </Select>
+          </FormControl>
+        </form>
       </ModalBody>
 
       <ModalFooter>
-        <Button colorScheme="blue" onClick={onClose}>Submit</Button>
+        <Button colorScheme="blue" type="submit" form="reportForm">
+          Submit
+        </Button>
       </ModalFooter>
     </ModalContent>
   )

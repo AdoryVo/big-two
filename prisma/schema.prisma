@@ -12,10 +12,10 @@ model Report {
   title       String
   description String?
   category    String
-  image       Bytes?
+  image       String?
   lat         Float
   lng         Float
-  likes       Int
-  dislikes    Int
+  likes       Int      @default(0)
+  dislikes    Int      @default(0)
   createdAt   DateTime @default(now()) @map("created_at")
 }
