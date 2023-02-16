@@ -10,11 +10,11 @@ import Report from '../components/Report'
 import prisma from '../lib/prisma'
 import { makeSerializable } from '../lib/util'
 
-interface Props {
+interface ReportsProps {
   feed: ReportType[]
 }
 
-export default function Reports(props: Props) {
+export default function Reports(props: ReportsProps) {
   return (
     <>
       <NextSeo

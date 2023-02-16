@@ -1,9 +1,15 @@
-import { Button, Container, Heading } from '@chakra-ui/react'
+import {
+  Button, Container, Heading,
+  Modal,
+  ModalOverlay,
+  useDisclosure
+} from '@chakra-ui/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
 import { useEffect, useState } from 'react'
 
+import ReportForm from '../components/ReportForm'
 import { parseCoords } from '../lib/util'
 
 const SD_LAT = 32.716
@@ -16,6 +22,9 @@ export default function Map() {
   // Init to San Diego coordinates
   const [lat, setLat] = useState(SD_LAT)
   const [lng, setLng] = useState(SD_LNG)
+
+  // Controls report form modal
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
     // Init to url query coordinates
@@ -53,6 +62,15 @@ export default function Map() {
         <p>
           Coords: ({lat}, {lng})
         </p>
+
+        <Button colorScheme="facebook" mt={5} onClick={onOpen}>Create Report</Button>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ReportForm onClose={onClose} lat={lat} lng={lng} />
+        </Modal>
+
+        <br />
+
         <Button colorScheme="blue" mt={5} onClick={changeCoords}>
           Change coords back to SD
         </Button>
