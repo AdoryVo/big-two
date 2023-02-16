@@ -76,7 +76,7 @@ src/
 package.json        # 📄 Dependencies
 ```
 
-### Prisma
+### Prisma (`pnpm prisma [command]`)
 - `db push`: Push the Prisma schema state to the database
 - `migrate dev`: Create migrations from your Prisma schema, apply them to the database, generate artifacts (e.g. Prisma Client)
 - `studio`: Run Prisma's local browser tool for viewing models

@@ -55,7 +55,7 @@ export default function Map() {
 
         <Link href="/reports" passHref>
           <Button colorScheme="blue" mb={4}>
-          Reports
+            Reports
           </Button>
         </Link>
         <Heading>Map</Heading>

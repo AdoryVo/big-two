@@ -13,14 +13,14 @@ export default function Report({ report }: { report: Report }) {
       <Text>Submitted on {new Date(report.createdAt).toLocaleString()}</Text>
 
       {report.image &&
-          <Box position="relative" h="64" my={3}>
-            <Image
-              src={`https://streetspot.s3.amazonaws.com/${report.image}`}
-              alt={report.title}
-              fill
-              sizes="33vw"
-            />
-          </Box>
+      <Box position="relative" h="64" my={3}>
+        <Image
+          src={`https://streetspot.s3.amazonaws.com/${report.image}`}
+          alt={report.title}
+          fill
+          sizes="33vw"
+        />
+      </Box>
       }
 
       <Text>Category: {report.category}</Text>
@@ -40,7 +40,7 @@ export default function Report({ report }: { report: Report }) {
       </HStack>
       <Link href={`/map?lat=${report.lat}&lng=${report.lng}`} passHref>
         <Button leftIcon={<MdMap />} colorScheme="blue" mt={5}>
-        View in map
+          View in map
         </Button>
       </Link>
     </Container>

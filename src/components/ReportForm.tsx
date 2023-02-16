@@ -29,8 +29,6 @@ export default function ReportForm({ onClose, lat, lng }: ReportFormProps) {
       title: '',
       description: '',
       category: '',
-      lat,
-      lng,
     },
     onSubmit: async (values) => {
       const formData = new FormData()
@@ -74,7 +72,7 @@ export default function ReportForm({ onClose, lat, lng }: ReportFormProps) {
           {/* Description input */}
           <FormControl mt={5}>
             <FormLabel htmlFor="description">
-            Description
+              Description
             </FormLabel>
             <Textarea
               placeholder="Ex: Around 10 cm in diameter..."
@@ -88,7 +86,7 @@ export default function ReportForm({ onClose, lat, lng }: ReportFormProps) {
           {/* File Input */}
           <FormControl mt={5}>
             <FormLabel htmlFor="image">
-            Picture
+              Picture
             </FormLabel>
 
             <input
@@ -107,7 +105,7 @@ export default function ReportForm({ onClose, lat, lng }: ReportFormProps) {
           {/* Category Selection */}
           <FormControl mt={5}>
             <FormLabel htmlFor="category">
-            Category
+              Category
             </FormLabel>
             <Select
               placeholder="Select option"

@@ -13,12 +13,12 @@ export default function Home() {
         <Heading>Streetspot</Heading>
         <Link href="/reports" passHref>
           <Button colorScheme="blue" mt={5} me={2}>
-          Reports
+            Reports
           </Button>
         </Link>
         <Link href="/map" passHref>
           <Button colorScheme="blue" mt={5}>
-          Map
+            Map
           </Button>
         </Link>
       </Container>

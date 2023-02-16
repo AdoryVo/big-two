@@ -23,7 +23,12 @@ export default function Reports(props: ReportsProps) {
       />
       <Container p={5}>
         <Link href="/" passHref>
-          <Button colorScheme="facebook" mb={4}>Home</Button>
+          <Button colorScheme="facebook" mb={4} me={2}>Home</Button>
+        </Link>
+        <Link href="/map" passHref>
+          <Button colorScheme="blue" mb={4}>
+            Map
+          </Button>
         </Link>
         <Heading mb={5}>Reports</Heading>
         <VStack spacing={5}>

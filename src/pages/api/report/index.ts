@@ -7,7 +7,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { v4 as uuidv4 } from 'uuid'
 
 import prisma from '../../../lib/prisma'
-import { uploadStream } from '../../../lib/s3Client'
+import { uploadFile } from '../../../lib/s3Client'
 
 // POST /api/report
 // Required fields in body: title, category, lat, lng
@@ -16,11 +16,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Report>
 ) {
-  const key = uuidv4()
   const form = formidable({
     uploadDir: './public/',
     keepExtensions: true,
-    filename: (_name: string, ext: string) => {return key + ext},
+    filename: (_name: string, ext: string) => {return uuidv4() + ext},
   })
 
   form.parse(req, (err: Error, fields: object, files: object) => {
@@ -30,12 +29,12 @@ export default async function handler(
     }
 
     // Parse fields values
-    fields = _.mapValues(fields, (item) => JSON.parse(item[0]))
+    fields = _.mapValues(fields, (item) => JSON.parse(item))
 
     // Parse image
     if (files.image) {
-      const image = files.image[0]
-      uploadStream(image)
+      const image = files.image
+      uploadFile(image)
       fields.image = image.newFilename
     }
 

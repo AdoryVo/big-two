@@ -12,20 +12,21 @@ const s3Client = new S3Client({
   },
 })
 
-async function uploadStream(file: { filepath: string, newFilename: string }) {
+/** Uploads a file to the cloud AWS S3 bucket. */
+async function uploadFile(file: { filepath: string, newFilename: string }) {
   const fileStream = fs.createReadStream(file.filepath)
   const params = {
     Bucket: AWS_BUCKET,
     Key: file.newFilename,
     Body: fileStream,
   }
-
   await s3Client.send(new PutObjectCommand(params))
 
+  // Delete the temporarily created file after uploading
   fs.unlink(file.filepath, (err) => {
     if (err)
       console.error(err)
   })
 }
 
-export { s3Client, uploadStream }
+export { s3Client, uploadFile }
