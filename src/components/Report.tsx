@@ -4,7 +4,7 @@ import {
 import type { Report } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { MdMap, MdThumbDown, MdThumbUp } from 'react-icons/md'
+import { MdPlace, MdThumbDown, MdThumbUp } from 'react-icons/md'
 
 export default function Report({ report }: { report: Report }) {
   return (
@@ -39,7 +39,7 @@ export default function Report({ report }: { report: Report }) {
         </Button>
       </HStack>
       <Link href={`/map?lat=${report.lat}&lng=${report.lng}`} passHref>
-        <Button leftIcon={<MdMap />} colorScheme="blue" mt={5}>
+        <Button leftIcon={<MdPlace />} colorScheme="blue" mt={5}>
           View in map
         </Button>
       </Link>

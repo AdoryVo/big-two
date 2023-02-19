@@ -6,23 +6,31 @@ export function makeSerializable<T> (o: T): T {
   return JSON.parse(JSON.stringify(o))
 }
 
+export interface Coords {
+  lat: number,
+  lng: number,
+}
+
 export function parseCoords(
   lat: string | string[] | undefined,
   lng: string | string[] | undefined
-): [number, number] | undefined {
+): Coords | null {
   // Coordinates should be strings
   if (typeof lat !== 'string' || typeof lng !== 'string') {
-    return undefined
+    return null
   }
 
-  const coords: [number, number] = [parseFloat(lat), parseFloat(lng)]
+  const coords: Coords = {
+    lat: parseFloat(lat),
+    lng: parseFloat(lng),
+  }
 
   // Coordinates must be valid numbers
-  if (!coords.every(isFinite)) return undefined
+  if (!isFinite(coords.lat) || !isFinite(coords.lng)) return null
 
   // Lat must be in [-90, 90], lng must be in [-180, 180)
-  if (coords[0] < -90 || coords[0] > 90) return undefined
-  if (coords[1] < -180 || coords[1] >= 180) return undefined
+  if (coords.lat < -90 || coords.lat > 90) return null
+  if (coords.lng < -180 || coords.lng >= 180) return null
 
   return coords
 }
