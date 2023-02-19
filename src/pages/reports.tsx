@@ -42,7 +42,7 @@ export default function Reports(props: ReportsProps) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const feed = await prisma.report.findMany()
+  const feed = await prisma.report.findMany({ orderBy: { likes: 'desc' } })
   return {
     props: { feed: makeSerializable(feed) },
     revalidate: 10,

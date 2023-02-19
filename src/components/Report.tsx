@@ -2,15 +2,30 @@ import {
   Box, Button, Container, Heading, HStack, Text
 } from '@chakra-ui/react'
 import type { Report } from '@prisma/client'
+import ky from 'ky'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useState } from 'react'
 import { MdPlace, MdThumbDown, MdThumbUp } from 'react-icons/md'
 
 export default function Report({ report }: { report: Report }) {
+  const [isLiked, setIsLiked] = useState(false)
+  const [ isdis, setisdis] = useState(false)
+
+  function handleLike() {
+    setIsLiked(!isLiked)
+    ky.post('api/report/like', { json: { id: report.id, isLiked: !isLiked } })
+  }
+
+  function handleDislike() {
+    setisdis(!isdis)
+    ky.post('api/report/like', { json: { id: report.id, isDisliked: !isdis } })
+  }
+
   return (
     <Container bg="blackAlpha.200" borderRadius="md" p={5}>
       <Heading fontSize="3xl">{report.title}</Heading>
-      <Text>Submitted on {new Date(report.createdAt).toLocaleString()}</Text>
+      {/* <Text>Submitted on {new Date(report.createdAt).toLocaleString()}</Text> */}
 
       {report.image &&
       <Box position="relative" h="64" my={3}>
@@ -31,11 +46,11 @@ export default function Report({ report }: { report: Report }) {
       </Text>
 
       <HStack mt={5}>
-        <Button leftIcon={<MdThumbUp />} colorScheme="green">
-          {report.likes}
+        <Button leftIcon={<MdThumbUp />} colorScheme="green" onClick={handleLike}>
+          {report.likes + ((isLiked) ? 1 : 0)}
         </Button>
-        <Button leftIcon={<MdThumbDown />} colorScheme="red">
-          {report.dislikes}
+        <Button leftIcon={<MdThumbDown />} colorScheme="red" onClick={handleDislike}>
+          {report.dislikes + ((isdis)? 1 : 0)}
         </Button>
       </HStack>
       <Link href={`/map?lat=${report.lat}&lng=${report.lng}`} passHref>
