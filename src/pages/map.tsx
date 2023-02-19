@@ -31,7 +31,7 @@ export default function Map() {
   // Controls report form modal
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  /** Retrieve the user's location through the browser. */
+  /** Retrieve & track the user's location through the browser. */
   function getCurrentLocation() {
     if (!navigator.geolocation) {
       alert('Geolocation is not supported by your browser')
