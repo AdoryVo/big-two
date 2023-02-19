@@ -10,16 +10,18 @@ import { MdPlace, MdThumbDown, MdThumbUp } from 'react-icons/md'
 
 export default function Report({ report }: { report: Report }) {
   const [isLiked, setIsLiked] = useState(false)
-  const [ isdis, setisdis] = useState(false)
+  const [isDisliked, setIsDisliked] = useState(false)
 
   function handleLike() {
     setIsLiked(!isLiked)
-    ky.post('api/report/like', { json: { id: report.id, isLiked: !isLiked } })
+    ky.post('api/report/like', { json: { id: report.id, isLiked: !isLiked } }).json().then((response) => {
+      console.log(response)
+    })
   }
 
   function handleDislike() {
-    setisdis(!isdis)
-    ky.post('api/report/like', { json: { id: report.id, isDisliked: !isdis } })
+    setIsDisliked(!isDisliked)
+    ky.post('api/report/dislike', { json: { id: report.id, isDisliked: !isDisliked } })
   }
 
   return (
@@ -50,7 +52,7 @@ export default function Report({ report }: { report: Report }) {
           {report.likes + ((isLiked) ? 1 : 0)}
         </Button>
         <Button leftIcon={<MdThumbDown />} colorScheme="red" onClick={handleDislike}>
-          {report.dislikes + ((isdis)? 1 : 0)}
+          {report.dislikes + ((isDisliked) ? 1 : 0)}
         </Button>
       </HStack>
       <Link href={`/map?lat=${report.lat}&lng=${report.lng}`} passHref>

@@ -2,7 +2,6 @@ import {
   Button, Container, Heading, VStack
 } from '@chakra-ui/react'
 import { Report as ReportType } from '@prisma/client'
-import { GetStaticProps } from 'next'
 import Link from 'next/link'
 import { NextSeo } from 'next-seo'
 
@@ -41,7 +40,7 @@ export default function Reports(props: ReportsProps) {
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export async function getStaticProps() {
   const feed = await prisma.report.findMany({ orderBy: { likes: 'desc' } })
   return {
     props: { feed: makeSerializable(feed) },
