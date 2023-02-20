@@ -1,5 +1,6 @@
 import {
-  Box, Button, Container, Heading, HStack, Text
+  Box, Button, Container, Heading, HStack, Skeleton,
+  Text
 } from '@chakra-ui/react'
 import type { Report } from '@prisma/client'
 import ky from 'ky'
@@ -8,26 +9,38 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { MdPlace, MdThumbDown, MdThumbUp } from 'react-icons/md'
 
+import { useFormattedTimestamp } from '../lib/hooks/useFormattedTimestamp'
+
 export default function Report({ report }: { report: Report }) {
-  const [isLiked, setIsLiked] = useState(false)
-  const [isDisliked, setIsDisliked] = useState(false)
+  const [likes, setLikes] = useState(report.likes)
+  const [dislikes, setDislikes] = useState(report.dislikes)
 
   function handleLike() {
-    setIsLiked(!isLiked)
-    ky.post('api/report/like', { json: { id: report.id, isLiked: !isLiked } }).json().then((response) => {
-      console.log(response)
-    })
+    ky.post('api/report/like', { json: { id: report.id } })
+      .json<Report>()
+      .then((updatedReport) => {
+        setLikes(updatedReport.likes)
+      }).catch((response) => {
+        console.log(response)
+      })
   }
 
   function handleDislike() {
-    setIsDisliked(!isDisliked)
-    ky.post('api/report/dislike', { json: { id: report.id, isDisliked: !isDisliked } })
+    ky.post('api/report/dislike', { json: { id: report.id } })
+      .json<Report>()
+      .then((updatedReport) => {
+        setDislikes(updatedReport.dislikes)
+      }).catch((response) => {
+        console.log(response)
+      })
   }
 
   return (
     <Container bg="blackAlpha.200" borderRadius="md" p={5}>
       <Heading fontSize="3xl">{report.title}</Heading>
-      {/* <Text>Submitted on {new Date(report.createdAt).toLocaleString()}</Text> */}
+      <Skeleton isLoaded={useFormattedTimestamp(report.createdAt) !== ''} fitContent={true}>
+        <Text>Reported at {useFormattedTimestamp(report.createdAt)}</Text>
+      </Skeleton>
 
       {report.image &&
       <Box position="relative" h="64" my={3}>
@@ -49,10 +62,10 @@ export default function Report({ report }: { report: Report }) {
 
       <HStack mt={5}>
         <Button leftIcon={<MdThumbUp />} colorScheme="green" onClick={handleLike}>
-          {report.likes + ((isLiked) ? 1 : 0)}
+          {likes}
         </Button>
         <Button leftIcon={<MdThumbDown />} colorScheme="red" onClick={handleDislike}>
-          {report.dislikes + ((isDisliked) ? 1 : 0)}
+          {dislikes}
         </Button>
       </HStack>
       <Link href={`/map?lat=${report.lat}&lng=${report.lng}`} passHref>
