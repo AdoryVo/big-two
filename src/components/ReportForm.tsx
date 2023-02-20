@@ -31,6 +31,8 @@ export default function ReportForm({ onClose, lat, lng }: ReportFormProps) {
       category: '',
     },
     onSubmit: async (values) => {
+      onClose()
+
       const formData = new FormData()
 
       Object.entries({ ...values, lat, lng }).forEach(([key, value]) => {
@@ -43,8 +45,6 @@ export default function ReportForm({ onClose, lat, lng }: ReportFormProps) {
 
       // TODO: Redirect user or prompt modal once done w/ report information
       console.log(report)
-
-      onClose()
     },
   })
 
@@ -53,10 +53,9 @@ export default function ReportForm({ onClose, lat, lng }: ReportFormProps) {
       <ModalHeader>Report an Issue</ModalHeader>
       <ModalCloseButton />
 
-      {/* Modal Body */}
       <ModalBody>
         <form id="reportForm" onSubmit={formik.handleSubmit}>
-          {/* Title input */}
+          {/* Title */}
           <FormControl>
             <FormLabel htmlFor="title">Title</FormLabel>
             <Input
@@ -69,7 +68,7 @@ export default function ReportForm({ onClose, lat, lng }: ReportFormProps) {
             />
           </FormControl>
 
-          {/* Description input */}
+          {/* Description */}
           <FormControl mt={5}>
             <FormLabel htmlFor="description">
               Description
@@ -83,7 +82,7 @@ export default function ReportForm({ onClose, lat, lng }: ReportFormProps) {
             />
           </FormControl>
 
-          {/* File Input */}
+          {/* Image */}
           <FormControl mt={5}>
             <FormLabel htmlFor="image">
               Picture
@@ -102,7 +101,7 @@ export default function ReportForm({ onClose, lat, lng }: ReportFormProps) {
             />
           </FormControl>
 
-          {/* Category Selection */}
+          {/* Category */}
           <FormControl mt={5}>
             <FormLabel htmlFor="category">
               Category

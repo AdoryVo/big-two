@@ -21,7 +21,7 @@ export default function Report({ report }: { report: Report }) {
       .then((updatedReport) => {
         setLikes(updatedReport.likes)
       }).catch((response) => {
-        console.log(response)
+        console.error(response)
       })
   }
 
@@ -31,7 +31,7 @@ export default function Report({ report }: { report: Report }) {
       .then((updatedReport) => {
         setDislikes(updatedReport.dislikes)
       }).catch((response) => {
-        console.log(response)
+        console.error(response)
       })
   }
 

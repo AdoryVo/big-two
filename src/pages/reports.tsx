@@ -1,19 +1,17 @@
 import {
   Button, Container, Heading, VStack
 } from '@chakra-ui/react'
-import { Report as ReportType } from '@prisma/client'
 import Link from 'next/link'
 import { NextSeo } from 'next-seo'
 
 import Report from '../components/Report'
-import prisma from '../lib/prisma'
-import { makeSerializable } from '../lib/util'
+import useReports from '../lib/hooks/useReports'
 
-interface ReportsProps {
-  feed: ReportType[]
-}
+export default function Reports() {
+  const { reports, error } = useReports()
 
-export default function Reports(props: ReportsProps) {
+  if (error) return <div>Failed to load the page...</div>
+
   return (
     <>
       <NextSeo
@@ -31,19 +29,11 @@ export default function Reports(props: ReportsProps) {
         </Link>
         <Heading mb={5}>Reports</Heading>
         <VStack spacing={5}>
-          {props.feed.map((report) => (
-            <Report key={report.id} report={report} />
+          {reports && reports.map((report) => (
+            <Report key={report.id + new Date().toISOString()} report={report} />
           ))}
         </VStack>
       </Container>
     </>
   )
-}
-
-export async function getStaticProps() {
-  const feed = await prisma.report.findMany({ orderBy: { likes: 'desc' } })
-  return {
-    props: { feed: makeSerializable(feed) },
-    revalidate: 10,
-  }
 }

@@ -24,8 +24,7 @@ async function uploadFile(file: { filepath: string, newFilename: string }) {
 
   // Delete the temporarily created file after uploading
   fs.unlink(file.filepath, (err) => {
-    if (err)
-      console.error(err)
+    if (err) console.error(err)
   })
 }
 

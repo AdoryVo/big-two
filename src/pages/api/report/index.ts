@@ -25,7 +25,7 @@ export default async function handler(
   form.parse(req, (err: Error, fields: object, files: object) => {
     if (err) {
       console.error(err)
-      return
+      return res.status(500).end()
     }
 
     // Parse fields values
@@ -39,7 +39,7 @@ export default async function handler(
     }
 
     prisma.report.create({ data: fields }).then((result) => {
-      res.json(result)
+      return res.status(200).json(result)
     })
   })
 }
