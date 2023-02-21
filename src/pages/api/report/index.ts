@@ -17,7 +17,7 @@ export default async function handler(
   res: NextApiResponse<Report>
 ) {
   const form = formidable({
-    uploadDir: './',
+    uploadDir: process.env.VERCEL ? '/tmp' : './public',
     keepExtensions: true,
     filename: (_name: string, ext: string) => {return uuidv4() + ext},
   })
