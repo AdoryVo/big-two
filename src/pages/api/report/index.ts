@@ -4,7 +4,6 @@ import type { Report } from '@prisma/client'
 import formidable from 'formidable'
 import _ from 'lodash'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 
 import prisma from '../../../lib/prisma'
@@ -18,7 +17,7 @@ export default async function handler(
   res: NextApiResponse<Report>
 ) {
   const form = formidable({
-    uploadDir: path.join(process.cwd(), 'uploads'),
+    uploadDir: './',
     keepExtensions: true,
     filename: (_name: string, ext: string) => {return uuidv4() + ext},
   })

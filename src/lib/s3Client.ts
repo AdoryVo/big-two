@@ -1,6 +1,5 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import * as fs from 'fs'
-import path from 'path'
 
 const AWS_BUCKET = process.env.AWS_BUCKET
 
@@ -15,8 +14,7 @@ const s3Client = new S3Client({
 
 /** Uploads a file to the cloud AWS S3 bucket. */
 async function uploadFile(file: { filepath: string, newFilename: string }) {
-  const filePath = path.join(process.cwd(), 'uploads', file.newFilename)
-  const fileStream = fs.createReadStream(filePath)
+  const fileStream = fs.createReadStream(file.filepath)
   const params = {
     Bucket: AWS_BUCKET,
     Key: file.newFilename,
@@ -25,7 +23,7 @@ async function uploadFile(file: { filepath: string, newFilename: string }) {
   await s3Client.send(new PutObjectCommand(params))
 
   // Delete the temporarily created file after uploading
-  fs.unlink(filePath, (err) => {
+  fs.unlink(file.filepath, (err) => {
     if (err) console.error(err)
   })
 }
