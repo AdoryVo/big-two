@@ -33,7 +33,7 @@ export default async function handler(
 
     // Parse image
     if (files.image) {
-      const image = files.image[0]
+      const image = files.image
       uploadFile(image)
       fields.image = image.newFilename
     }
