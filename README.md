@@ -1,7 +1,4 @@
-# 🏙️ streetspot
-
-A platform for citizens to report local infrastructure issues and improve their city.  
-*Idea from SD Hacks 2021 project (https://github.com/AdoryVo/streetspot-2021)*
+# 🎴 big-two
 
 ## 🚀 Getting Started
 
@@ -21,7 +18,7 @@ A platform for citizens to report local infrastructure issues and improve their 
 
 ### Setup
 
-1. Clone the repo (`git clone https://github.com/AdoryVo/streetspot.git`)
+1. Clone the repo (`git clone https://github.com/AdoryVo/big-two.git`)
 2. Open your local repo folder in VS Code
 3. Open a new terminal (`` Ctrl+` ``) & run `pnpm install` (or `npm install`) to install dependencies
 4. Add a `.env` file to the root directory & add the contents received from Discord

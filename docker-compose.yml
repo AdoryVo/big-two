@@ -6,4 +6,4 @@ services:
     ports:
       - '5432:5432'
     restart: on-failure
-    container_name: streetspot-db
+    container_name: big-two-db
