@@ -1,4 +1,4 @@
-# 🎴 big-two
+<h1>♠️ big-two </h1>
 
 ## 🚀 Getting Started
 
@@ -42,8 +42,6 @@ Next, run the development server:
 npm run dev
 # or
 pnpm dev
-# or
-yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -67,8 +65,6 @@ src/
     └── api/        # 📝 Custom API routes
     └── _app.tsx    # 📄 Page component wrapper
     └── index.tsx   # ⭐ Home page
-    └── map.tsx     # ⭐ Map page
-    └── reports.tsx # ⭐ Reports page
 .env                # 📝 Environment variables
 package.json        # 📄 Dependencies
 ```
