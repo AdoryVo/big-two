@@ -8,11 +8,10 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { gameId } = req.query
-  const response = await pusher.trigger(String(gameId), 'pong', { message: 'hello world' })
+  await pusher.trigger(String(gameId), 'pong', { message: 'hello world' })
     .catch((err) => {
       console.error(err)
     })
-  console.log(response)
 
   return res.status(200).end()
 }
