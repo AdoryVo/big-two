@@ -1,14 +1,22 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-export interface TempGame {
-  hand: string[]
+import Game from '../../../lib/game/Game'
+import type Player from '../../../lib/game/Player'
+
+interface GamesStore {
+  [gameId: string]: Game
 }
 
-interface TempGames {
-  [gameId: string]: TempGame
-}
+export const games: GamesStore = { }
 
-const games: TempGames = { '0e7c8f40-1adc-4b82-9b18-74b09a326326': { hand: ['a5'] } }
+export function getHandObjects(player: Player) {
+  return player.hand?.map((card) => {
+    return {
+      rank: card.rank.abbrn,
+      suit: card.suit.name,
+    }
+  })
+}
 
 // GET, POST /api/[gameId]/game
 export default async function handler(
@@ -26,21 +34,23 @@ export default async function handler(
     }
 
     if (!game && process.env.NODE_ENV === 'development') {
-      games[id] = { hand: ['a5'] }
+      games[id] = new Game(0)
       return res.status(201).json(game)
     }
     if (!game) {
       return res.status(404).end()
     }
 
-    return res.status(200).json(game)
+    const data = { players: game.players.map(getHandObjects) }
+
+    return res.status(200).json(data)
   } else if (req.method === 'POST') { // POST: Create game
     // If game exists, do not override
     if (games[id]) {
       return res.status(404).end()
     }
 
-    games[id] = { hand: ['a5'] }
+    games[id] = new Game(0)
 
     return res.status(200).end()
   }

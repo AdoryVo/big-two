@@ -5,7 +5,7 @@ export function usePusher() {
   const [pusher, setPusher] = useState<Pusher|null>(null)
 
   if (!pusher) {
-    const pusher = new Pusher('cbede7ce68bd1e60c158', { cluster: 'us3' })
+    const pusher = new Pusher('e1b5c37560248e0a4fff', { cluster: 'us3' })
     setPusher(pusher)
     return pusher
   }
