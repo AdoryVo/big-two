@@ -31,7 +31,7 @@ export default function Game() {
 
   useEffect(() => {
     // Do not act until game id in query is loaded
-    if (!router.query.gameId) {
+    if (!router.query.gameId || !game) {
       return
     }
 
@@ -50,24 +50,26 @@ export default function Game() {
     setGameId(gameId)
 
     const channel = pusher.subscribe(gameId)
+    channel.unbind()
     channel.bind('new-player', (data: { player: Player }) => {
       setPlayers([...players, data.player])
     })
 
     channel.bind('start-game', (data: { players: object[] }) => {
       setGameInProgress(true)
-      mutate(data)
+      mutate(data, { revalidate: false })
     })
 
-    channel.bind('end-game', () => {
+    channel.bind('end-game', (data: { players: object[] }) => {
+      setGameInProgress(false)
+      setPlayers([])
       setPlayerId(-1)
       localStorage.removeItem('playerId')
 
-      mutate()
+      mutate(data, { revalidate: false })
     })
 
-    channel.bind('pong', (data: { message: string }) => {
-      console.log(data)
+    channel.bind('pong', () => {
       toast({
         title: 'Pong!',
         status: 'success',
@@ -153,7 +155,7 @@ export default function Game() {
           )
         }
         {
-          (game && game.players && game.players.length === 0) && (
+          (!gameInProgress) && (
             <>
               {/* Game Lobby Controls */}
               <Button onClick={handleStartGame} colorScheme="green" mb={4} me={2}>

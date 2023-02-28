@@ -16,6 +16,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@prisma/client": "4.11.0-dev.19",
+    "@vercel/edge-config": "^0.1.1",
     "cards": "^2.0.2",
     "formidable": "^2.1.1",
     "formik": "^2.2.9",
