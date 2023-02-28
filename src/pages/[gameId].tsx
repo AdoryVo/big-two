@@ -2,23 +2,28 @@ import {
   Button, Container, Heading, Text
 } from '@chakra-ui/react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { usePusher } from '../lib/hooks/usePusher'
 
-export default function Socket() {
+export default function Game() {
+  const router = useRouter()
   const pusher = usePusher()
   const [gameId, setGameId] = useState('') // UUID
 
-  useEffect(() => {
-    const storedGameId = localStorage.getItem('gameId')
-    if (storedGameId) {
-      joinGame(storedGameId)
-    }
-  })
+  const joinGame = useCallback(joinGameCallback, [pusher])
 
-  function joinGame(gameId: string) {
+  useEffect(() => {
+    if (!router.query.gameId) {
+      return
+    }
+
+    joinGame(String(router.query.gameId))
+  }, [router.query.gameId, joinGame])
+
+  function joinGameCallback(gameId: string) {
     setGameId(gameId)
 
     const channel = pusher.subscribe(gameId)
@@ -45,14 +50,14 @@ export default function Socket() {
   return (
     <>
       <NextSeo
-        title="Socket Testing | Big Two"
+        title="[person's] Turn | Big Two"
       />
       <Container p={5}>
         <Link href="/" passHref>
           <Button colorScheme="facebook" mb={4} me={2}>Home</Button>
         </Link>
 
-        <Heading mb={5}>Socket Testing</Heading>
+        <Heading mb={5}>Game Lobby</Heading>
 
         <Text mb={3}>Game id: {gameId || '❌'}</Text>
         <Button onClick={handleStartGame} colorScheme="green" mb={4} me={2}>
