@@ -36,6 +36,11 @@ export default function Socket() {
     const pusher = getPusher()
     setGameId(gameId)
 
+    const allChannel = pusher.subscribe('all')
+    allChannel.bind('pong', (data: { message: string }) => {
+      console.log(data)
+    })
+
     const channel = pusher.subscribe(gameId)
     channel.bind('pong', (data: { message: string }) => {
       console.log(data)
@@ -53,8 +58,12 @@ export default function Socket() {
     joinGame(gameId)
   }
 
-  function handlePing() {
+  function handlePingGame() {
     fetch(`/api/ping/${gameId}`)
+  }
+
+  function handlePing() {
+    fetch('/api/ping')
   }
 
   return (
@@ -73,8 +82,11 @@ export default function Socket() {
         <Button onClick={handleStartGame} colorScheme="green" mb={4} me={2}>
           Start Game
         </Button>
-        <Button onClick={handlePing} colorScheme="purple" mb={4}>
+        <Button onClick={handlePing} colorScheme="purple" mb={4} me={2}>
           Ping server
+        </Button>
+        <Button onClick={handlePingGame} colorScheme="purple" mb={4}>
+          Ping game channel
         </Button>
       </Container>
     </>

@@ -2,13 +2,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import pusher from '../../../lib/pusher'
 
-// GET /api/ping/[gameId]
+// GET /api/ping
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { gameId } = req.query
-  pusher.trigger(String(gameId), 'pong', { message: 'hello world' }).then((value) => {
+  pusher.trigger('all', 'pong', { message: 'hello world' }).then((value) => {
     console.log(value)
   }).catch((err) => {
     console.error(err)
