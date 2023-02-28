@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import pusher from '../../../lib/pusher'
 
-// GET /api/ping/[gameId]
+// GET /api/[gameId]/ping
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

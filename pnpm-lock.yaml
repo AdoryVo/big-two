@@ -14,6 +14,7 @@ specifiers:
   '@types/uuid': ^9.0.0
   '@typescript-eslint/eslint-plugin': ^5.52.0
   '@typescript-eslint/parser': ^5.52.0
+  cards: ^2.0.2
   eslint: 8.34.0
   eslint-config-next: 13.1.6
   eslint-plugin-simple-import-sort: ^10.0.0
@@ -42,6 +43,7 @@ dependencies:
   '@emotion/react': 11.10.5_wkiylh6bncbdhwh6tncqb3s2nm
   '@emotion/styled': 11.10.5_cjinou6kcnbro54hfk33pnlsly
   '@prisma/client': 4.11.0-dev.19_prisma@4.11.0-dev.19
+  cards: 2.0.2
   formidable: 2.1.1
   formik: 2.2.9_react@18.2.0
   framer-motion: 9.0.3_biqbaboplfbrettd7655fr4n2y
@@ -3206,6 +3208,10 @@ packages:
 
   /caniuse-lite/1.0.30001453:
     resolution: {integrity: sha512-R9o/uySW38VViaTrOtwfbFEiBFUh7ST3uIG4OEymIG3/uKdHDO4xk/FaqfUw0d+irSUyFPy3dZszf9VvSTPnsA==}
+    dev: false
+
+  /cards/2.0.2:
+    resolution: {integrity: sha512-9DPuZc8LkXL9Y+EQFi+VV7x6gRtpok1wYp4uu5/iPcBtPk0/I3F/f5LsTkgJ62JRmCdVbwieU6bdPn8vPlyYiA==}
     dev: false
 
   /chalk/2.4.2:
