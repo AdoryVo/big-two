@@ -7,11 +7,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  pusher.trigger('all', 'pong', { message: 'hello world' }).then((value) => {
-    console.log(value)
-  }).catch((err) => {
-    console.error(err)
-  })
+  const response = await pusher.trigger('all', 'pong', { message: 'hello world' })
+    .catch((err) => {
+      console.error(err)
+    })
+  console.log(response)
 
   return res.status(200).end()
 }
