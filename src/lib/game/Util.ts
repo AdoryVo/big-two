@@ -142,7 +142,8 @@ class Util {
     else if (new_combo.type === Combo_Types.BOMB && combo.type !== Combo_Types.BOMB)
       return true
 
-    return new_combo.type === combo.type && this._compare_cards(new_combo.value_card, combo.value_card) > 0
+    if (new_combo.value_card && combo.value_card)
+      return new_combo.type === combo.type && this._compare_cards(new_combo.value_card, combo.value_card) > 0
   }
 }
 
