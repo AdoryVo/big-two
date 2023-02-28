@@ -10,16 +10,19 @@ enum Combo_Types {
   STRAIGHT,
   FULL_HOUSE,
   BOMB,
+  FLUSH,
   INVALID
 }
 
 class Combo {
   readonly cards: Card[]
   readonly type: Combo_Types
+  readonly value_card: Card | null
 
-  constructor(cards: Card[], type: Combo_Types) {
+  constructor(cards: Card[], type: Combo_Types, value_card: Card | null) {
     this.cards = cards
     this.type = type
+    this.value_card = value_card
   }
 }
 
