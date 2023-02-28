@@ -7,7 +7,7 @@ import ky from 'ky'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import useGame from '../../lib/hooks/useGame'
 import { usePusher } from '../../lib/hooks/usePusher'
@@ -27,27 +27,22 @@ export default function Game() {
   const [name, setName] = useState('')
   const [playerId, setPlayerId] = useState(-1)
 
-  const joinLobby = useCallback(joinLobbyCallback, [pusher, players, toast, mutate])
-
   useEffect(() => {
     // Do not act until game id in query is loaded
-    if (!router.query.gameId || !game) {
+    if (!router.query.gameId) {
       return
     }
+    setGameId(String(router.query.gameId))
 
-    const gameInProgress = Boolean(game && game.players && game.players.length > 0)
-    setGameInProgress(gameInProgress)
+    if (game) {
+      const gameInProgress = Boolean(game.players && game.players.length > 0)
+      setGameInProgress(gameInProgress)
+    }
 
     const storedPlayerId = localStorage.getItem('playerId')
     if (storedPlayerId && gameInProgress) {
       setPlayerId(parseInt(storedPlayerId))
     }
-
-    joinLobby(String(router.query.gameId))
-  }, [game, router.query.gameId, joinLobby])
-
-  function joinLobbyCallback(gameId: string) {
-    setGameId(gameId)
 
     const channel = pusher.subscribe(gameId)
     channel.unbind()
@@ -77,7 +72,7 @@ export default function Game() {
         isClosable: true,
       })
     })
-  }
+  }, [router.query.gameId, gameId, game, gameInProgress, players, pusher, mutate, toast])
 
   function handleStartGame() {
     ky.post(`/api/${gameId}/start`, { json: { players } })
@@ -109,6 +104,12 @@ export default function Game() {
 
   function copyGameLink() {
     navigator.clipboard.writeText(window.location.toString())
+    toast({
+      title: 'Lobby link copied!',
+      status: 'success',
+      duration: 1500,
+      isClosable: true,
+    })
   }
 
   return (
@@ -123,8 +124,15 @@ export default function Game() {
 
         <Heading>Game Lobby</Heading>
         <Text mb={5}>
-          <ChakraLink color="teal.500" fontWeight="bold" onClick={copyGameLink} title="Copy lobby link">
-            📋 Lobby ID: {gameId}
+          <ChakraLink
+            onClick={copyGameLink}
+            _focus={{ fontStyle: 'italic' }}
+            tabIndex={1}
+            title="Copy lobby link"
+            color="teal.500"
+            fontWeight="bold"
+          >
+            Lobby ID: {gameId} 🔗
           </ChakraLink>
         </Text>
 
@@ -155,10 +163,17 @@ export default function Game() {
           )
         }
         {
-          (!gameInProgress) && (
+          (!gameInProgress && game && game.players && game.players.length === 0) && (
             <>
               {/* Game Lobby Controls */}
-              <Button onClick={handleStartGame} colorScheme="green" mb={4} me={2}>
+              <Button
+                onClick={handleStartGame}
+                isLoading={players.length < 2}
+                loadingText="Need more players to start..."
+                colorScheme="green"
+                mb={4}
+                me={2}
+              >
                 Start Game
               </Button>
               <Button onClick={handlePingGame} colorScheme="purple" mb={4}>
@@ -177,9 +192,16 @@ export default function Game() {
               {
                 playerId === -1 && (
                   <>
-                    <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" w="75%" me={2} />
+                    <Input
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Name"
+                      maxLength={24}
+                      w="50%"
+                      me={2} />
+                    <br />
                     <Button onClick={handleJoinLobby} colorScheme="blue" mt={2}>
-                      Join Next Game
+                      Join next game
                     </Button>
                   </>
                 )

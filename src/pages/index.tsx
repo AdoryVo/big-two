@@ -24,7 +24,7 @@ export default function Home() {
       <Container p={5}>
         <Heading mb={5}>♠️ Big Two</Heading>
         <Button onClick={handleStartGame} colorScheme="green" mb={4} me={2}>
-          Start Game
+          Create Lobby
         </Button>
       </Container>
     </>
