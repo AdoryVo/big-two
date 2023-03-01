@@ -3,68 +3,88 @@ import {
   ListItem, OrderedList,
   Text, useToast
 } from '@chakra-ui/react'
+import { Player } from '@prisma/client'
 import ky from 'ky'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
 import { useEffect, useState } from 'react'
 
 import useGame from '../../lib/hooks/useGame'
 import { usePusher } from '../../lib/hooks/usePusher'
-import type { Player } from '../api/[gameId]/join'
+import { GameWithPlayers } from '../../lib/prisma'
+import { Event } from '../../lib/pusher'
+
+const enum Action {
+  Ping = 'ping',
+  Join = 'join',
+  Start = 'start',
+  End = 'end'
+}
+
+function BasePage({ children }: { children?: React.ReactNode }) {
+  return (
+    <Container p={5}>
+      <Link href="/" passHref>
+        <Button colorScheme="facebook" mb={4} me={2}>Home</Button>
+      </Link>
+
+      {children}
+    </Container>
+  )
+}
 
 export default function Game() {
-  const router = useRouter()
   const pusher = usePusher()
   const toast = useToast()
 
-  /** mutate: tells server to refetch the game state */
-  const { game, isLoading, mutate } = useGame(String(router.query.gameId))
-  const [gameId, setGameId] = useState('') // UUID
+  /** calling mutate tells the server to refetch the game state */
+  const {
+    game, isLoading, error, mutate,
+  } = useGame()
   const [gameInProgress, setGameInProgress] = useState(false)
   const [players, setPlayers] = useState<Player[]>([])
 
   const [name, setName] = useState('')
-  const [playerId, setPlayerId] = useState(-1)
+  const [playerId, setPlayerId] = useState('')
 
   useEffect(() => {
-    // Do not act until game id in query is loaded
-    if (!router.query.gameId) {
+    if (isLoading || !game) {
       return
     }
-    setGameId(String(router.query.gameId))
 
-    if (game) {
-      const gameInProgress = Boolean(game.players && game.players.length > 0)
-      setGameInProgress(gameInProgress)
-    }
+    setGameInProgress(Boolean(game.currentPlayer))
+    setPlayers(game.players)
 
     const storedPlayerId = localStorage.getItem('playerId')
-    if (storedPlayerId && gameInProgress) {
-      setPlayerId(parseInt(storedPlayerId))
+    if (storedPlayerId) {
+      if (!game.players.length) {
+        localStorage.removeItem('playerId')
+      } else {
+        setPlayerId(storedPlayerId)
+      }
     }
 
-    const channel = pusher.subscribe(gameId)
+    const channel = pusher.subscribe(game.id)
     channel.unbind()
-    channel.bind('new-player', (data: { player: Player }) => {
-      setPlayers([...players, data.player])
+    channel.bind(Event.LobbyUpdate, (game: GameWithPlayers) => {
+      mutate(game, { revalidate: false })
     })
 
-    channel.bind('start-game', (data: { players: object[] }) => {
+    channel.bind(Event.StartGame, (game: GameWithPlayers) => {
       setGameInProgress(true)
-      mutate(data, { revalidate: false })
+      mutate(game, { revalidate: false })
     })
 
-    channel.bind('end-game', (data: { players: object[] }) => {
+    channel.bind(Event.EndGame, (game: GameWithPlayers) => {
       setGameInProgress(false)
       setPlayers([])
-      setPlayerId(-1)
+      setPlayerId('')
       localStorage.removeItem('playerId')
 
-      mutate(data, { revalidate: false })
+      mutate(game, { revalidate: false })
     })
 
-    channel.bind('pong', () => {
+    channel.bind(Event.Pong, () => {
       toast({
         title: 'Pong!',
         status: 'success',
@@ -72,26 +92,44 @@ export default function Game() {
         isClosable: true,
       })
     })
-  }, [router.query.gameId, gameId, game, gameInProgress, players, pusher, mutate, toast])
+  }, [game, isLoading, pusher, mutate, toast])
 
-  function handleStartGame() {
-    ky.post(`/api/${gameId}/start`, { json: { players } })
-  }
+  // Handles player actions by sending server requests
+  function handleAction(action: Action) {
+    if (!game) {
+      return
+    }
 
-  function handleEndGame() {
-    ky.get(`/api/${gameId}/end`)
-  }
+    const url = `/api/${game.id}/${action}`
+    let options = {}
 
-  function handleJoinLobby() {
-    // Set player id and send it to the server to store
-    setPlayerId(players.length)
-    localStorage.setItem('playerId', players.length.toString())
-
-    ky.post(`/api/${gameId}/join`, { json: { name } })
-  }
-
-  function handlePingGame() {
-    ky.get(`/api/${gameId}/ping`)
+    switch (action) {
+      case Action.Ping:
+        ky.get(url)
+        break
+      case Action.Join:
+        if (!name) {
+          toast({
+            title: 'Error',
+            description: 'Please enter a valid name!',
+            status: 'error',
+          })
+          return
+        }
+        options = { json: { name } }
+        ky.post(url, options).json<GameWithPlayers>().then((game) => {
+          const player = game.players.at(-1)
+          if (player) {
+            localStorage.setItem('playerId', player.id)
+            setPlayerId(player.id)
+          }
+        })
+        break
+      case Action.Start:
+      case Action.End:
+        ky.patch(url)
+        break
+    }
   }
 
   function getPageTitle() {
@@ -112,16 +150,16 @@ export default function Game() {
     })
   }
 
+  if (isLoading || !game || error) {
+    return <BasePage />
+  }
+
   return (
     <>
       <NextSeo
         title={`${getPageTitle()} | Big Two`}
       />
-      <Container maxW="container.sm" p={5}>
-        <Link href="/" passHref>
-          <Button colorScheme="facebook" mb={4} me={2}>Home</Button>
-        </Link>
-
+      <BasePage>
         <Heading>Game Lobby</Heading>
         <Text mb={5}>
           <ChakraLink
@@ -132,84 +170,84 @@ export default function Game() {
             color="teal.500"
             fontWeight="bold"
           >
-            Lobby ID: {gameId} 🔗
+            Lobby ID: {game.id} 🔗
           </ChakraLink>
         </Text>
 
-        {
-          (gameInProgress && game) && (
-            <>
-              {/* Game Container */}
-              {!isLoading && game.players[playerId] &&
+        {gameInProgress ? (
+          <>
+            {/* Player view: current hand */}
+            {game.players.find((player) => player.id == playerId) &&
               <Box my={5} py={2}>
-                {JSON.stringify(game.players[playerId])}
+                {JSON.stringify(game.players.find((player) => player.id == playerId))}
               </Box>
-              }
-              {(playerId < 0 || playerId >= game.players.length) &&
-                <Box my={5} py={2}>
-                  <Heading size="md">Spectating...</Heading>
-                  {game.players.map((player, index) => (
-                    <Box key={index} mb={5}>
-                      <Heading size="sm">Hand {index}</Heading>
-                      {JSON.stringify(player)}
-                    </Box>
-                  ))}
-                </Box>
-              }
-              <Button onClick={handleEndGame} colorScheme="red" mb={4} me={2}>
-                End Game
-              </Button>
-            </>
-          )
-        }
-        {
-          (!gameInProgress && game && game.players && game.players.length === 0) && (
-            <>
-              {/* Game Lobby Controls */}
-              <Button
-                onClick={handleStartGame}
-                isLoading={players.length < 2}
-                loadingText="Need more players to start..."
-                colorScheme="green"
-                mb={4}
-                me={2}
-              >
-                Start Game
-              </Button>
-              <Button onClick={handlePingGame} colorScheme="purple" mb={4}>
-                Ping game channel
-              </Button>
+            }
 
-              <Heading size="lg">Current players</Heading>
-              {!players.length && 'No players currently, join in!'}
-              <OrderedList mb={5}>
-                {
-                  players.map((player, index) => (
-                    <ListItem key={index} fontWeight={index === playerId ? 'bold' : ''}>{player.name}</ListItem>
-                  ))
-                }
-              </OrderedList>
-              {
-                playerId === -1 && (
-                  <>
-                    <Input
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Name"
-                      maxLength={24}
-                      w="50%"
-                      me={2} />
-                    <br />
-                    <Button onClick={handleJoinLobby} colorScheme="blue" mt={2}>
-                      Join next game
-                    </Button>
-                  </>
-                )
-              }
-            </>
-          )
-        }
-      </Container>
+            {/* Spectator view */}
+            {!playerId && (
+              <Box my={5} py={2}>
+                <Heading size="md">Spectating...</Heading>
+                {game.players.map((player, index) => (
+                  <Box key={index} mb={5}>
+                    <Heading size="sm">Hand {index}</Heading>
+                    {JSON.stringify(player)}
+                  </Box>
+                ))}
+              </Box>
+            )}
+
+            <Button onClick={() => handleAction(Action.End)} colorScheme="red" mb={4} me={2}>
+              End Game
+            </Button>
+          </>
+        ) : (
+          <>
+            {/* Game Lobby Controls */}
+            <Button
+              onClick={() => handleAction(Action.Start)}
+              isLoading={players.length < 2}
+              loadingText="Need more players to start..."
+              colorScheme="green"
+              mb={4}
+              me={2}
+            >
+              Start Game
+            </Button>
+            <Button onClick={() => handleAction(Action.Ping)} colorScheme="purple" mb={4}>
+              Ping game channel
+            </Button>
+
+            {/* Current players list */}
+            <Heading size="lg">Current players</Heading>
+            {!players.length && 'No players currently, join in!'}
+
+            <OrderedList mb={5}>
+              {players.map((player, index) =>
+                <ListItem key={index} fontWeight={player.id === playerId ? 'bold' : ''}>
+                  {player.name}
+                </ListItem>
+              )}
+            </OrderedList>
+
+            {/* Join game prompt */}
+            {!playerId && (
+              <>
+                <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Name"
+                  maxLength={24}
+                  w="50%"
+                  me={2} />
+                <br />
+                <Button onClick={() => handleAction(Action.Join)} colorScheme="blue" mt={2}>
+                  Join next game
+                </Button>
+              </>
+            )}
+          </>
+        )}
+      </BasePage>
     </>
   )
 }

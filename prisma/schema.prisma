@@ -7,6 +7,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Game {
+  id    String   @id @default(uuid())
+  deck  String[] @default([])
+  combo String[] @default([])
+
+  players       Player[] @relation("Players")
+  currentPlayer Player?  @relation("CurrentTurn")
+
+  createdAt DateTime @default(now())
+}
+
+model Player {
+  id       String   @id @default(uuid())
+  name     String   @db.VarChar(255)
+  hand     String[] @default([])
+  finished Boolean  @default(false)
+  points   Int      @default(0)
+
+  game   Game   @relation("Players", fields: [gameId], references: [id])
+  gameId String
+
+  currentIn   Game?   @relation("CurrentTurn", fields: [currentInId], references: [id])
+  currentInId String? @unique
+}
+
 model Report {
   id          String   @id @default(cuid())
   title       String
@@ -21,8 +46,8 @@ model Report {
 }
 
 model User {
-  id          String   @id @default(cuid())
-  ipAddress   String   @unique
-  likes       String[] @default([])
-  dislikes    String[] @default([])
+  id        String   @id @default(cuid())
+  ipAddress String   @unique
+  likes     String[] @default([])
+  dislikes  String[] @default([])
 }

@@ -1,4 +1,5 @@
 import { Button, Container, Heading } from '@chakra-ui/react'
+import type { Game } from '@prisma/client'
 import ky from 'ky'
 import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
@@ -7,11 +8,9 @@ export default function Home() {
   const router = useRouter()
 
   function handleStartGame() {
-    const gameId = self.crypto.randomUUID()
-
     // Create a new game and then redirect them
-    ky.post(`api/${gameId}/game`).then(() => {
-      router.push(`/game/${gameId}`)
+    ky.post('api/lobby').json<Game>().then((game) => {
+      router.push({ pathname: '/game/[gameId]', query: { gameId: game.id } })
     })
   }
 

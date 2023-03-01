@@ -1,31 +1,29 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import prisma from '../../../lib/prisma'
 import pusher from '../../../lib/pusher'
+import { Event } from '../../../lib/pusher'
 
-export interface Player {
-  id: number,
-  name: string,
-  cookie: string
-}
-
-// GET /api/[gameId]/join
+// POST /api/[gameId]/join
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { gameId } = req.query
+  const id = String(req.query.gameId)
   const { name } = req.body
 
-  const newPlayer = {
-    id: 1,
-    name,
-    cookie: 'asdf',
-  }
+  const data = { name: String(name) }
 
-  await pusher.trigger(String(gameId), 'new-player', { player: newPlayer })
+  const game = await prisma.game.update({
+    where: { id },
+    data: { players: { create: data } },
+    include: { players: true },
+  })
+
+  await pusher.trigger(String(id), Event.LobbyUpdate, game)
     .catch((err) => {
       console.error(err)
     })
 
-  return res.status(200).end()
+  return res.status(201).json(game)
 }

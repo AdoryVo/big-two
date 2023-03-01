@@ -6,7 +6,8 @@ specifiers:
   '@chakra-ui/react': ^2.5.1
   '@emotion/react': ^11.10.5
   '@emotion/styled': ^11.10.5
-  '@prisma/client': 4.11.0-dev.19
+  '@prisma/client': ^4.11.0
+  '@types/lodash': ^4.14.191
   '@types/node': ^18.13.0
   '@types/react': ^18.0.28
   '@types/react-dom': ^18.0.11
@@ -14,7 +15,6 @@ specifiers:
   '@types/uuid': ^9.0.0
   '@typescript-eslint/eslint-plugin': ^5.52.0
   '@typescript-eslint/parser': ^5.52.0
-  '@vercel/edge-config': ^0.1.1
   cards: ^2.0.2
   eslint: 8.34.0
   eslint-config-next: 13.1.6
@@ -26,7 +26,7 @@ specifiers:
   lodash: ^4.17.21
   next: 13.1.6
   next-seo: ^5.15.0
-  prisma: 4.11.0-dev.19
+  prisma: ^4.11.0
   pusher: ^5.1.2
   pusher-js: ^8.0.1
   react: 18.2.0
@@ -43,8 +43,7 @@ dependencies:
   '@chakra-ui/react': 2.5.1_gptzkjtpoihqsqh6fvedpd25mm
   '@emotion/react': 11.10.5_wkiylh6bncbdhwh6tncqb3s2nm
   '@emotion/styled': 11.10.5_cjinou6kcnbro54hfk33pnlsly
-  '@prisma/client': 4.11.0-dev.19_prisma@4.11.0-dev.19
-  '@vercel/edge-config': 0.1.1
+  '@prisma/client': 4.11.0_prisma@4.11.0
   cards: 2.0.2
   formidable: 2.1.1
   formik: 2.2.9_react@18.2.0
@@ -63,6 +62,7 @@ dependencies:
   uuid: 9.0.0
 
 devDependencies:
+  '@types/lodash': 4.14.191
   '@types/node': 18.13.0
   '@types/react': 18.0.28
   '@types/react-dom': 18.0.11
@@ -73,7 +73,7 @@ devDependencies:
   eslint: 8.34.0
   eslint-config-next: 13.1.6_7kw3g6rralp5ps6mg3uyzz6azm
   eslint-plugin-simple-import-sort: 10.0.0_eslint@8.34.0
-  prisma: 4.11.0-dev.19
+  prisma: 4.11.0
   typescript: 4.9.5
 
 packages:
@@ -2753,8 +2753,8 @@ packages:
     resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}
     dev: false
 
-  /@prisma/client/4.11.0-dev.19_prisma@4.11.0-dev.19:
-    resolution: {integrity: sha512-3+QuRI0K5bbfc/rQDnm156EvrDI0V19UX+d2cECxGi1+uJo0CRB01HHhJXiRP1wqNmxmXbSWHZdgCYMY+aFhMQ==}
+  /@prisma/client/4.11.0_prisma@4.11.0:
+    resolution: {integrity: sha512-0INHYkQIqgAjrt7NzhYpeDQi8x3Nvylc2uDngKyFDDj1tTRQ4uV1HnVmd1sQEraeVAN63SOK0dgCKQHlvjL0KA==}
     engines: {node: '>=14.17'}
     requiresBuild: true
     peerDependencies:
@@ -2763,16 +2763,16 @@ packages:
       prisma:
         optional: true
     dependencies:
-      '@prisma/engines-version': 4.11.0-28.cb65d78d04bbb4ee83c2ba4a57c5f0b64689d03c
-      prisma: 4.11.0-dev.19
+      '@prisma/engines-version': 4.11.0-57.8fde8fef4033376662cad983758335009d522acb
+      prisma: 4.11.0
     dev: false
 
-  /@prisma/engines-version/4.11.0-28.cb65d78d04bbb4ee83c2ba4a57c5f0b64689d03c:
-    resolution: {integrity: sha512-Zj/Fzf3jL0ohXavp+LwM9wh819PH49j06FhDJ5cT28Z/1LrRxD3TvLhsvNholbrbKQ02ncpGJe2Sb2BGAvVrnQ==}
+  /@prisma/engines-version/4.11.0-57.8fde8fef4033376662cad983758335009d522acb:
+    resolution: {integrity: sha512-3Vd8Qq06d5xD8Ch5WauWcUUrsVPdMC6Ge8ILji8RFfyhUpqon6qSyGM0apvr1O8n8qH8cKkEFqRPsYjuz5r83g==}
     dev: false
 
-  /@prisma/engines/4.11.0-dev.19:
-    resolution: {integrity: sha512-NnD7xTEq+P+qJY86QJyyG827ftWpxXwPB+k1Vfvz+ELxJv2rkZTUwo0tbmE5RVNuTLxQ7M44VnJBnxPUF6STkA==}
+  /@prisma/engines/4.11.0:
+    resolution: {integrity: sha512-0AEBi2HXGV02cf6ASsBPhfsVIbVSDC9nbQed4iiY5eHttW9ZtMxHThuKZE1pnESbr8HRdgmFSa/Kn4OSNYuibg==}
     requiresBuild: true
 
   /@rushstack/eslint-patch/1.2.0:
@@ -2809,7 +2809,6 @@ packages:
 
   /@types/lodash/4.14.191:
     resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
-    dev: false
 
   /@types/node-fetch/2.6.2:
     resolution: {integrity: sha512-DHqhlq5jeESLy19TYhLakJ07kNumXWjcDdxXsLUMJZ6ue8VZJj4kLPQVE/2mdHh3xZziNF1xppu5lwmS53HR+A==}
@@ -2999,11 +2998,6 @@ packages:
       '@typescript-eslint/types': 5.52.0
       eslint-visitor-keys: 3.3.0
     dev: true
-
-  /@vercel/edge-config/0.1.1:
-    resolution: {integrity: sha512-HDl+12tzW2RHIu8Y804kXg2VpZ02KVb7Nqsa+e1AFoACXXMb+7TfjI1wR19tXoDIu5enQz1dbat40YMEgaH13Q==}
-    engines: {node: '>=14.6'}
-    dev: false
 
   /@zag-js/element-size/0.3.1:
     resolution: {integrity: sha512-jR5j4G//bRzcxwAACWi9EfITnwjNmn10LxF4NmALrdZU7/PNWP3uUCdhCxd/0SCyeiJXUl0yvD57rWAbKPs1nw==}
@@ -4831,13 +4825,13 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prisma/4.11.0-dev.19:
-    resolution: {integrity: sha512-5SVoM6eRG6vR+3gf+Xja/FTn7bmL/933ga8CCi+4USUhi8wUQdIENwScEvOXRulskR4SFDo9c8cZi/zUTFwm+Q==}
+  /prisma/4.11.0:
+    resolution: {integrity: sha512-4zZmBXssPUEiX+GeL0MUq/Yyie4ltiKmGu7jCJFnYMamNrrulTBc+D+QwAQSJ01tyzeGHlD13kOnqPwRipnlNw==}
     engines: {node: '>=14.17'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@prisma/engines': 4.11.0-dev.19
+      '@prisma/engines': 4.11.0
 
   /prop-types/15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}

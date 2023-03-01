@@ -15,8 +15,7 @@
     "@chakra-ui/react": "^2.5.1",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@prisma/client": "4.11.0-dev.19",
-    "@vercel/edge-config": "^0.1.1",
+    "@prisma/client": "^4.11.0",
     "cards": "^2.0.2",
     "formidable": "^2.1.1",
     "formik": "^2.2.9",
@@ -35,6 +34,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.191",
     "@types/node": "^18.13.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
@@ -45,7 +45,7 @@
     "eslint": "8.34.0",
     "eslint-config-next": "13.1.6",
     "eslint-plugin-simple-import-sort": "^10.0.0",
-    "prisma": "4.11.0-dev.19",
+    "prisma": "^4.11.0",
     "typescript": "^4.9.5"
   }
 }

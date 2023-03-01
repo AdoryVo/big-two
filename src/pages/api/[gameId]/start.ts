@@ -1,37 +1,70 @@
-import ky from 'ky'
+import { type Card, decks } from 'cards'
+import _ from 'lodash'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import Game from '../../../lib/game/Game'
+import prisma from '../../../lib/prisma'
+import { Event } from '../../../lib/pusher'
 import pusher from '../../../lib/pusher'
-import { games } from './game'
-import { getHandObjects } from './game'
 
-// POST /api/[gameId]/start
+function cardToString(card: Card) {
+  return `${card.rank.abbrn};${card.suit.name}`
+}
+
+function deckToStringArray(deck: decks.Deck): string[] {
+  return deck.remainingCards.map(cardToString)
+}
+
+// PATCH /api/[gameId]/start
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { players } = req.body
   const id = String(req.query.gameId)
 
-  const game = new Game(players.length)
-  games[id] = game
+  const game = await prisma.game.findUnique({
+    where: { id },
+    include: { players: true },
+  })
 
-  const data = { players: game.players.map(getHandObjects) }
-
-  if (process.env.VERCEL) {
-    await ky.patch('https://api.vercel.com/v1/edge-config/ecfg_pq909usfi5fkeaj0pkw9mtwwxw39/items',
-      {
-        json: {
-          items: [
-            { operation: 'update', key: id, value: data },
-          ],
-        },
-        headers: { Authorization: `Bearer ${process.env.VERCEL_ACCESS_TOKEN}` },
-      })
+  if (!game) {
+    return res.status(404).end()
   }
 
-  await pusher.trigger(id, 'start-game', data)
+  const gameInstance = new Game(game.players.length)
+  const deck = deckToStringArray(gameInstance.deck)
+  const currentPlayer = _.sample(game.players)
+
+  // Add deck & current player
+  await prisma.game.update({
+    where: { id },
+    data: {
+      deck: { set: deck },
+      currentPlayer: { connect: { id: currentPlayer?.id } },
+    },
+    include: {
+      players: true,
+      currentPlayer: true,
+    },
+  })
+
+  // Add hands to each player
+  for (let i = 0; i < game.players.length; i++) {
+    const storedPlayer = game.players[i]
+    const instancePlayer = gameInstance.players[i]
+
+    await prisma.player.update({
+      where: { id: storedPlayer.id },
+      data: { hand: instancePlayer.hand?.map(cardToString) },
+    })
+  }
+
+  const updatedGame = await prisma.game.findUnique({
+    where: { id },
+    include: { players: true, currentPlayer: true },
+  })
+
+  await pusher.trigger(id, Event.StartGame, updatedGame)
     .catch((err) => {
       console.error(err)
     })
