@@ -9,7 +9,7 @@ export default function App({ Component, pageProps }: AppProps) {
         openGraph={{
           type: 'website',
           locale: 'en_US',
-          url: 'https://big-two.vercel.app/',
+          url: 'https://bigtwo.vercel.app/',
           siteName: 'Big Two',
         }}
         twitter={{
