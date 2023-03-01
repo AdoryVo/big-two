@@ -2,12 +2,17 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from '../../lib/prisma'
 
-// POST /api/lobby
+// GET /api/lobbies
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const lobby = await prisma.game.create({ data: {} })
+  const games = await prisma.game.findMany({
+    include: {
+      players: true,
+      currentPlayer: true,
+    },
+  })
 
-  return res.status(201).json(lobby)
+  return res.status(200).json(games)
 }

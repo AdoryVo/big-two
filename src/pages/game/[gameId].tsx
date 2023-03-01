@@ -151,7 +151,7 @@ export default function Game() {
   }
 
   if (isLoading || !game || error) {
-    return <><NextSeo title="Lobby" description="Join and play!" /><BasePage /></>
+    return <><NextSeo title="Lobby | Big Two" description="Join and play!" /><BasePage /></>
   }
 
   return (
