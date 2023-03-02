@@ -32,6 +32,8 @@ class Game {
     for (const player of this.players) {
       player.hand = this.deck.draw(Math.floor(this.deck.totalLength / this.players.length))
       player.hand.sort((a, b) => this.util.compare_cards(a, b))
+
+      player.finished_rank = null
     }
 
     this.remaining_players = []
@@ -52,20 +54,22 @@ class Game {
    * and play is designed for use for the client to call to the server.
    * If this action results in a player clearing their cards, add the appropriate number to their score,
    * then return the player id of the player who has finished.
+   * If the cards were played but it did not result in a
   */
   play(cstring: string) {
     const cards = this.util.string_to_cards(cstring)
     if (!this.util.can_play_on(cards, this.combo) || !this.players[this.current_player].has_cards(cards) || this.remaining_players.length === 1)
-      return -1
+      return -2
 
     this.players[this.current_player].remove_cards(cards)
     if (!cards.length) {
       this.players[this.current_player].score += this.remaining_players.length - 1
+      this.players[this.current_player].finished_rank = this.players.length - this.remaining_players.length + 1
       const curr_player_index = this.remaining_players.indexOf(this.current_player)
-      const temp = this.current_player
+      const finished_player = this.current_player
       this.current_player = this.remaining_players[(curr_player_index + 1) % this.remaining_players.length]
       this.remaining_players.splice(curr_player_index, 1)
-      return temp
+      return finished_player
     }
 
     return -1
