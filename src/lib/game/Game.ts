@@ -54,7 +54,8 @@ class Game {
    * and play is designed for use for the client to call to the server.
    * If this action results in a player clearing their cards, add the appropriate number to their score,
    * then return the player id of the player who has finished.
-   * If the cards were played but it did not result in a
+   * If the cards were played but it did not result in a victory, returns -1.
+   * Otherwise, if the cards could not be played (probably due to client and server disagreeing on game state), return -2.
   */
   play(cstring: string) {
     const cards = this.util.string_to_cards(cstring)
