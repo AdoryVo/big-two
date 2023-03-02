@@ -1,16 +1,38 @@
-import type { Card } from 'cards'
+import { Card } from 'cards'
+import { Rank } from 'cards/build/ranks'
+import { Suit } from 'cards/build/suits'
 
 import { Combo, Combo_Types } from './Combo'
+import type Player from './Player'
 import Rules from './Rules'
 
 const SUIT_RANKING_ORDERS = { [Rules.SUIT_ORDER_ALPHA] : ['clubs', 'diamonds', 'hearts', 'spades'] }
+
+const SUIT_ABBR_TO_NAME : { [key: string]: string } = {
+  'C': 'clubs', 'D': 'diamonds', 'H': 'hearts', 'S': 'spades',
+}
+
+const RANK_ABBR_TO_NAME : { [key: string] : string } = {
+  '2': 'Two',
+  '3': 'Three',
+  '4': 'Four',
+  '5': 'Five',
+  '6': 'Six',
+  '7': 'Seven',
+  '8': 'Eight',
+  '9': 'Nine',
+  '0': 'Ten',
+  'J': 'Jack',
+  'Q': 'Queen',
+  'K': 'King',
+  'A': 'Ace',
+}
 
 class Util {
   rules: Rules
 
   constructor(rules: Rules) {
     this.rules = rules
-
   }
 
   _rank_val(card: Card) {
@@ -30,7 +52,7 @@ class Util {
     return -1
   }
 
-  _compare_cards(c1: Card, c2: Card) {
+  compare_cards(c1: Card, c2: Card) {
     const r1 = this._rank_val(c1)
     const r2 = this._rank_val(c2)
 
@@ -114,9 +136,8 @@ class Util {
     return new Combo(cards, Combo_Types.INVALID, null)
   }
 
+  // constructs a combo from a list of SORTED cards.
   _construct_combo(cards: Card[]) {
-    cards.sort(this._compare_cards)
-
     switch (cards.length) {
       case 1:
         return new Combo(cards, Combo_Types.SINGLE, cards[0])
@@ -135,7 +156,10 @@ class Util {
 
   // Whether it is legal to play the specified set of cards on top of the combo.
   // TODO: add 5-combo compatability logic + appopriate flag in Rules (e.g. can play full house on flush/straight)
-  can_play_on(cards: Card[], combo: Combo) {
+  can_play_on(cards: Card[], combo: Combo | null) {
+    if (!combo)
+      return true
+
     const new_combo = this._construct_combo(cards)
     if (new_combo.type === Combo_Types.INVALID || (new_combo.type !== Combo_Types.BOMB && combo.type === Combo_Types.BOMB))
       return false
@@ -143,7 +167,23 @@ class Util {
       return true
 
     if (new_combo.value_card && combo.value_card)
-      return new_combo.type === combo.type && this._compare_cards(new_combo.value_card, combo.value_card) > 0
+      return new_combo.type === combo.type && this.compare_cards(new_combo.value_card, combo.value_card) > 0
+  }
+
+  /* Given a space-separated string of cards ([rank_chr][suit_chr] [rank_chr][suit_chr] ... [rank_chr][suit_chr]),
+   * return a SORTED Card array.
+   * Ex: "2c 0h kd as" = [2 of clubs, 10 of hearts, king of diamonds, ace of spades]
+  */
+  string_to_cards(s: string) {
+    const cards = []
+
+    for (const cstring of s.split(' ')) {
+      const rank_abbr = cstring[0] === '0' ? cstring[0].toUpperCase() : '10'
+      cards.push(new Card(new Suit(SUIT_ABBR_TO_NAME[cstring[1].toUpperCase()]), new Rank(rank_abbr, RANK_ABBR_TO_NAME[rank_abbr])))
+    }
+
+    cards.sort(this.compare_cards)
+    return cards
   }
 }
 
