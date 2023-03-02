@@ -1,24 +1,28 @@
 import {
-  Box, Button, Container, Heading, Input, Link as ChakraLink,
-  ListItem, OrderedList,
+  Button, Container, Heading, Link as ChakraLink,
   Text, useToast
 } from '@chakra-ui/react'
-import { Player } from '@prisma/client'
 import ky from 'ky'
 import Link from 'next/link'
 import { NextSeo } from 'next-seo'
 import { useEffect, useState } from 'react'
 
+import ActiveGame from '../../components/ActiveGame'
+import WaitingLobby from '../../components/WaitingLobby'
 import useGame from '../../lib/hooks/useGame'
 import { usePusher } from '../../lib/hooks/usePusher'
 import { GameWithPlayers } from '../../lib/prisma'
 import { Event } from '../../lib/pusher'
 
-const enum Action {
+export const enum Action {
   Ping = 'ping',
   Join = 'join',
   Start = 'start',
   End = 'end'
+}
+
+export interface ActionData {
+  name?: string
 }
 
 function BasePage({ children }: { children?: React.ReactNode }) {
@@ -42,9 +46,6 @@ export default function Game() {
     game, isLoading, error, mutate,
   } = useGame()
   const [gameInProgress, setGameInProgress] = useState(false)
-  const [players, setPlayers] = useState<Player[]>([])
-
-  const [name, setName] = useState('')
   const [playerId, setPlayerId] = useState('')
 
   useEffect(() => {
@@ -53,7 +54,6 @@ export default function Game() {
     }
 
     setGameInProgress(Boolean(game.currentPlayer))
-    setPlayers(game.players)
 
     const storedPlayerId = localStorage.getItem('playerId')
     if (storedPlayerId) {
@@ -77,7 +77,6 @@ export default function Game() {
 
     channel.bind(Event.EndGame, (game: GameWithPlayers) => {
       setGameInProgress(false)
-      setPlayers([])
       setPlayerId('')
       localStorage.removeItem('playerId')
 
@@ -95,19 +94,19 @@ export default function Game() {
   }, [game, isLoading, pusher, mutate, toast])
 
   // Handles player actions by sending server requests
-  function handleAction(action: Action) {
+  function handleAction(action: Action, data: ActionData = {}) {
     if (!game) {
       return
     }
 
     const url = `/api/${game.id}/${action}`
-    let options = {}
 
     switch (action) {
       case Action.Ping:
         ky.get(url)
         break
       case Action.Join:
+        const name = data.name
         if (!name) {
           toast({
             title: 'Error',
@@ -116,7 +115,7 @@ export default function Game() {
           })
           return
         }
-        options = { json: { name } }
+        const options = { json: { name } }
         ky.post(url, options).json<GameWithPlayers>().then((game) => {
           const player = game.players.at(-1)
           if (player) {
@@ -175,77 +174,9 @@ export default function Game() {
         </Text>
 
         {gameInProgress ? (
-          <>
-            {/* Player view: current hand */}
-            {game.players.find((player) => player.id == playerId) &&
-              <Box my={5} py={2}>
-                {JSON.stringify(game.players.find((player) => player.id == playerId))}
-              </Box>
-            }
-
-            {/* Spectator view */}
-            {!playerId && (
-              <Box my={5} py={2}>
-                <Heading size="md">Spectating...</Heading>
-                {game.players.map((player, index) => (
-                  <Box key={index} mb={5}>
-                    <Heading size="sm">Hand {index}</Heading>
-                    {JSON.stringify(player)}
-                  </Box>
-                ))}
-              </Box>
-            )}
-
-            <Button onClick={() => handleAction(Action.End)} colorScheme="red" mb={4} me={2}>
-              End Game
-            </Button>
-          </>
+          <ActiveGame game={game} playerId={playerId} handleAction={handleAction} />
         ) : (
-          <>
-            {/* Game Lobby Controls */}
-            <Button
-              onClick={() => handleAction(Action.Start)}
-              isLoading={players.length < 2}
-              loadingText="Need more players to start..."
-              colorScheme="green"
-              mb={4}
-              me={2}
-            >
-              Start Game
-            </Button>
-            <Button onClick={() => handleAction(Action.Ping)} colorScheme="purple" mb={4}>
-              Ping game channel
-            </Button>
-
-            {/* Current players list */}
-            <Heading size="lg">Current players</Heading>
-            {!players.length && 'No players currently, join in!'}
-
-            <OrderedList mb={5}>
-              {players.map((player, index) =>
-                <ListItem key={index} fontWeight={player.id === playerId ? 'bold' : ''}>
-                  {player.name}
-                </ListItem>
-              )}
-            </OrderedList>
-
-            {/* Join game prompt */}
-            {!playerId && (
-              <>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Name"
-                  maxLength={24}
-                  w="50%"
-                  me={2} />
-                <br />
-                <Button onClick={() => handleAction(Action.Join)} colorScheme="blue" mt={2}>
-                  Join next game
-                </Button>
-              </>
-            )}
-          </>
+          <WaitingLobby game={game} playerId={playerId} handleAction={handleAction} />
         )}
       </BasePage>
     </>
