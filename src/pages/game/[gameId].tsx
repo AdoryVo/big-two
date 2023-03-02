@@ -37,7 +37,7 @@ export default function Game() {
   const pusher = usePusher()
   const toast = useToast()
 
-  /** calling mutate tells the server to refetch the game state */
+  // calling mutate tells the server to refetch the game state
   const {
     game, isLoading, error, mutate,
   } = useGame()

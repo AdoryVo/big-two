@@ -56,17 +56,19 @@ Key:
 - 📄: Mainly for reference & foundation, unlikely to be changed
 ```
 prisma/
-└── schema.prisma   # 📄 Database schema
+└── schema.prisma           # 📄 Database schema
 src/
-├── components/     # ⭐ React components
+├── components/             # 📝 React components
 ├── lib/
-│   └── util.ts     # 📝 Utility functions
-└── pages/          # 📄 Visitable routes
-    └── api/        # 📝 Custom API routes
-    └── _app.tsx    # 📄 Page component wrapper
-    └── index.tsx   # ⭐ Home page
-.env                # 📝 Environment variables
-package.json        # 📄 Dependencies
+│   └── game/               # ⭐ Game logic
+│   └── hooks/              # 📝 Hooks
+└── pages/                  # 📄 Visitable routes
+    └── api/                # ⭐ Server API routes
+    └── _app.tsx            # 📄 Page component wrapper
+    └── game/[gameId].tsx   # ⭐ Game lobby page
+    └── index.tsx           # 📝 Home page
+.env                        # 📝 Environment variables
+package.json                # 📄 Dependencies
 ```
 
 ### Prisma (`pnpm prisma [command]`)
