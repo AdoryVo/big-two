@@ -3,6 +3,7 @@ import _ from 'lodash'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import Game from '../../../lib/game/Game'
+import Rules from '../../../lib/game/Rules'
 import prisma from '../../../lib/prisma'
 import { Event } from '../../../lib/pusher'
 import pusher from '../../../lib/pusher'
@@ -31,7 +32,7 @@ export default async function handler(
     return res.status(404).end()
   }
 
-  const gameInstance = new Game(game.players.length)
+  const gameInstance = new Game(game.players.length, Rules.SUIT_ORDER_ALPHA)
   const deck = deckToStringArray(gameInstance.deck)
   const currentPlayer = _.sample(game.players)
 
