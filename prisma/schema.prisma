@@ -31,23 +31,3 @@ model Player {
   currentIn   Game?   @relation("CurrentTurn", fields: [currentInId], references: [id])
   currentInId String? @unique
 }
-
-model Report {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  category    String
-  image       String?
-  lat         Float
-  lng         Float
-  likes       Int      @default(0)
-  dislikes    Int      @default(0)
-  createdAt   DateTime @default(now()) @map("created_at")
-}
-
-model User {
-  id        String   @id @default(cuid())
-  ipAddress String   @unique
-  likes     String[] @default([])
-  dislikes  String[] @default([])
-}

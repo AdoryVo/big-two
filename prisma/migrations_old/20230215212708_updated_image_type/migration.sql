@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Report" ALTER COLUMN "image" SET DATA TYPE TEXT;

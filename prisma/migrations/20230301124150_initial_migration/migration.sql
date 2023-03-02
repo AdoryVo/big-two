@@ -21,32 +21,6 @@ CREATE TABLE "Player" (
     CONSTRAINT "Player_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "Report" (
-    "id" TEXT NOT NULL,
-    "title" TEXT NOT NULL,
-    "description" TEXT,
-    "category" TEXT NOT NULL,
-    "image" TEXT,
-    "lat" DOUBLE PRECISION NOT NULL,
-    "lng" DOUBLE PRECISION NOT NULL,
-    "likes" INTEGER NOT NULL DEFAULT 0,
-    "dislikes" INTEGER NOT NULL DEFAULT 0,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "User" (
-    "id" TEXT NOT NULL,
-    "ipAddress" TEXT NOT NULL,
-    "likes" TEXT[] DEFAULT ARRAY[]::TEXT[],
-    "dislikes" TEXT[] DEFAULT ARRAY[]::TEXT[],
-
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "Player_currentInId_key" ON "Player"("currentInId");
 
