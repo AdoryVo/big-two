@@ -1,4 +1,3 @@
-import { type Card, decks } from 'cards'
 import _ from 'lodash'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
@@ -7,14 +6,6 @@ import Rules from '../../../lib/game/Rules'
 import prisma from '../../../lib/prisma'
 import { Event } from '../../../lib/pusher'
 import pusher from '../../../lib/pusher'
-
-function cardToString(card: Card) {
-  return `${card.rank.abbrn};${card.suit.name}`
-}
-
-function deckToStringArray(deck: decks.Deck): string[] {
-  return deck.remainingCards.map(cardToString)
-}
 
 // PATCH /api/[gameId]/start
 export default async function handler(
@@ -33,7 +24,7 @@ export default async function handler(
   }
 
   const gameInstance = new Game(game.players.length, Rules.SUIT_ORDER_ALPHA)
-  const deck = deckToStringArray(gameInstance.deck)
+  const deck = gameInstance.remainingCards
   const currentPlayer = _.sample(game.players)
 
   // Add deck & current player
@@ -56,7 +47,7 @@ export default async function handler(
 
     await prisma.player.update({
       where: { id: storedPlayer.id },
-      data: { hand: instancePlayer.hand?.map(cardToString) },
+      data: { hand: gameInstance.util.cards_to_strings(instancePlayer.hand) },
     })
   }
 

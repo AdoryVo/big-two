@@ -6,11 +6,9 @@ import { Combo, Combo_Types } from './Combo'
 import type Player from './Player'
 import Rules from './Rules'
 
-const SUIT_RANKING_ORDERS = { [Rules.SUIT_ORDER_ALPHA] : ['clubs', 'diamonds', 'hearts', 'spades'] }
+export const CARD_STRING_SEPARATOR = ';' // "2;clubs"
 
-const SUIT_ABBR_TO_NAME : { [key: string]: string } = {
-  'C': 'clubs', 'D': 'diamonds', 'H': 'hearts', 'S': 'spades',
-}
+const SUIT_RANKING_ORDERS = { [Rules.SUIT_ORDER_ALPHA] : ['clubs', 'diamonds', 'hearts', 'spades'] }
 
 const RANK_ABBR_TO_NAME : { [key: string] : string } = {
   '2': 'Two',
@@ -21,7 +19,7 @@ const RANK_ABBR_TO_NAME : { [key: string] : string } = {
   '7': 'Seven',
   '8': 'Eight',
   '9': 'Nine',
-  '0': 'Ten',
+  '10': 'Ten',
   'J': 'Jack',
   'Q': 'Queen',
   'K': 'King',
@@ -37,7 +35,7 @@ class Util {
 
   _rank_val(card: Card) {
     const rank = card.rank.abbrn
-    if ('3' <= rank && rank <= '9' || rank == '10')
+    if (parseInt(rank) > 2)
       return Number(rank)
     else
       return {
@@ -170,16 +168,25 @@ class Util {
       return new_combo.type === combo.type && this.compare_cards(new_combo.value_card, combo.value_card) > 0
   }
 
-  /* Given a space-separated string of cards ([rank_chr][suit_chr] [rank_chr][suit_chr] ... [rank_chr][suit_chr]),
+  /** Ex: 2 of clubs -> "2;clubs" */
+  card_to_string(card: Card) {
+    return card.rank.abbrn + CARD_STRING_SEPARATOR + card.suit.name
+  }
+
+  cards_to_strings(cards: Card[]): string[] {
+    return cards.map(this.card_to_string)
+  }
+
+  /* Given a string array of cards ["rank_abbr;suit", "rank_abbr;suit", ... "rank_abbr;suit"],
    * return a SORTED Card array.
-   * Ex: "2c 0h kd as" = [2 of clubs, 10 of hearts, king of diamonds, ace of spades]
+   * Ex: ["2;clubs", "10;hearts", "a;spades"] = [2 of clubs, 10 of hearts, ace of spades]
   */
-  string_to_cards(s: string) {
+  strings_to_cards(str_cards: string[]) {
     const cards = []
 
-    for (const cstring of s.split(' ')) {
-      const rank_abbr = cstring[0] === '0' ? cstring[0].toUpperCase() : '10'
-      cards.push(new Card(new Suit(SUIT_ABBR_TO_NAME[cstring[1].toUpperCase()]), new Rank(rank_abbr, RANK_ABBR_TO_NAME[rank_abbr])))
+    for (const cstring of str_cards) {
+      const [suit_name, rank_abbr] = cstring.split(CARD_STRING_SEPARATOR) // ex: "2;clubs" -> ["2", "clubs"]
+      cards.push(new Card(new Suit(suit_name), new Rank(rank_abbr, RANK_ABBR_TO_NAME[rank_abbr])))
     }
 
     cards.sort(this.compare_cards)

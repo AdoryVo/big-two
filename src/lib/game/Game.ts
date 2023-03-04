@@ -42,8 +42,8 @@ class Game {
   }
 
   /* Returns boolean denoting whether the set of cards can be played on the current combo. */
-  can_play(cstring: string) {
-    return this.util.can_play_on(this.util.string_to_cards(cstring), this.combo)
+  can_play(str_cards: string[]) {
+    return this.util.can_play_on(this.util.strings_to_cards(str_cards), this.combo)
   }
 
   /* Check that the current player is allowed to play the cards, then have the player play them, updating
@@ -57,8 +57,8 @@ class Game {
    * If the cards were played but it did not result in a victory, returns -1.
    * Otherwise, if the cards could not be played (probably due to client and server disagreeing on game state), return -2.
   */
-  play(cstring: string) {
-    const cards = this.util.string_to_cards(cstring)
+  play(str_cards: string[]) {
+    const cards = this.util.strings_to_cards(str_cards)
     if (!this.util.can_play_on(cards, this.combo) || !this.players[this.current_player].has_cards(cards) || this.remaining_players.length === 1)
       return -2
 
@@ -79,6 +79,10 @@ class Game {
   /* Resets the state of the game, issuing cards to players and picking the appropriate player to start. */
   reset() {
     this._initialize_game()
+  }
+
+  get remainingCards() {
+    return this.util.cards_to_strings(this.deck.remainingCards)
   }
 }
 
