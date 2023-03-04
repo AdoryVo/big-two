@@ -3,7 +3,6 @@ import { Rank } from 'cards/build/ranks'
 import { Suit } from 'cards/build/suits'
 
 import { Combo, Combo_Types } from './Combo'
-import type Player from './Player'
 import Rules from './Rules'
 
 export const CARD_STRING_SEPARATOR = ';' // "2;clubs"
@@ -177,8 +176,10 @@ class Util {
     return cards.map(this.card_to_string)
   }
 
-  /* Given a string array of cards ["rank_abbr;suit", "rank_abbr;suit", ... "rank_abbr;suit"],
+  /**
+   * Given a string array of cards ["rank_abbr;suit", "rank_abbr;suit", ... "rank_abbr;suit"],
    * return a SORTED Card array.
+   * ---
    * Ex: ["2;clubs", "10;hearts", "a;spades"] = [2 of clubs, 10 of hearts, ace of spades]
   */
   strings_to_cards(str_cards: string[]) {

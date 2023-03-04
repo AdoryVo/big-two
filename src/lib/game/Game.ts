@@ -1,4 +1,5 @@
-import { Card, decks } from 'cards'
+import { decks } from 'cards'
+import _ from 'lodash'
 
 import { Combo } from './Combo'
 import Player from './Player'
@@ -13,16 +14,35 @@ class Game {
   combo!: Combo | null
   util: Util
 
-  constructor(players: number, rules: Rules) {
-    this.players = []
-    for (let i = 0; i < players; ++i) {
-      this.players.push(new Player())
-    }
-
-    this.deck = new decks.StandardDeck()
+  constructor(playerCount: number, rules: Rules,
+    // To initialize an existing game:
+    deck?: string[], combo?: string[], hands?: string[][], current_player=0)
+  {
     this.util = new Util(rules)
 
-    this._initialize_game()
+    if (deck && combo && hands) {
+      this.deck = new decks.Deck({ cards: this.util.strings_to_cards(deck) })
+      this.deck.shuffleAll()
+
+      this.players = hands.map((hand) => new Player(this.util.strings_to_cards(hand)))
+      // Populate remaining players
+      this.remaining_players = []
+      this.players.forEach((player, index) => {
+        if (player.hand.length)
+          this.remaining_players.push(index)
+      })
+
+      this.combo = this.util._construct_combo(this.util.strings_to_cards(combo))
+      this.current_player = current_player
+    } else {
+      this.deck = new decks.StandardDeck()
+      this.players = []
+      for (let i = 0; i < playerCount; ++i) {
+        this.players.push(new Player())
+      }
+
+      this._initialize_game()
+    }
   }
 
   _initialize_game() {
@@ -36,9 +56,7 @@ class Game {
       player.finished_rank = null
     }
 
-    this.remaining_players = []
-    for (let i = 0; i < this.players.length; ++i)
-      this.remaining_players.push(i)
+    this.remaining_players = _.range(this.players.length)
   }
 
   /* Returns boolean denoting whether the set of cards can be played on the current combo. */

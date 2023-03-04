@@ -10,8 +10,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
 
-import { default as Big2Game } from '../lib/game/Game'
-import Rules from '../lib/game/Rules'
 import useLobbies from '../lib/hooks/useLobbies'
 
 export default function Home() {
@@ -24,9 +22,6 @@ export default function Home() {
       router.push({ pathname: '/game/[gameId]', query: { gameId: game.id } })
     })
   }
-
-  // const game = new Big2Game(4, Rules.SUIT_ORDER_ALPHA | Rules.STRAIGHTS_WRAP_AROUND)
-  // console.log(game.players[0].hand)
 
   return (
     <Box background="green.100">

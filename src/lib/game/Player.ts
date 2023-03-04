@@ -1,12 +1,12 @@
 import { Card } from 'cards'
-import { decks } from 'cards'
 
 class Player {
   hand!: Card[] // the hand should be initiated from the Game, so it is ignored in the constructor
   score: number
   finished_rank: number | null
 
-  constructor() {
+  constructor(hand?: Card[]) {
+    if (hand) this.hand = hand
     this.score = 0
     this.finished_rank = null
   }
