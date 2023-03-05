@@ -1,7 +1,8 @@
 import {
-  Box, Button,
-  Card, CardBody, CardFooter,
-  CardHeader,   Container,
+  Box,
+  Button,
+  Card, CardBody, CardFooter, CardHeader,
+  Container,
   Heading
 } from '@chakra-ui/react'
 import type { Game } from '@prisma/client'

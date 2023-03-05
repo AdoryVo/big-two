@@ -1,6 +1,10 @@
 import {
-  Button, Container, Heading, Link as ChakraLink,
-  Text, useToast
+  Button,
+  Container,
+  Heading,
+  Link as ChakraLink,
+  Text,
+  useToast
 } from '@chakra-ui/react'
 import ky from 'ky'
 import Link from 'next/link'

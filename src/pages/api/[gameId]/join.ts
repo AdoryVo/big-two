@@ -25,5 +25,9 @@ export default async function handler(
       console.error(err)
     })
 
+  // Set cookie
+  const player = game.players.at(-1)
+  res.setHeader('Set-Cookie', `playerId=${player?.id}; Path=/`)
+
   return res.status(201).json(game)
 }

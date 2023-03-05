@@ -30,5 +30,8 @@ export default async function handler(
       console.error(err)
     })
 
+  // Remove cookie
+  res.setHeader('Set-Cookie', 'playerId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT')
+
   return res.status(200).end()
 }
