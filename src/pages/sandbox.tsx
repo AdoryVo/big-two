@@ -33,10 +33,16 @@ export default function Sandbox() {
     switch (action) {
       case 'play':
         game?.play(args ? args.split(' ') : [])
+        refreshGame()
         break
       case 'reset':
         game?.reset()
         refreshGame()
+        break
+      case 'pass':
+        game?.pass()
+        refreshGame()
+        break
       default:
         if (args) console.log('Args:', args)
         break
@@ -53,7 +59,13 @@ export default function Sandbox() {
       <Text mb={3}>
         Current player: {game.current_player}
         <br />
-        Combo: {game.combo && game.util.cards_to_strings(game.combo.cards)}
+        Remaining players: {game.remaining_players.join(' ')}
+        <br />
+        Last playmaker: {game.last_playmaker}
+        <br />
+        Backup: {game.backup_next}
+        <br />
+        Combo: {game.combo && game.util.cards_to_strings(game.combo.cards).join(' ')}
       </Text>
 
       Hands:
@@ -61,7 +73,7 @@ export default function Sandbox() {
         <Text key={index} mb={3}>
           Player #{index}
           <br />
-          {game.util.cards_to_strings(player.hand).join(', ')}
+          {game.util.cards_to_strings(player.hand).join(' ')}
         </Text>
       )}
 

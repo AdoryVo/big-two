@@ -66,19 +66,20 @@ class Util {
     return 0
   }
 
-  /* Returns the count of consecutively equal ranks in the list of cards given, starting
-   * from the specified index.
+  /* Returns the count of consecutively equal cards (ranks if use_suit is specified, suits otherwise)
+   * in the list of cards given, starting from the specified index.
   */
   _count_cons_eq(cards: Card[], start = 0, use_suit = false) {
     let curr = start
     if (use_suit) {
-      while (curr < cards.length && cards[curr].suit === cards[curr + 1].suit)
+      while (curr < (cards.length - 1) && cards[curr].suit.name === cards[curr + 1].suit.name)
         ++curr
     }
     else {
-      while (curr < cards.length && cards[curr].rank === cards[curr + 1].rank)
+      while (curr < (cards.length - 1) && cards[curr].rank.abbrn === cards[curr + 1].rank.abbrn)
         ++curr
     }
+
     return curr - start + 1
   }
 
@@ -155,13 +156,13 @@ class Util {
   // Whether it is legal to play the specified set of cards on top of the combo.
   // TODO: add 5-combo compatability logic + appopriate flag in Rules (e.g. can play full house on flush/straight)
   can_play_on(cards: Card[], combo: Combo | null) {
-    if (!combo)
-      return true
-
     const new_combo = this._construct_combo(cards)
+    if (!combo)
+      return new_combo.type !== Combo_Types.INVALID
+
     if (new_combo.type === Combo_Types.INVALID || (new_combo.type !== Combo_Types.BOMB && combo.type === Combo_Types.BOMB))
       return false
-    else if (new_combo.type === Combo_Types.BOMB && combo.type !== Combo_Types.BOMB)
+    else if (!combo || new_combo.type === Combo_Types.BOMB && combo.type !== Combo_Types.BOMB)
       return true
 
     if (new_combo.value_card && combo.value_card)
