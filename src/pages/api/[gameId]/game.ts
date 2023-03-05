@@ -24,12 +24,22 @@ export default async function handler(
   const cookies = req.headers.cookie?.split('; ')
   const playerId = cookies?.find((cookie) => cookie.startsWith('playerId'))?.split('=')[1]
 
-  // If a player is requesting game data, obscure other players' cards
-  if (playerId && game.players.map((player) => player.id).includes(playerId))
+  // If a player is requesting game data, obscure other players' id's & cards
+  if (playerId && game.players.map((player) => player.id).includes(playerId)) {
     game.players.forEach((player) => {
-      if (player.id !== playerId)
-        player.hand = player.hand.map(() => '?;?')
+      if (player.id !== playerId) {
+        player.id = ''
+        player.hand = player.hand.map(() => '')
+      }
     })
+  }
+
+  // Obscure ID's from spectating players
+  if (!playerId) {
+    game.players.forEach((player) => {
+      player.id = ''
+    })
+  }
 
   // If a game is not in progress, remove cookie
   if (!game.currentPlayer) {

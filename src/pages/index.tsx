@@ -48,7 +48,9 @@ export default function Home() {
               &nbsp;|&nbsp;{lobby.players && lobby.players.length} current players
             </CardHeader>
             <CardBody>
-              [insert lobby rules]
+              Rules: Classic
+              <br />
+              Spectating: On
             </CardBody>
             <CardFooter>
               <Link href={`/game/${lobby.id}`} passHref>
