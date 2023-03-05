@@ -12,7 +12,7 @@ class Player {
   }
 
   _cards_eq(c1: Card, c2: Card) {
-    return c1.rank.abbrn === c2.rank.abbrn && c1.suit.name === c2.rank.name
+    return c1.rank.abbrn === c2.rank.abbrn && c1.suit.name === c2.suit.name
   }
 
   /* Returns whether the player has the specified cards. Assumes that
@@ -43,6 +43,11 @@ class Player {
 
       ++i
     }
+
+    while (i < this.hand.length) {
+      new_cards.push(this.hand[i++])
+    }
+
     this.hand = new_cards
   }
 }

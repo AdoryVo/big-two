@@ -9,6 +9,7 @@ enum Rules {
   FLUSH_ALLOW = 1 << 2,
 
   // Other
+  MUST_PLAY_LOWEST_CARD = 1 << 3
 }
 
 export default Rules

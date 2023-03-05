@@ -1,4 +1,4 @@
-import { decks } from 'cards'
+import { Card, decks } from 'cards'
 import _ from 'lodash'
 
 import { Combo } from './Combo'
@@ -13,10 +13,11 @@ class Game {
   current_player!: number
   combo!: Combo | null
   util: Util
+  lowest_card!: Card
 
   constructor(playerCount: number, rules: Rules,
     // To initialize an existing game:
-    deck?: string[], combo?: string[], hands?: string[][], current_player=0)
+    deck?: string[], combo?: string[], hands?: string[][], current_player?: number)
   {
     this.util = new Util(rules)
 
@@ -33,7 +34,7 @@ class Game {
       })
 
       this.combo = this.util._construct_combo(this.util.strings_to_cards(combo))
-      this.current_player = current_player
+      this.current_player = current_player ?? 0
     } else {
       this.deck = new decks.StandardDeck()
       this.players = []
@@ -51,17 +52,36 @@ class Game {
     this.current_player = 0
     for (const player of this.players) {
       player.hand = this.deck.draw(Math.floor(this.deck.totalLength / this.players.length))
-      player.hand.sort((a, b) => this.util.compare_cards(a, b))
+      player.hand.sort((c1, c2) => this.util.compare_cards(c1, c2))
 
       player.finished_rank = null
     }
 
     this.remaining_players = _.range(this.players.length)
+
+    this.current_player = 0
+    // find starting player - this is the player with the smallest card
+    for (let i = 1; i < this.players.length; ++i) {
+      // if the current player's smallest card is LARGER than player i's smallest card
+      if (this.util.compare_cards(this.players[this.current_player].hand[0], this.players[i].hand[0]) > 0)
+        this.current_player = i
+    }
+
+    this.lowest_card = this.players[this.current_player].hand[0]
   }
 
   /* Returns boolean denoting whether the set of cards can be played on the current combo. */
   can_play(str_cards: string[]) {
     return this.util.can_play_on(this.util.strings_to_cards(str_cards), this.combo)
+  }
+
+  // Increments the current player, also removing them from the remaining players list if the remove
+  // parameter is true.
+  _increment_curr_player(remove: boolean) {
+    const curr_player_index = this.remaining_players.indexOf(this.current_player)
+    this.current_player = this.remaining_players[(curr_player_index + 1) % this.remaining_players.length]
+    if (remove)
+      this.remaining_players.splice(curr_player_index, 1)
   }
 
   /* Check that the current player is allowed to play the cards, then have the player play them, updating
@@ -77,20 +97,23 @@ class Game {
   */
   play(str_cards: string[]) {
     const cards = this.util.strings_to_cards(str_cards)
-    if (!this.util.can_play_on(cards, this.combo) || !this.players[this.current_player].has_cards(cards) || this.remaining_players.length === 1)
+    if (!this.util.can_play_on(cards, this.combo) || !this.players[this.current_player].has_cards(cards) ||
+        this.remaining_players.length === 1 || !this.util.lowest_card_check(cards, this.players[this.current_player], this.lowest_card))
       return -2
 
     this.players[this.current_player].remove_cards(cards)
     if (!cards.length) {
+      // update player's score, and finished rank
       this.players[this.current_player].score += this.remaining_players.length - 1
       this.players[this.current_player].finished_rank = this.players.length - this.remaining_players.length + 1
-      const curr_player_index = this.remaining_players.indexOf(this.current_player)
+
+      // remove finished player from list of remaining players before returning the finished player's id
       const finished_player = this.current_player
-      this.current_player = this.remaining_players[(curr_player_index + 1) % this.remaining_players.length]
-      this.remaining_players.splice(curr_player_index, 1)
+      this._increment_curr_player(true)
       return finished_player
     }
 
+    this._increment_curr_player(false)
     return -1
   }
 

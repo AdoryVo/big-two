@@ -3,6 +3,7 @@ import { Rank } from 'cards/build/ranks'
 import { Suit } from 'cards/build/suits'
 
 import { Combo, Combo_Types } from './Combo'
+import Player from './Player'
 import Rules from './Rules'
 
 export const CARD_STRING_SEPARATOR = ';' // "2;clubs"
@@ -186,12 +187,24 @@ class Util {
     const cards = []
 
     for (const cstring of str_cards) {
-      const [suit_name, rank_abbr] = cstring.split(CARD_STRING_SEPARATOR) // ex: "2;clubs" -> ["2", "clubs"]
+      const [rank_abbr, suit_name] = cstring.split(CARD_STRING_SEPARATOR) // ex: "2;clubs" -> ["2", "clubs"]
       cards.push(new Card(new Suit(suit_name), new Rank(rank_abbr, RANK_ABBR_TO_NAME[rank_abbr])))
     }
 
-    cards.sort(this.compare_cards)
+    cards.sort((c1, c2) => this.compare_cards(c1, c2))
     return cards
+  }
+
+  // Given a sorted list of cards to be played, a player, and the lowest card dealt in a game,
+  // return whether the player is allowed to play the list of cards.
+  // i.e. if the rules specify that you must play the lowest card when you start with it, check that
+  // that if the player has the lowest card, it is also being played (exists in cards argument)
+  lowest_card_check(cards: Card[], player: Player, lowest_card: Card) {
+    if ((this.rules & Rules.MUST_PLAY_LOWEST_CARD) && player.has_cards([lowest_card])) {
+      return !this.compare_cards(cards[0], lowest_card)
+    }
+
+    return true
   }
 }
 

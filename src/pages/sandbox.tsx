@@ -1,6 +1,7 @@
 import {
   Button, Container, Heading, Input, Text
 } from '@chakra-ui/react'
+import React from 'react'
 import { useEffect, useState } from 'react'
 
 import Game from '../lib/game/Game'
@@ -13,7 +14,7 @@ export default function Sandbox() {
   const [args, setArgs] = useState('')
 
   useEffect(() => {
-    setGame(new Game(4, Rules.SUIT_ORDER_ALPHA | Rules.STRAIGHTS_WRAP_AROUND))
+    setGame(new Game(4, Rules.SUIT_ORDER_ALPHA | Rules.STRAIGHTS_WRAP_AROUND | Rules.MUST_PLAY_LOWEST_CARD))
   }, [])
 
   /**
@@ -31,7 +32,7 @@ export default function Sandbox() {
 
     switch (action) {
       case 'play':
-        // [insert play action w/ args]
+        game?.play(args ? JSON.parse(args) : [])
         break
       case 'reset':
         game?.reset()
