@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 import { Combo } from './Combo'
 import Player from './Player'
-import type Rules from './Rules'
+import Rules from './Rules'
 import Util from  './Util'
 
 class Game {
@@ -117,8 +117,12 @@ class Game {
       return
     }
 
-    while (this.passed_players.has(this.current_player))
-      this.current_player = this.remaining_players[(++current_player_index) % this.remaining_players.length]
+    // If we disallow playing after pass (default), we skip over those who have passed this round.
+    // Otherwise, we don't care who has passed, as long as they still have cards left in the round.
+    if (!(this.util.rules & Rules.CAN_PLAY_AFTER_PASS)) {
+      while (this.passed_players.has(this.current_player))
+        this.current_player = this.remaining_players[(++current_player_index) % this.remaining_players.length]
+    }
 
     // Otherwise, if not everyone remaining has passed, if we wrap around to the last playmaker we also know
     // to start another round, as this would mean that the only person who hasn't passed was the last person
@@ -142,11 +146,17 @@ class Game {
   */
   play(str_cards: string[]) {
     const cards = this.util.strings_to_cards(str_cards)
-    // if (!this.util.can_play_on(cards, this.combo) || !this.players[this.current_player].has_cards(cards) ||
-    //     this.remaining_players.length <= 1 || !this.util.lowest_card_check(cards, this.players[this.current_player], this.lowest_card))
-    //   return -2
+    if (!this.util.can_play_on(cards, this.combo) || !this.players[this.current_player].has_cards(cards) ||
+        this.remaining_players.length <= 1 || !this.util.lowest_card_check(cards, this.players[this.current_player], this.lowest_card))
+      return -2
 
     console.log(`played ${cards} successfully`)
+
+    // In the case that you can play after passing, just clear the passed players set, as it is used ONLY to keep track of
+    // the case where the last playmaker has won (and is therefore no longer eligible to have turns) and everyone else has
+    // passed.
+    if (this.util.rules & Rules.CAN_PLAY_AFTER_PASS)
+      this.passed_players.clear()
 
     this.players[this.current_player].remove_cards(cards)
     this.last_playmaker = this.current_player
