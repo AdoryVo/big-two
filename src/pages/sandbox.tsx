@@ -32,7 +32,7 @@ export default function Sandbox() {
 
     switch (action) {
       case 'play':
-        game?.play(args ? JSON.parse(args) : [])
+        game?.play(args ? args.split(' ') : [])
         break
       case 'reset':
         game?.reset()
