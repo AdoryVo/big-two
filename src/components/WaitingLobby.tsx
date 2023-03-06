@@ -61,6 +61,15 @@ export default function WaitingLobby({ game, playerId, handleAction }: Props) {
           </Button>
         </>
       )}
+
+      {/* Leave game button */}
+      {playerId && (
+        <>
+          <Button onClick={() => handleAction(Action.Leave)} colorScheme="pink" mt={2}>
+            Sit out next game
+          </Button>
+        </>
+      )}
     </>
   )
 }

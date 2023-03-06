@@ -27,6 +27,11 @@ export default async function handler(
     },
   })
 
+  // Obscure ID's from spectating players
+  updatedGame.players.forEach((player) => {
+    player.id = ''
+  })
+
   await pusher.trigger(id, Event.EndGame, updatedGame)
     .catch((err) => {
       console.error(err)

@@ -41,7 +41,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           Current combo: {game.combo.join(' ')}
           <br />
 
-          Turn order: {game.players.map((player) => player.name).join(', ')}
+          Turn order: {game.players.sort((a, b) => a.index - b.index).map((player) => player.name).join(', ')}
           <br />
 
           Passed players: {passedPlayers.map((player) => player.name).join(', ')}

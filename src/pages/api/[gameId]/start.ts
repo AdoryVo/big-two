@@ -41,19 +41,30 @@ export default async function handler(
   })
 
   // Add hands to each player
+  const rng = _.random(game.players.length - 1)
   for (let i = 0; i < game.players.length; i++) {
     const storedPlayer = game.players[i]
     const instancePlayer = gameInstance.players[i]
 
     await prisma.player.update({
       where: { id: storedPlayer.id },
-      data: { hand: gameInstance.util.cards_to_strings(instancePlayer.hand) },
+      data: {
+        index: (i + rng) % game.players.length,
+        hand: gameInstance.util.cards_to_strings(instancePlayer.hand),
+      },
     })
   }
 
   const updatedGame = await prisma.game.findUnique({
     where: { id },
     include: { players: true, currentPlayer: true },
+  })
+
+  if (!updatedGame) return res.status(500).end()
+
+  // Obscure ID's from spectating players
+  updatedGame.players.forEach((player) => {
+    player.id = ''
   })
 
   await pusher.trigger(id, Event.StartGame, updatedGame)

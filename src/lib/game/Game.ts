@@ -28,7 +28,7 @@ class Game {
       this.combo = (game.combo.length) ? this.util._construct_combo(this.util.strings_to_cards(game.combo)) : null
       this.lowest_card = this.util.strings_to_cards([game.lowestCard])[0]
 
-      this.players = game.players.map((player) => new Player(this.util.strings_to_cards(player.hand)))
+      this.players = game.players.sort((a, b) => a.index - b.index).map((player) => new Player(this.util.strings_to_cards(player.hand)))
       this.current_player = game.players.findIndex((player) => player.id === game.currentPlayer?.id)
       this.passed_players = new Set(game.passedPlayers)
       this.last_playmaker = game.lastPlaymaker ?? -1
