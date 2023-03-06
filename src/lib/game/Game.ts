@@ -1,6 +1,7 @@
 import { Card, decks } from 'cards'
 import _ from 'lodash'
 
+import { GameWithPlayers } from '../prisma'
 import { Combo } from './Combo'
 import Player from './Player'
 import Rules from './Rules'
@@ -12,26 +13,26 @@ class Game {
   passed_players!: Set<number>
   last_playmaker!: number
   backup_next!: number
-  deck: decks.Deck
+  deck!: decks.Deck
   current_player!: number
   combo!: Combo | null
   util: Util
   lowest_card!: Card
 
-  constructor(playerCount: number, rules: Rules,
-    // To initialize an existing game:
-    deck?: string[], combo?: string[], hands?: string[][], current_player?: number)
+  constructor(playerCount: number, rules: Rules, game?: GameWithPlayers)
   {
     this.util = new Util(rules)
 
-    if (deck && combo && hands) {
-      this.deck = new decks.Deck({ cards: this.util.strings_to_cards(deck) })
-      this.deck.shuffleAll()
+    // Initialize game from existing game (+ ensure game fields exist)
+    if (game && game.lowestCard) {
+      this.combo = this.util._construct_combo(this.util.strings_to_cards(game.combo))
+      this.lowest_card = this.util.strings_to_cards([game.lowestCard])[0]
 
-      this.players = hands.map((hand) => new Player(this.util.strings_to_cards(hand)))
-
-      // TODO: possibly change this to something nontrivial
-      this.passed_players = new Set<number>()
+      this.players = game.players.map((player) => new Player(this.util.strings_to_cards(player.hand)))
+      this.current_player = game.players.findIndex((player) => player.id === game.currentPlayer?.id)
+      this.passed_players = new Set(game.passedPlayers)
+      this.last_playmaker = game.lastPlaymaker ?? -1
+      this.backup_next = game.backupNext ?? -1
 
       // Populate remaining players
       this.remaining_players = []
@@ -39,9 +40,6 @@ class Game {
         if (player.hand.length)
           this.remaining_players.push(index)
       })
-
-      this.combo = this.util._construct_combo(this.util.strings_to_cards(combo))
-      this.current_player = current_player ?? 0
     } else {
       this.deck = new decks.StandardDeck()
       this.players = []
@@ -194,10 +192,6 @@ class Game {
   /* Resets the state of the game, issuing cards to players and picking the appropriate player to start. */
   reset() {
     this._initialize_game()
-  }
-
-  get remainingCards() {
-    return this.util.cards_to_strings(this.deck.remainingCards)
   }
 }
 

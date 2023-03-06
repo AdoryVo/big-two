@@ -14,10 +14,13 @@ export default async function handler(
   const updatedGame = await prisma.game.update({
     where: { id },
     data: {
-      deck: { set: [] },
       combo: { set: [] },
+      lowestCard: null,
       players: { deleteMany: {} },
       currentPlayer: { disconnect: true },
+      passedPlayers: { set: [] },
+      lastPlaymaker: null,
+      backupNext: null,
     },
     include: {
       players: true,

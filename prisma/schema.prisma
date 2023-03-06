@@ -8,12 +8,15 @@ datasource db {
 }
 
 model Game {
-  id    String   @id @default(uuid())
-  deck  String[] @default([])
-  combo String[] @default([])
+  id         String   @id @default(uuid())
+  combo      String[] @default([])
+  lowestCard String?
 
-  players       Player[] @relation("Players")
-  currentPlayer Player?  @relation("CurrentTurn")
+  players          Player[] @relation("Players")
+  currentPlayer    Player?  @relation("CurrentTurn")
+  passedPlayers    Int[]    @default([])
+  lastPlaymaker    Int?
+  backupNext       Int?
 
   createdAt DateTime @default(now())
 }

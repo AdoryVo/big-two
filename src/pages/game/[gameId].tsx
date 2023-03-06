@@ -22,7 +22,9 @@ export const enum Action {
   Ping = 'ping',
   Join = 'join',
   Start = 'start',
-  End = 'end'
+  End = 'end',
+  Pass = 'pass',
+  Play = 'play'
 }
 
 export interface ActionData {
@@ -128,6 +130,7 @@ export default function Game() {
           }
         })
         break
+      case Action.Pass:
       case Action.Start:
       case Action.End:
         ky.patch(url)

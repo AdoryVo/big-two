@@ -24,9 +24,6 @@ CREATE TABLE "Player" (
 -- CreateIndex
 CREATE UNIQUE INDEX "Player_currentInId_key" ON "Player"("currentInId");
 
--- CreateIndex
-CREATE UNIQUE INDEX "User_ipAddress_key" ON "User"("ipAddress");
-
 -- AddForeignKey
 ALTER TABLE "Player" ADD CONSTRAINT "Player_gameId_fkey" FOREIGN KEY ("gameId") REFERENCES "Game"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 

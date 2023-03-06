@@ -13,13 +13,37 @@ interface Props {
 }
 
 export default function ActiveGame({ game, playerId, handleAction }: Props) {
+  const player = game.players.find((player) => player.id === playerId)
+  const passedPlayers = game.players.filter((_, index) => game.passedPlayers.includes(index))
+
   return (
     <>
       {/* Player view: current hand */}
-      {game.players.find((player) => player.id == playerId) &&
-      <Box my={5} py={2}>
-        {JSON.stringify(game.players.find((player) => player.id == playerId))}
-      </Box>
+      {player &&
+        <Box my={5} py={2}>
+          <Heading size="md" mb={2}>{game.currentPlayer?.name}&apos;s Turn</Heading>
+
+          Combo: {game.combo.join(' ')}
+          <br />
+
+          Passed Players: {passedPlayers.map((player) => player.name).join(', ')}
+          <br />
+          <br />
+
+          Your hand:
+          <br />
+          {player.hand.join(', ')}
+
+          {/* Current turn: Display actions */}
+          {game.currentPlayer?.id === player.id &&
+            <Box>
+              <Heading size="md" my={4}>Take your action!</Heading>
+              <Button onClick={() => handleAction(Action.Pass)} colorScheme="blue">
+                Pass
+              </Button>
+            </Box>
+          }
+        </Box>
       }
 
       {/* Spectator view */}

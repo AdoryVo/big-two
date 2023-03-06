@@ -16,7 +16,7 @@ export default async function handler(
 
   const game = await prisma.game.findUnique({
     where: { id },
-    include: { players: true },
+    include: { players: true, currentPlayer: true },
   })
 
   if (!game) {
@@ -24,14 +24,14 @@ export default async function handler(
   }
 
   const gameInstance = new Game(game.players.length, Rules.SUIT_ORDER_ALPHA)
-  const deck = gameInstance.remainingCards
+  const lowestCard = gameInstance.util.card_to_string(gameInstance.lowest_card)
   const currentPlayer = _.sample(game.players)
 
-  // Add deck & current player
+  // Store lowest card & current player
   await prisma.game.update({
     where: { id },
     data: {
-      deck: { set: deck },
+      lowestCard: { set: lowestCard },
       currentPlayer: { connect: { id: currentPlayer?.id } },
     },
     include: {
