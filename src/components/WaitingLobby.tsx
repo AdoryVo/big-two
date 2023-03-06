@@ -39,7 +39,7 @@ export default function WaitingLobby({ game, playerId, handleAction }: Props) {
 
       <OrderedList mb={5}>
         {game.players.map((player, index) =>
-          <ListItem key={index} fontWeight={player.id === playerId ? 'bold' : ''}>
+          <ListItem key={index} fontWeight={(playerId && player.id === playerId) ? 'bold' : ''}>
             {player.name}
           </ListItem>
         )}

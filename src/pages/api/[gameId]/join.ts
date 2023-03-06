@@ -20,7 +20,7 @@ export default async function handler(
     include: { players: true },
   })
 
-  await pusher.trigger(String(id), Event.LobbyUpdate, game)
+  await pusher.trigger(id, Event.LobbyUpdate, game)
     .catch((err) => {
       console.error(err)
     })

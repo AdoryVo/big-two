@@ -14,7 +14,7 @@ export default function Sandbox() {
   const [args, setArgs] = useState('')
 
   useEffect(() => {
-    setGame(new Game(4, Rules.SUIT_ORDER_ALPHA | Rules.STRAIGHTS_WRAP_AROUND | Rules.MUST_PLAY_LOWEST_CARD))
+    setGame(new Game(2, Rules.SUIT_ORDER_ALPHA | Rules.STRAIGHTS_WRAP_AROUND | Rules.MUST_PLAY_LOWEST_CARD))
   }, [])
 
   /**

@@ -25,7 +25,7 @@ export default function Home() {
   }
 
   return (
-    <Box background="green.100">
+    <Box background="green.100" minH="100vh">
       <NextSeo
         title="Big Two"
         description="card game"
@@ -58,6 +58,9 @@ export default function Home() {
               </Link>
             </CardFooter>
           </Card>
+        )}
+        {!isLoading && !lobbies?.length && (
+          <Heading size="sm">0 current public lobbies, create one!</Heading>
         )}
       </Container>
     </Box>

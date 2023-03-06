@@ -28,7 +28,9 @@ export const enum Action {
 }
 
 export interface ActionData {
-  name?: string
+  name?: string,
+  comboToPlay?: string[],
+  onClose?: () => void
 }
 
 function BasePage({ children }: { children?: React.ReactNode }) {
@@ -63,7 +65,7 @@ export default function Game() {
 
     const storedPlayerId = localStorage.getItem('playerId')
     if (storedPlayerId) {
-      if (!game.players.length) {
+      if (!game.players.find((player) => player.id === storedPlayerId)) {
         localStorage.removeItem('playerId')
       } else {
         setPlayerId(storedPlayerId)
@@ -83,8 +85,6 @@ export default function Game() {
 
     channel.bind(Event.EndGame, (game: GameWithPlayers) => {
       setGameInProgress(false)
-      setPlayerId('')
-      localStorage.removeItem('playerId')
 
       mutate(game, { revalidate: false })
     })
@@ -118,11 +118,12 @@ export default function Game() {
             title: 'Error',
             description: 'Please enter a valid name!',
             status: 'error',
+            duration: 1000,
           })
           return
         }
-        const options = { json: { name } }
-        ky.post(url, options).json<GameWithPlayers>().then((game) => {
+        const joinBody = { json: { name } }
+        ky.post(url, joinBody).json<GameWithPlayers>().then((game) => {
           const player = game.players.at(-1)
           if (player) {
             localStorage.setItem('playerId', player.id)
@@ -130,10 +131,32 @@ export default function Game() {
           }
         })
         break
+      case Action.Play:
+        const playBody = { json: { combo: data.comboToPlay } }
+        ky.put(url, playBody).then((response) => {
+          console.log(response)
+          data.onClose?.()
+        }).catch((err) => {
+          console.log(err)
+          toast({
+            title: 'Invalid combination',
+            description: 'Invalid with the current combo - try another combo!',
+            status: 'error',
+            duration: 1000,
+          })
+        })
+        break
       case Action.Pass:
       case Action.Start:
       case Action.End:
-        ky.patch(url)
+        ky.patch(url).catch(() => {
+          toast({
+            title: 'Error',
+            description: 'Action failed!',
+            status: 'error',
+            duration: 1000,
+          })
+        })
         break
     }
   }
@@ -157,7 +180,10 @@ export default function Game() {
   }
 
   if (isLoading || !game || error) {
-    return <><NextSeo title="Lobby | Big Two" description="Join and play!" /><BasePage /></>
+    return <>
+      <NextSeo title="Lobby | Big Two" description="Join and play!" /><BasePage />
+      {error && <Container><Heading>💀 Game could not load!</Heading></Container>}
+    </>
   }
 
   return (

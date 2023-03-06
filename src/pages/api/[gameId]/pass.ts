@@ -6,7 +6,7 @@ import prisma from '../../../lib/prisma'
 import pusher from '../../../lib/pusher'
 import { Event } from '../../../lib/pusher'
 
-// GET /api/[gameId]/pass
+// PATCH /api/[gameId]/pass
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -28,7 +28,7 @@ export default async function handler(
   // Double check that the request is from the current player
   const cookies = req.headers.cookie?.split('; ')
   const playerId = cookies?.find((cookie) => cookie.startsWith('playerId'))?.split('=')[1]
-  if (playerId !== game.currentPlayer?.id) {
+  if (playerId !== game.currentPlayer.id) {
     return res.status(401).end()
   }
 
@@ -51,6 +51,23 @@ export default async function handler(
     },
     include: { players: true, currentPlayer: true },
   })
+
+  // TODO: think about not sending optimistic data to websocket
+  // Authorization - obscuring player data
+  if (playerId && updatedGame.players.map((player) => player.id).includes(playerId)) {
+    // If a player is requesting game data, obscure other players' id's & cards
+    game.players.forEach((player) => {
+      if (player.id !== playerId) {
+        player.id = ''
+        player.hand = player.hand.map(() => '')
+      }
+    })
+  } else if (!playerId) {
+    // Obscure ID's from spectating players
+    updatedGame.players.forEach((player) => {
+      player.id = ''
+    })
+  }
 
   await pusher.trigger(id, Event.LobbyUpdate, updatedGame)
     .catch((err) => {
