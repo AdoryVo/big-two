@@ -25,7 +25,7 @@ class Game {
 
     // Initialize game from existing game (+ ensure game fields exist)
     if (game && game.lowestCard) {
-      this.combo = this.util._construct_combo(this.util.strings_to_cards(game.combo))
+      this.combo = (game.combo.length) ? this.util._construct_combo(this.util.strings_to_cards(game.combo)) : null
       this.lowest_card = this.util.strings_to_cards([game.lowestCard])[0]
 
       this.players = game.players.map((player) => new Player(this.util.strings_to_cards(player.hand)))
@@ -84,6 +84,7 @@ class Game {
     this.combo = null
     this.current_player = this.passed_players.size === this.remaining_players.length ?
       this.backup_next : this.last_playmaker
+    console.log(this.passed_players)
     this.passed_players.clear()
   }
 
