@@ -139,10 +139,9 @@ export default function Game() {
         })
         break
       case Action.Leave:
-        ky.patch(url).then(() => {
-          localStorage.removeItem('playerId')
-          setPlayerId('')
-        })
+        localStorage.removeItem('playerId')
+        setPlayerId('')
+        ky.patch(url)
       case Action.Play:
         const playBody = { json: { combo: data.comboToPlay } }
         ky.put(url, playBody).then(() => {
