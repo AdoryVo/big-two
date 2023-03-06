@@ -4,7 +4,7 @@ import prisma from '../../../lib/prisma'
 import pusher from '../../../lib/pusher'
 import { Event } from '../../../lib/pusher'
 
-// GET /api/[gameId]/leave
+// PATCH /api/[gameId]/leave
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

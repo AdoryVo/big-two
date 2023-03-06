@@ -156,6 +156,7 @@ export default function Game() {
         localStorage.removeItem('playerId')
         setPlayerId('')
         ky.patch(url)
+        break
       case Action.Play:
         const playBody = { json: { combo: data.comboToPlay } }
         ky.put(url, playBody).then(() => {
@@ -253,8 +254,8 @@ export default function Game() {
               </Tr>
             </Thead>
             <Tbody>
-              {game.players.sort((a, b) => b.points - a.points).map((player) =>
-                <Tr key={player.id}>
+              {game.players.sort((a, b) => b.points - a.points).map((player, index) =>
+                <Tr key={index}>
                   <Td>{game.players.findIndex((p) => player.points === p.points) + 1}</Td>
                   <Td>{player.name}</Td>
                   <Td isNumeric>#</Td>
