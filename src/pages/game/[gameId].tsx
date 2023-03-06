@@ -152,7 +152,7 @@ export default function Game() {
         ky.patch(url).catch(() => {
           toast({
             title: 'Error',
-            description: 'Action failed!',
+            description: 'You cannot pass right now!',
             status: 'error',
             duration: 1000,
           })

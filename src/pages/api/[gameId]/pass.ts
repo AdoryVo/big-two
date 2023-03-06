@@ -36,7 +36,7 @@ export default async function handler(
   const result = gameInstance.pass()
 
   if (result === -2) {
-    return res.status(402).end('Cannot pass right now!')
+    return res.status(422).end('Cannot pass right now!')
   }
 
   const updatedGame = await prisma.game.update({
