@@ -74,5 +74,10 @@ export default async function handler(
       console.error(err)
     })
 
+  await pusher.trigger(id, Event.Play, 'Passed!')
+    .catch((err) => {
+      console.error(err)
+    })
+
   return res.status(200).end()
 }

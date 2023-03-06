@@ -1,9 +1,13 @@
 import {
+  Box,
   Button,
   Container,
+  Divider,
   Heading,
   Link as ChakraLink,
+  Table, TableContainer, Tbody, Td,
   Text,
+  Th, Thead, Tr,
   useToast
 } from '@chakra-ui/react'
 import ky from 'ky'
@@ -36,7 +40,7 @@ export interface ActionData {
 
 function BasePage({ children }: { children?: React.ReactNode }) {
   return (
-    <Container p={5}>
+    <Container p={5} backgroundColor="white" borderRadius="lg" maxW="container.md">
       <Link href="/" passHref>
         <Button colorScheme="facebook" mb={4} me={2}>Home</Button>
       </Link>
@@ -87,6 +91,16 @@ export default function Game() {
     channel.unbind()
     channel.bind(Event.LobbyUpdate, (game: GameWithPlayers) => {
       mutate(game)
+    })
+
+    channel.bind(Event.Play, (play: string) => {
+      toast({
+        title: 'Action taken',
+        description: play,
+        status: 'info',
+        duration: 2500,
+        isClosable: true,
+      })
     })
 
     channel.bind(Event.StartGame, (game: GameWithPlayers) => {
@@ -192,13 +206,15 @@ export default function Game() {
 
   if (isLoading || !game || error) {
     return <>
-      <NextSeo title="Lobby | Big Two" description="Join and play!" /><BasePage />
-      {error && <Container><Heading>💀 Game could not load!</Heading></Container>}
+      <NextSeo title="Lobby | Big Two" description="Join and play!" />
+      <BasePage>
+        {error && <Container><Heading>💀 Game could not load!</Heading></Container>}
+      </BasePage>
     </>
   }
 
   return (
-    <>
+    <Box backgroundColor="green.100" minH="100vh" p={5}>
       <NextSeo
         title={`${getPageTitle()} | Big Two`}
       />
@@ -222,7 +238,33 @@ export default function Game() {
         ) : (
           <WaitingLobby game={game} playerId={playerId} handleAction={handleAction} />
         )}
+
+        <Divider my={5} />
+
+        <Heading size="lg">🏆 Scoreboard</Heading>
+        <TableContainer>
+          <Table>
+            <Thead>
+              <Tr>
+                <Th>Rank</Th>
+                <Th>Name</Th>
+                <Th isNumeric>Games</Th>
+                <Th isNumeric>Score</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {game.players.sort((a, b) => b.points - a.points).map((player) =>
+                <Tr key={player.id}>
+                  <Td>{game.players.findIndex((p) => player.points === p.points) + 1}</Td>
+                  <Td>{player.name}</Td>
+                  <Td isNumeric>#</Td>
+                  <Td isNumeric>{player.points}</Td>
+                </Tr>
+              )}
+            </Tbody>
+          </Table>
+        </TableContainer>
       </BasePage>
-    </>
+    </Box>
   )
 }

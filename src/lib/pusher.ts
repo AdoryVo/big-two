@@ -11,6 +11,7 @@ const pusher = new Pusher({
 export const enum Event {
   Pong = 'pong',
   LobbyUpdate = 'lobby-update',
+  Play = 'play',
   StartGame = 'start-game',
   EndGame = 'end-game'
 }

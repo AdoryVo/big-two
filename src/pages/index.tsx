@@ -28,7 +28,7 @@ export default function Home() {
     <Box background="green.100" minH="100vh">
       <NextSeo
         title="Big Two"
-        description="card game"
+        description="Play big two online with your friends or in public lobbies!"
       />
       <Container p={5}>
         <Heading mb={5}>♠️ Big Two</Heading>

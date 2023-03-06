@@ -6,6 +6,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
       <DefaultSeo
+        themeColor="#C6F6D5"
         openGraph={{
           type: 'website',
           locale: 'en_US',

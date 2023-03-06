@@ -59,7 +59,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
               <Button onClick={onOpen} colorScheme="green" me={2}>
                 Play a combo
               </Button>
-              <Button onClick={() => handleAction(Action.Pass)} colorScheme="blue">
+              <Button onClick={() => handleAction(Action.Pass)} isDisabled={!game.combo.length} colorScheme="blue">
                 Pass
               </Button>
             </Box>
@@ -113,7 +113,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
         Finished players: {game.players.filter((player) => player.finished).map((player) => player.name).join(', ')}
       </Box>
 
-      <Button onClick={() => handleAction(Action.End)} colorScheme="red" my={4} me={2}>
+      <Button onClick={() => handleAction(Action.End)} colorScheme="red" me={2}>
         End Game
       </Button>
     </>
