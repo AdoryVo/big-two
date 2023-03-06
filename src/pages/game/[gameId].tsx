@@ -137,16 +137,17 @@ export default function Game() {
         break
       case Action.Join:
         const name = data.name
-        if (!name) {
+        if (!name ||
+          game.players.find((player) => player.name.toLowerCase() === name.trim().toLowerCase())) {
           toast({
             title: 'Error',
-            description: 'Please enter a valid name!',
+            description: 'Please enter a valid & unique name!',
             status: 'error',
             duration: 1000,
           })
           return
         }
-        const joinBody = { json: { name } }
+        const joinBody = { json: { name: name.trim() } }
         ky.post(url, joinBody).json<string>().then((playerId) => {
           localStorage.setItem('playerId', playerId)
           setPlayerId(playerId)
