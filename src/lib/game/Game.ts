@@ -84,7 +84,6 @@ class Game {
     this.combo = null
     this.current_player = this.passed_players.size === this.remaining_players.length ?
       this.backup_next : this.last_playmaker
-    console.log(this.passed_players)
     this.passed_players.clear()
   }
 
