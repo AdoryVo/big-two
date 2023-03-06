@@ -1,18 +1,18 @@
 import { Card } from 'cards'
-import { decks } from 'cards'
 
 class Player {
   hand!: Card[] // the hand should be initiated from the Game, so it is ignored in the constructor
   score: number
   finished_rank: number | null
 
-  constructor() {
+  constructor(hand?: Card[]) {
+    if (hand) this.hand = hand
     this.score = 0
     this.finished_rank = null
   }
 
   _cards_eq(c1: Card, c2: Card) {
-    return c1.rank.abbrn === c2.rank.abbrn && c1.suit.name === c2.rank.name
+    return c1.rank.abbrn === c2.rank.abbrn && c1.suit.name === c2.suit.name
   }
 
   /* Returns whether the player has the specified cards. Assumes that
@@ -43,6 +43,11 @@ class Player {
 
       ++i
     }
+
+    while (i < this.hand.length) {
+      new_cards.push(this.hand[i++])
+    }
+
     this.hand = new_cards
   }
 }

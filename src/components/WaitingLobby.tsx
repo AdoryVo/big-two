@@ -39,7 +39,7 @@ export default function WaitingLobby({ game, playerId, handleAction }: Props) {
 
       <OrderedList mb={5}>
         {game.players.map((player, index) =>
-          <ListItem key={index} fontWeight={player.id === playerId ? 'bold' : ''}>
+          <ListItem key={index} fontWeight={(playerId && player.id === playerId) ? 'bold' : ''}>
             {player.name}
           </ListItem>
         )}
@@ -58,6 +58,15 @@ export default function WaitingLobby({ game, playerId, handleAction }: Props) {
           <br />
           <Button onClick={() => handleAction(Action.Join, { name })} colorScheme="blue" mt={2}>
             Join next game
+          </Button>
+        </>
+      )}
+
+      {/* Leave game button */}
+      {playerId && (
+        <>
+          <Button onClick={() => handleAction(Action.Leave)} colorScheme="pink" mt={2}>
+            Sit out next game
           </Button>
         </>
       )}

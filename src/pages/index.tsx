@@ -1,7 +1,8 @@
 import {
-  Box, Button,
-  Card, CardBody, CardFooter,
-  CardHeader,   Container,
+  Box,
+  Button,
+  Card, CardBody, CardFooter, CardHeader,
+  Container,
   Heading
 } from '@chakra-ui/react'
 import type { Game } from '@prisma/client'
@@ -10,8 +11,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
 
-import { default as Big2Game } from '../lib/game/Game'
-import Rules from '../lib/game/Rules'
 import useLobbies from '../lib/hooks/useLobbies'
 
 export default function Home() {
@@ -25,11 +24,8 @@ export default function Home() {
     })
   }
 
-  // const game = new Big2Game(4, Rules.SUIT_ORDER_ALPHA | Rules.STRAIGHTS_WRAP_AROUND)
-  // console.log(game.players[0].hand)
-
   return (
-    <Box background="green.100">
+    <Box background="green.100" minH="100vh">
       <NextSeo
         title="Big Two"
         description="card game"
@@ -52,7 +48,9 @@ export default function Home() {
               &nbsp;|&nbsp;{lobby.players && lobby.players.length} current players
             </CardHeader>
             <CardBody>
-              [insert lobby rules]
+              Rules: Classic
+              <br />
+              Spectating: On
             </CardBody>
             <CardFooter>
               <Link href={`/game/${lobby.id}`} passHref>
@@ -60,6 +58,9 @@ export default function Home() {
               </Link>
             </CardFooter>
           </Card>
+        )}
+        {!isLoading && !lobbies?.length && (
+          <Heading size="sm">0 current public lobbies, create one!</Heading>
         )}
       </Container>
     </Box>

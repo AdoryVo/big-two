@@ -1,4 +1,3 @@
-import { type Card, decks } from 'cards'
 import _ from 'lodash'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
@@ -7,14 +6,6 @@ import Rules from '../../../lib/game/Rules'
 import prisma from '../../../lib/prisma'
 import { Event } from '../../../lib/pusher'
 import pusher from '../../../lib/pusher'
-
-function cardToString(card: Card) {
-  return `${card.rank.abbrn};${card.suit.name}`
-}
-
-function deckToStringArray(deck: decks.Deck): string[] {
-  return deck.remainingCards.map(cardToString)
-}
 
 // PATCH /api/[gameId]/start
 export default async function handler(
@@ -25,7 +16,7 @@ export default async function handler(
 
   const game = await prisma.game.findUnique({
     where: { id },
-    include: { players: true },
+    include: { players: true, currentPlayer: true },
   })
 
   if (!game) {
@@ -33,14 +24,14 @@ export default async function handler(
   }
 
   const gameInstance = new Game(game.players.length, Rules.SUIT_ORDER_ALPHA)
-  const deck = deckToStringArray(gameInstance.deck)
+  const lowestCard = gameInstance.util.card_to_string(gameInstance.lowest_card)
   const currentPlayer = _.sample(game.players)
 
-  // Add deck & current player
+  // Store lowest card & current player
   await prisma.game.update({
     where: { id },
     data: {
-      deck: { set: deck },
+      lowestCard: { set: lowestCard },
       currentPlayer: { connect: { id: currentPlayer?.id } },
     },
     include: {
@@ -50,19 +41,30 @@ export default async function handler(
   })
 
   // Add hands to each player
+  const rng = _.random(game.players.length - 1)
   for (let i = 0; i < game.players.length; i++) {
     const storedPlayer = game.players[i]
     const instancePlayer = gameInstance.players[i]
 
     await prisma.player.update({
       where: { id: storedPlayer.id },
-      data: { hand: instancePlayer.hand?.map(cardToString) },
+      data: {
+        index: (i + rng) % game.players.length,
+        hand: gameInstance.util.cards_to_strings(instancePlayer.hand),
+      },
     })
   }
 
   const updatedGame = await prisma.game.findUnique({
     where: { id },
     include: { players: true, currentPlayer: true },
+  })
+
+  if (!updatedGame) return res.status(500).end()
+
+  // Obscure ID's from spectating players
+  updatedGame.players.forEach((player) => {
+    player.id = ''
   })
 
   await pusher.trigger(id, Event.StartGame, updatedGame)

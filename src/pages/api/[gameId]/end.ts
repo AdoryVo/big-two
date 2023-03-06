@@ -14,15 +14,22 @@ export default async function handler(
   const updatedGame = await prisma.game.update({
     where: { id },
     data: {
-      deck: { set: [] },
       combo: { set: [] },
-      players: { deleteMany: {} },
+      lowestCard: null,
       currentPlayer: { disconnect: true },
+      passedPlayers: { set: [] },
+      lastPlaymaker: null,
+      backupNext: null,
     },
     include: {
       players: true,
       currentPlayer: true,
     },
+  })
+
+  // Obscure ID's from spectating players
+  updatedGame.players.forEach((player) => {
+    player.id = ''
   })
 
   await pusher.trigger(id, Event.EndGame, updatedGame)

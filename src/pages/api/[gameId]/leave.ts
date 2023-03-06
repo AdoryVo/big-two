@@ -4,28 +4,30 @@ import prisma from '../../../lib/prisma'
 import pusher from '../../../lib/pusher'
 import { Event } from '../../../lib/pusher'
 
-// POST /api/[gameId]/join
+// GET /api/[gameId]/leave
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const id = String(req.query.gameId)
-  const { name } = req.body
 
-  const data = { name: String(name) }
+  const cookies = req.headers.cookie?.split('; ')
+  const playerId = cookies?.find((cookie) => cookie.startsWith('playerId'))?.split('=')[1]
 
-  const game = await prisma.game.update({
+  if (!playerId) {
+    return res.status(404).end()
+  }
+
+  await prisma.player.delete({ where: { id: playerId } })
+
+  const game = await prisma.game.findUnique({
     where: { id },
-    data: { players: { create: data } },
-    include: { players: true },
+    include: {
+      players: true,
+      currentPlayer: true,
+    },
   })
 
-  // Set cookie
-  const player = game.players.at(-1)
-  const playerId = player?.id
-  res.setHeader('Set-Cookie', `playerId=${playerId}; Path=/`)
-
-  // Authorization - obscuring player data
   if (game) {
     // Obscure ID's from spectating players
     game.players.forEach((player) => {
@@ -38,5 +40,8 @@ export default async function handler(
       console.error(err)
     })
 
-  return res.status(201).json(playerId)
+  // Remove cookie
+  res.setHeader('Set-Cookie', 'playerId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT')
+
+  return res.status(200).end()
 }

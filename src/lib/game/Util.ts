@@ -3,14 +3,12 @@ import { Rank } from 'cards/build/ranks'
 import { Suit } from 'cards/build/suits'
 
 import { Combo, Combo_Types } from './Combo'
-import type Player from './Player'
+import Player from './Player'
 import Rules from './Rules'
 
-const SUIT_RANKING_ORDERS = { [Rules.SUIT_ORDER_ALPHA] : ['clubs', 'diamonds', 'hearts', 'spades'] }
+export const CARD_STRING_SEPARATOR = ';' // "2;clubs"
 
-const SUIT_ABBR_TO_NAME : { [key: string]: string } = {
-  'C': 'clubs', 'D': 'diamonds', 'H': 'hearts', 'S': 'spades',
-}
+const SUIT_RANKING_ORDERS = { [Rules.SUIT_ORDER_ALPHA] : ['clubs', 'diamonds', 'hearts', 'spades'] }
 
 const RANK_ABBR_TO_NAME : { [key: string] : string } = {
   '2': 'Two',
@@ -21,7 +19,7 @@ const RANK_ABBR_TO_NAME : { [key: string] : string } = {
   '7': 'Seven',
   '8': 'Eight',
   '9': 'Nine',
-  '0': 'Ten',
+  '10': 'Ten',
   'J': 'Jack',
   'Q': 'Queen',
   'K': 'King',
@@ -37,7 +35,7 @@ class Util {
 
   _rank_val(card: Card) {
     const rank = card.rank.abbrn
-    if ('3' <= rank && rank <= '9' || rank == '10')
+    if (parseInt(rank) > 2)
       return Number(rank)
     else
       return {
@@ -68,19 +66,20 @@ class Util {
     return 0
   }
 
-  /* Returns the count of consecutively equal ranks in the list of cards given, starting
-   * from the specified index.
+  /* Returns the count of consecutively equal cards (ranks if use_suit is specified, suits otherwise)
+   * in the list of cards given, starting from the specified index.
   */
   _count_cons_eq(cards: Card[], start = 0, use_suit = false) {
     let curr = start
     if (use_suit) {
-      while (curr < cards.length && cards[curr].suit === cards[curr + 1].suit)
+      while (curr < (cards.length - 1) && cards[curr].suit.name === cards[curr + 1].suit.name)
         ++curr
     }
     else {
-      while (curr < cards.length && cards[curr].rank === cards[curr + 1].rank)
+      while (curr < (cards.length - 1) && cards[curr].rank.abbrn === cards[curr + 1].rank.abbrn)
         ++curr
     }
+
     return curr - start + 1
   }
 
@@ -157,33 +156,59 @@ class Util {
   // Whether it is legal to play the specified set of cards on top of the combo.
   // TODO: add 5-combo compatability logic + appopriate flag in Rules (e.g. can play full house on flush/straight)
   can_play_on(cards: Card[], combo: Combo | null) {
-    if (!combo)
-      return true
-
     const new_combo = this._construct_combo(cards)
+    if (!combo)
+      return new_combo.type !== Combo_Types.INVALID
+
     if (new_combo.type === Combo_Types.INVALID || (new_combo.type !== Combo_Types.BOMB && combo.type === Combo_Types.BOMB))
       return false
-    else if (new_combo.type === Combo_Types.BOMB && combo.type !== Combo_Types.BOMB)
+    else if (!combo || new_combo.type === Combo_Types.BOMB && combo.type !== Combo_Types.BOMB)
       return true
 
     if (new_combo.value_card && combo.value_card)
       return new_combo.type === combo.type && this.compare_cards(new_combo.value_card, combo.value_card) > 0
   }
 
-  /* Given a space-separated string of cards ([rank_chr][suit_chr] [rank_chr][suit_chr] ... [rank_chr][suit_chr]),
+  /** Ex: 2 of clubs -> "2;clubs" */
+  card_to_string(card: Card) {
+    return card.rank.abbrn + CARD_STRING_SEPARATOR + card.suit.name
+  }
+
+  cards_to_strings(cards: Card[]): string[] {
+    return cards.map(this.card_to_string)
+  }
+
+  /**
+   * Given a string array of cards ["rank_abbr;suit", "rank_abbr;suit", ... "rank_abbr;suit"],
    * return a SORTED Card array.
-   * Ex: "2c 0h kd as" = [2 of clubs, 10 of hearts, king of diamonds, ace of spades]
+   * ---
+   * Ex: ["2;clubs", "10;hearts", "a;spades"] = [2 of clubs, 10 of hearts, ace of spades]
   */
-  string_to_cards(s: string) {
+  strings_to_cards(str_cards: string[]) {
     const cards = []
 
-    for (const cstring of s.split(' ')) {
-      const rank_abbr = cstring[0] === '0' ? cstring[0].toUpperCase() : '10'
-      cards.push(new Card(new Suit(SUIT_ABBR_TO_NAME[cstring[1].toUpperCase()]), new Rank(rank_abbr, RANK_ABBR_TO_NAME[rank_abbr])))
+    for (const cstring of str_cards) {
+      const [rank_abbr, suit_name] = cstring.split(CARD_STRING_SEPARATOR) // ex: "2;clubs" -> ["2", "clubs"]
+      cards.push(new Card(new Suit(suit_name), new Rank(rank_abbr, RANK_ABBR_TO_NAME[rank_abbr])))
     }
 
-    cards.sort(this.compare_cards)
+    // for some reason, 'this' gets unbound in the scope of this.compare_cards without this arrow function,
+    // so then this._rank_val cannot be called from this.compare_cards
+    // no clue why???
+    cards.sort((c1, c2) => this.compare_cards(c1, c2))
     return cards
+  }
+
+  // Given a sorted list of cards to be played, a player, and the lowest card dealt in a game,
+  // return whether the player is allowed to play the list of cards.
+  // i.e. if the rules specify that you must play the lowest card when you start with it, check that
+  // that if the player has the lowest card, it is also being played (exists in cards argument)
+  lowest_card_check(cards: Card[], player: Player, lowest_card: Card) {
+    if ((this.rules & Rules.MUST_PLAY_LOWEST_CARD) && player.has_cards([lowest_card])) {
+      return !this.compare_cards(cards[0], lowest_card)
+    }
+
+    return true
   }
 }
 

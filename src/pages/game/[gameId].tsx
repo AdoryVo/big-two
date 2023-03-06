@@ -1,6 +1,10 @@
 import {
-  Button, Container, Heading, Link as ChakraLink,
-  Text, useToast
+  Button,
+  Container,
+  Heading,
+  Link as ChakraLink,
+  Text,
+  useToast
 } from '@chakra-ui/react'
 import ky from 'ky'
 import Link from 'next/link'
@@ -17,12 +21,17 @@ import { Event } from '../../lib/pusher'
 export const enum Action {
   Ping = 'ping',
   Join = 'join',
+  Leave = 'leave',
   Start = 'start',
-  End = 'end'
+  End = 'end',
+  Pass = 'pass',
+  Play = 'play'
 }
 
 export interface ActionData {
-  name?: string
+  name?: string,
+  comboToPlay?: string[],
+  onClose?: () => void
 }
 
 function BasePage({ children }: { children?: React.ReactNode }) {
@@ -55,32 +64,39 @@ export default function Game() {
 
     setGameInProgress(Boolean(game.currentPlayer))
 
-    const storedPlayerId = localStorage.getItem('playerId')
-    if (storedPlayerId) {
-      if (!game.players.length) {
-        localStorage.removeItem('playerId')
-      } else {
-        setPlayerId(storedPlayerId)
+    // If the game refresh is from web socket, ignore player id logic
+    if (!game.players.every((player) => player.id === '')) {
+      // If we are retrieving a player ID, join back in
+      const player = game.players.find((player) => player.id)
+      if (player) {
+        localStorage.setItem('playerId', player.id)
+        setPlayerId(player.id)
+      }
+
+      const storedPlayerId = localStorage.getItem('playerId')
+      if (storedPlayerId) {
+        if (!game.players.find((player) => player.id === storedPlayerId)) {
+          localStorage.removeItem('playerId')
+        } else {
+          setPlayerId(storedPlayerId)
+        }
       }
     }
 
     const channel = pusher.subscribe(game.id)
     channel.unbind()
     channel.bind(Event.LobbyUpdate, (game: GameWithPlayers) => {
-      mutate(game, { revalidate: false })
+      mutate(game)
     })
 
     channel.bind(Event.StartGame, (game: GameWithPlayers) => {
       setGameInProgress(true)
-      mutate(game, { revalidate: false })
+      mutate(game)
     })
 
     channel.bind(Event.EndGame, (game: GameWithPlayers) => {
       setGameInProgress(false)
-      setPlayerId('')
-      localStorage.removeItem('playerId')
-
-      mutate(game, { revalidate: false })
+      mutate(game)
     })
 
     channel.bind(Event.Pong, () => {
@@ -112,16 +128,42 @@ export default function Game() {
             title: 'Error',
             description: 'Please enter a valid name!',
             status: 'error',
+            duration: 1000,
           })
           return
         }
-        const options = { json: { name } }
-        ky.post(url, options).json<GameWithPlayers>().then((game) => {
-          const player = game.players.at(-1)
-          if (player) {
-            localStorage.setItem('playerId', player.id)
-            setPlayerId(player.id)
-          }
+        const joinBody = { json: { name } }
+        ky.post(url, joinBody).json<string>().then((playerId) => {
+          localStorage.setItem('playerId', playerId)
+          setPlayerId(playerId)
+        })
+        break
+      case Action.Leave:
+        ky.patch(url).then(() => {
+          localStorage.removeItem('playerId')
+          setPlayerId('')
+        })
+      case Action.Play:
+        const playBody = { json: { combo: data.comboToPlay } }
+        ky.put(url, playBody).then(() => {
+          data.onClose?.()
+        }).catch(() => {
+          toast({
+            title: 'Invalid combination',
+            description: 'Invalid with the current combo - try another combo!',
+            status: 'error',
+            duration: 1000,
+          })
+        })
+        break
+      case Action.Pass:
+        ky.patch(url).catch(() => {
+          toast({
+            title: 'Invalid action',
+            description: 'You cannot pass right now!',
+            status: 'error',
+            duration: 1000,
+          })
         })
         break
       case Action.Start:
@@ -150,7 +192,10 @@ export default function Game() {
   }
 
   if (isLoading || !game || error) {
-    return <><NextSeo title="Lobby | Big Two" description="Join and play!" /><BasePage /></>
+    return <>
+      <NextSeo title="Lobby | Big Two" description="Join and play!" /><BasePage />
+      {error && <Container><Heading>💀 Game could not load!</Heading></Container>}
+    </>
   }
 
   return (

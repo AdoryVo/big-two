@@ -8,18 +8,23 @@ datasource db {
 }
 
 model Game {
-  id    String   @id @default(uuid())
-  deck  String[] @default([])
-  combo String[] @default([])
+  id         String   @id @default(uuid())
+  combo      String[] @default([])
+  lowestCard String?
 
   players       Player[] @relation("Players")
   currentPlayer Player?  @relation("CurrentTurn")
+  passedPlayers Int[]    @default([])
+  lastPlaymaker Int?
+  backupNext    Int?
 
   createdAt DateTime @default(now())
 }
 
 model Player {
-  id       String   @id @default(uuid())
+  id    String @id @default(uuid())
+  index Int    @default(-1)
+
   name     String   @db.VarChar(255)
   hand     String[] @default([])
   finished Boolean  @default(false)
