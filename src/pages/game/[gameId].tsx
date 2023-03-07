@@ -160,9 +160,7 @@ export default function Game() {
         break
       case Action.Play:
         const playBody = { json: { combo: data.comboToPlay } }
-        ky.put(url, playBody).then(() => {
-          data.onClose?.()
-        }).catch(() => {
+        ky.put(url, playBody).catch(() => {
           toast({
             title: 'Invalid combination',
             description: 'Invalid with the current combo - try another combo!',

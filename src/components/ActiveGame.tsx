@@ -1,16 +1,16 @@
 import {
   Box,
   Button,
+  Divider,
   Heading,
-  Modal, ModalOverlay,
-  Text,
-  useDisclosure
+  Text
 } from '@chakra-ui/react'
+import { useState } from 'react'
 
 import { GameWithPlayers } from '../lib/prisma'
 import { Action, ActionData } from '../pages/game/[gameId]'
 import CardImage from './CardImage'
-import PlayComboModal from './PlayComboModal'
+import PlayerHand from './PlayerHand'
 
 interface Props {
   game: GameWithPlayers,
@@ -19,11 +19,27 @@ interface Props {
 }
 
 export default function ActiveGame({ game, playerId, handleAction }: Props) {
-  // For playing a hand (modal)
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [comboToPlay, setComboToPlay] = useState(new Set<string>())
 
   const player = game.players.find((player) => (playerId && player.id === playerId))
   const passedPlayers = game.players.filter((_, index) => game.passedPlayers.includes(index))
+
+  // use dummy flag to force rerenders, so we don't have to copy the comboToPlay set every time to trigger rerender
+  const [dummy, setDummy] = useState(false)
+  function forceUpdate() {
+    setDummy(!dummy)
+  }
+
+  function handleClick(card: string) {
+    if (comboToPlay.has(card)) {
+      comboToPlay.delete(card)
+    } else {
+      comboToPlay.add(card)
+    }
+
+    setComboToPlay(comboToPlay)
+    forceUpdate()
+  }
 
   return (
     <>
@@ -54,33 +70,26 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
 
           Your hand ({player.hand.length} cards):
           <br />
-          {player.hand.map((card, index) =>
-            <CardImage key={index} card={card} />
-          )}
+          <PlayerHand hand={player.hand} handleClick={handleClick} comboToPlay={comboToPlay}>
+            {/* Current turn: Display actions */}
+            {game.currentPlayer?.id === player.id &&
+              <Box>
+                <Heading size="md" my={4}>Take your action!</Heading>
+                <Button onClick={() => handleAction(Action.Play, { comboToPlay: Array.from(comboToPlay) })} colorScheme="green" me={2}>
+                  Play a combo
+                </Button>
+                <Button onClick={() => handleAction(Action.Pass)} isDisabled={!game.combo.length} colorScheme="blue">
+                  Pass
+                </Button>
+              </Box>
+            }
+          </PlayerHand>
 
-          {/* Current turn: Display actions */}
-          {game.currentPlayer?.id === player.id &&
-            <Box>
-              <Heading size="md" my={4}>Take your action!</Heading>
-              <Button onClick={onOpen} colorScheme="green" me={2}>
-                Play a combo
-              </Button>
-              <Button onClick={() => handleAction(Action.Pass)} isDisabled={!game.combo.length} colorScheme="blue">
-                Pass
-              </Button>
-            </Box>
-          }
+          <Divider my={4} />
 
-          <br />
-          <Button onClick={() => handleAction(Action.End)} colorScheme="red" mt={5} me={2}>
+          <Button onClick={() => handleAction(Action.End)} colorScheme="red">
             End Game
           </Button>
-
-          {/* Play combo modal */}
-          <Modal size="xl" isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <PlayComboModal player={player} onClose={onClose} handleAction={handleAction} />
-          </Modal>
         </Box>
       }
 

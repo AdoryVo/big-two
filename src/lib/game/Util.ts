@@ -192,9 +192,9 @@ class Util {
       cards.push(new Card(new Suit(suit_name), new Rank(rank_abbr, RANK_ABBR_TO_NAME[rank_abbr])))
     }
 
-    // for some reason, 'this' gets unbound in the scope of this.compare_cards without this arrow function,
+    // 'this' gets unbound in the scope of this.compare_cards without this arrow function,
     // so then this._rank_val cannot be called from this.compare_cards
-    // no clue why???
+    // this is because this.compare_cards is passed as a parameter and loses certain bound variables
     cards.sort((c1, c2) => this.compare_cards(c1, c2))
     return cards
   }

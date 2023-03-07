@@ -15,17 +15,27 @@ function cardToUrl(card: string) {
   return BASE_CARD_IMAGE_URL + [RANK_NAMES[rank] || rank, suit].join('_of_') + '.png'
 }
 
-export default function CardImage({ card } : { card: string }) {
+interface Props {
+  card: string,
+  border?: string,
+  value?: string
+}
+
+export default function CardImage({ card, border, value }: Props) {
   return (
     <Image
       alt={card}
       src={cardToUrl(card)}
       style={{
         display: 'inline',
-        width: '4em',
+        width: '5em',
         height: 'auto',
         marginRight: '1em',
-        border: 'medium double #68D391',
+        border: border || 'thin solid black',
+        backgroundColor: 'white',
+        cursor: 'pointer',
+        transform: value,
+        position: 'relative',
       }}
       width={50}
       height={100}
