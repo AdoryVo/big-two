@@ -41,7 +41,13 @@ export default async function handler(
     return res.status(422).end('Invalid combination')
   }
 
-  if (result !== -1) {
+  if (result === -1) {
+    // Edit player's hand
+    await prisma.player.update({
+      where: { id: game.currentPlayer.id },
+      data: { hand: gameInstance.util.cards_to_strings(gameInstance.players[currentPlayerIndex].hand) },
+    })
+  } else {
     // Player finished - mark them as finished!
     const finishedPlayer = gameInstance.players[result]
 
@@ -52,12 +58,6 @@ export default async function handler(
         finished: true,
         points: { increment: finishedPlayer.score },
       },
-    })
-  } else {
-    // Edit player's hand
-    await prisma.player.update({
-      where: { id: game.currentPlayer.id },
-      data: { hand: gameInstance.util.cards_to_strings(gameInstance.players[currentPlayerIndex].hand) },
     })
   }
 

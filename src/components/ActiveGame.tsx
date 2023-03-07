@@ -3,6 +3,7 @@ import {
   Button,
   Divider,
   Heading,
+  Stack,
   Text
 } from '@chakra-ui/react'
 import { useState } from 'react'
@@ -23,6 +24,8 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
 
   const player = game.players.find((player) => (playerId && player.id === playerId))
   const passedPlayers = game.players.filter((_, index) => game.passedPlayers.includes(index))
+  // Check if last playmaker is in the remaining players
+  const lastInGame = game.players.filter((player) => !player.finished).some((player) => player.index === game.lastPlaymaker)
 
   // use dummy flag to force rerenders, so we don't have to copy the comboToPlay set every time to trigger rerender
   const [dummy, setDummy] = useState(false)
@@ -39,6 +42,12 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
 
     setComboToPlay(comboToPlay)
     forceUpdate()
+  }
+
+  function handlePlay() {
+    handleAction(Action.Play, { comboToPlay: Array.from(comboToPlay) })
+    comboToPlay.clear()
+    setComboToPlay(comboToPlay)
   }
 
   return (
@@ -58,11 +67,15 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
       {/* Player view: current hand */}
       {player &&
         <Box my={5} py={2}>
-          <Heading size="md" mb={2}>{game.currentPlayer?.name}&apos;s Turn</Heading>
+          {/* <Heading size="md" mb={2}>{game.currentPlayer?.name}&apos;s Turn</Heading> */}
 
           Player hands:
           {game.players.sort((a, b) => a.index - b.index).map((player, index) =>
-            <Text key={index}>
+            <Text
+              key={index}
+              fontWeight={(game.currentPlayer?.name === player.name) ? 'bold' : ''}
+              color={(player.index === ((lastInGame) ? game.lastPlaymaker : game.backupNext)) ? 'blue.500' : ''}
+            >
               {player.name}: {player.hand.length} cards
             </Text>
           )}
@@ -75,7 +88,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
             {game.currentPlayer?.id === player.id &&
               <Box>
                 <Heading size="md" my={4}>Take your action!</Heading>
-                <Button onClick={() => handleAction(Action.Play, { comboToPlay: Array.from(comboToPlay) })} colorScheme="green" me={2}>
+                <Button onClick={handlePlay} colorScheme="green" me={2}>
                   Play a combo
                 </Button>
                 <Button onClick={() => handleAction(Action.Pass)} isDisabled={!game.combo.length} colorScheme="blue">
@@ -100,9 +113,17 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           {game.players.map((player, index) => (
             <Box key={index} mb={5}>
               <Heading size="sm" mb={1}>{player.name}&apos;s hand</Heading>
-              {player.hand.map((card, cardIndex) =>
-                <CardImage key={cardIndex} card={card} />
-              )}
+              <Stack key={index} direction="row" spacing="-5em">
+                {player.hand.map((card, cardIndex) =>
+                  <Box key={cardIndex} onClick={() => handleClick(card)}>
+                    <CardImage
+                      card={card}
+                      border={comboToPlay.has(card) ? 'thin solid #68D391' : 'thin solid black'}
+                      value={comboToPlay.has(card) ? 'translate(0, -1em)' : ''}
+                    />
+                  </Box>
+                )}
+              </Stack>
             </Box>
           ))}
         </Box>

@@ -27,7 +27,8 @@ export default function PlayerHand({
               border={comboToPlay.has(card) ? 'thin solid #68D391' : 'thin solid black'}
               value={comboToPlay.has(card) ? 'translate(0, -1em)' : ''}
             />
-          </Box>)}
+          </Box>
+        )}
       </Stack>
 
       {children}
