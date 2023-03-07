@@ -25,7 +25,7 @@ export default async function handler(
 
   const gameInstance = new Game(game.players.length, Rules.SUIT_ORDER_ALPHA)
   const lowestCard = gameInstance.util.card_to_string(gameInstance.lowest_card)
-  const currentPlayer = _.sample(game.players)
+  const currentPlayer = game.players[gameInstance.current_player]
 
   // Store lowest card & current player
   await prisma.game.update({
