@@ -11,6 +11,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
 
+import Preferences from '../components/Preferences'
 import useLobbies from '../lib/hooks/useLobbies'
 
 export default function Home() {
@@ -35,6 +36,7 @@ export default function Home() {
         <Button onClick={handleStartGame} colorScheme="green" mb={4} me={2}>
           Create Lobby
         </Button>
+        <Preferences />
 
         <Heading size="lg" my={5}>🏠 Public Lobbies</Heading>
         {error && (

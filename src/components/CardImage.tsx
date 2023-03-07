@@ -1,6 +1,9 @@
 import Image from 'next/image'
+import { CSSProperties } from 'react'
 
-const BASE_CARD_IMAGE_URL = '/assets/cards/paul/'
+import { getTheme } from '../lib/theme'
+
+const BASE_CARD_IMAGE_URL = '/assets/cards/'
 
 const RANK_NAMES: { [abbrn: string]: string } = {
   'J': 'jack',
@@ -9,23 +12,27 @@ const RANK_NAMES: { [abbrn: string]: string } = {
   'A': 'ace',
 }
 
-function cardToUrl(card: string) {
-  const [rank, suit] = card.split(';')
-
-  if (!rank) {
-    return BASE_CARD_IMAGE_URL + 'back.png'
-  }
-
-  return BASE_CARD_IMAGE_URL + [RANK_NAMES[rank] || rank, suit].join('_of_') + '.png'
-}
-
 interface Props {
   card: string,
   border?: string,
-  value?: string
+  value?: string,
+  theme?: string,
+  style?: CSSProperties
 }
 
-export default function CardImage({ card, border, value }: Props) {
+export default function CardImage({
+  card, border, value, theme, style,
+}: Props) {
+  function cardToUrl(card: string) {
+    const [rank, suit] = card.split(';')
+
+    if (!rank) {
+      return '/assets/cards/classic/back.png'
+    }
+
+    return `${BASE_CARD_IMAGE_URL}${theme || getTheme()}/${[RANK_NAMES[rank] || rank, suit].join('_of_')}.png`
+  }
+
   return (
     <Image
       alt={card}
@@ -40,6 +47,7 @@ export default function CardImage({ card, border, value }: Props) {
         cursor: 'pointer',
         transform: value,
         position: 'relative',
+        ...style,
       }}
       width={50}
       height={100}
