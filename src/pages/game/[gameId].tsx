@@ -91,8 +91,8 @@ export default function Game() {
 
     const channel = pusher.subscribe(game.id)
     channel.unbind()
-    channel.bind(Event.LobbyUpdate, (game: GameWithPlayers) => {
-      mutate(game)
+    channel.bind(Event.LobbyUpdate, () => {
+      mutate()
     })
 
     channel.bind(Event.Play, (play: string) => {
