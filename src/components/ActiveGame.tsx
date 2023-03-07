@@ -64,10 +64,9 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           <CardImage card="" />
         }
       </Stack>
-      <br />
 
-      Turn order: {game.players.sort((a, b) => a.index - b.index).map((player) => player.name).join(', ')}
-      <br />
+      {/* Turn order: {game.players.sort((a, b) => a.index - b.index).map((player) => player.name).join(', ')}
+      <br /> */}
 
       {/* Player view: current hand */}
       {player &&
@@ -82,7 +81,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                 color={(player2.index === ((lastInGame) ? game.lastPlaymaker : game.backupNext)) ? 'blue.500' : ''}
                 title={(player2.index === ((lastInGame) ? game.lastPlaymaker : game.backupNext)) ? 'Round leader' : ''}
               >
-                {player2.name}: {player2.hand.length} cards {RANK_EMOJIS[player2.finishedRank]}
+                {player2.name} {player.name === player2.name && '(You)'}: {player2.hand.length} cards {RANK_EMOJIS[player2.finishedRank]}
                 {game.passedPlayers.includes(player2.index) ? '⏭️' : ''}
               </Text>
               {player2.name !== player.name &&

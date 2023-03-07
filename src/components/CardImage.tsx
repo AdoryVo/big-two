@@ -13,7 +13,6 @@ function cardToUrl(card: string) {
   const [rank, suit] = card.split(';')
 
   if (!rank) {
-    console.log(BASE_CARD_IMAGE_URL + 'back.png')
     return BASE_CARD_IMAGE_URL + 'back.png'
   }
 
