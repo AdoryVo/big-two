@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-const BASE_CARD_IMAGE_URL = '/assets/cards/classic-theme/'
+const BASE_CARD_IMAGE_URL = '/assets/cards/paul/'
 
 const RANK_NAMES: { [abbrn: string]: string } = {
   'J': 'jack',
@@ -33,7 +33,7 @@ export default function CardImage({ card, border, value }: Props) {
       src={cardToUrl(card)}
       style={{
         display: 'inline',
-        width: '5em',
+        width: '6em',
         height: 'auto',
         marginRight: '1em',
         border: border || 'thin solid black',
