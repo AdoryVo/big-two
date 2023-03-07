@@ -84,12 +84,19 @@ class Util {
   }
 
   _straight(cards: Card[]) {
+    let discont = null
     for (let i = 0; i < cards.length - 1; ++i) {
-      if (this._rank_val(cards[i]) + 1 !== this._rank_val(cards[i+1]) &&
-      !((this.rules & Rules.STRAIGHTS_WRAP_AROUND) && (this._rank_val(cards[i]) + 1) % 13 === this._rank_val(cards[i+1])))
-        return null
+      if (this._rank_val(cards[i]) + 1 !== this._rank_val(cards[i+1])) {
+        // if we have a straight wraparound, we will see a discontinuity of EXACTLY 9 in the list of sorted cards,
+        // e.g. 3 4 K A 2, 3 4 5 A 2, 3 4 5 6 2
+        if ((this.rules & Rules.STRAIGHTS_WRAP_AROUND) && this._rank_val(cards[i]) + 9 === this._rank_val(cards[i+1]))
+          discont = cards[i]
+        else
+          return null
+      }
     }
-    return cards[cards.length - 1]
+
+    return discont ?? cards[cards.length - 1]
   }
 
   _full_house(cards: Card[]) {
