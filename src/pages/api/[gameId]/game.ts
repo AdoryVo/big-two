@@ -25,8 +25,9 @@ export default async function handler(
   const playerId = cookies?.find((cookie) => cookie.startsWith('playerId'))?.split('=')[1]
 
   // Authorization - obscuring player data
-  if (playerId && game.players.map((player) => player.id).includes(playerId)) {
-    // If a player is requesting game data, obscure other players' id's & cards
+  const player = game.players.find((player) => player.id === playerId)
+  if (playerId && player && player.finishedRank === 0) {
+    // If a remaining player is requesting game data, obscure other players' id's & cards
     game.players.forEach((player) => {
       if (player.id !== playerId) {
         player.id = ''

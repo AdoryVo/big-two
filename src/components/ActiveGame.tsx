@@ -60,6 +60,9 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
             <CardImage card={card} />
           </Box>
         )}
+        {!game.combo.length &&
+          <CardImage card="" />
+        }
       </Stack>
       <br />
 
@@ -110,15 +113,15 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                 </Button>
               </Box>
             }
+
+            {remainingPlayers.length === 1 &&
+              <Box my={3}>
+                <Button onClick={() => handleAction(Action.End)} colorScheme="red">
+                  End Game
+                </Button>
+              </Box>
+            }
           </PlayerHand>
-
-          {/* <Divider my={4} /> */}
-
-          {remainingPlayers.length === 1 &&
-            <Button onClick={() => handleAction(Action.End)} colorScheme="red">
-              End Game
-            </Button>
-          }
         </Box>
       }
 

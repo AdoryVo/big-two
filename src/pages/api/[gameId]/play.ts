@@ -75,7 +75,8 @@ export default async function handler(
   })
 
   // Authorization - obscuring player data
-  if (playerId && updatedGame.players.map((player) => player.id).includes(playerId)) {
+  const player = updatedGame.players.find((player) => player.id === playerId)
+  if (playerId && player && player.finishedRank === 0) {
     // If a player is requesting game data, obscure other players' id's & cards
     updatedGame.players.forEach((player) => {
       if (player.id !== playerId) {

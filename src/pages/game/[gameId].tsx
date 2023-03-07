@@ -68,8 +68,10 @@ export default function Game() {
 
     setGameInProgress(Boolean(game.currentPlayer))
 
-    // If the game refresh is from web socket, ignore player id logic
-    if (!game.players.every((player) => player.id === '')) {
+    // If the game refresh is from web socket, OR spectating, ignore player id logic
+    if (!game.players.every((player) => player.id === '') ||
+      !game.players.every((player) => player.id !== '')
+    ) {
       // If we are retrieving a player ID, join back in
       const player = game.players.find((player) => player.id)
       if (player) {
