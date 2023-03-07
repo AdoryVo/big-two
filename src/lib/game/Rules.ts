@@ -14,7 +14,10 @@ enum Rules {
   MUST_PLAY_LOWEST_CARD = 1 << 3,
 
   // if you pass, you can still play if your turn comes again
-  CAN_PLAY_AFTER_PASS = 1 << 4
+  CAN_PLAY_AFTER_PASS = 1 << 4,
+
+  // default
+  DEFAULT = SUIT_ORDER_ALPHA | STRAIGHTS_WRAP_AROUND | MUST_PLAY_LOWEST_CARD,
 }
 
 export default Rules

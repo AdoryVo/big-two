@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Divider,
   Heading,
   Stack,
   Text
@@ -19,13 +18,15 @@ interface Props {
   handleAction: (action: Action, data?: ActionData) => void
 }
 
+const RANK_EMOJIS = ['', '🥇', '🥈', '🥉']
+
 export default function ActiveGame({ game, playerId, handleAction }: Props) {
   const [comboToPlay, setComboToPlay] = useState(new Set<string>())
 
   const player = game.players.find((player) => (playerId && player.id === playerId))
-  const passedPlayers = game.players.filter((_, index) => game.passedPlayers.includes(index))
+  const remainingPlayers = game.players.filter((player) => !player.finishedRank)
   // Check if last playmaker is in the remaining players
-  const lastInGame = game.players.filter((player) => !player.finished).some((player) => player.index === game.lastPlaymaker)
+  const lastInGame = remainingPlayers.some((player) => player.index === game.lastPlaymaker)
 
   // use dummy flag to force rerenders, so we don't have to copy the comboToPlay set every time to trigger rerender
   const [dummy, setDummy] = useState(false)
@@ -52,16 +53,17 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
 
   return (
     <>
-      Current combo: {game.combo.join(' ')}
+      Current combo:
+      <Stack direction="row" spacing="-5em">
+        {game.combo.map((card, index) =>
+          <Box key={index}>
+            <CardImage card={card} />
+          </Box>
+        )}
+      </Stack>
       <br />
 
       Turn order: {game.players.sort((a, b) => a.index - b.index).map((player) => player.name).join(', ')}
-      <br />
-
-      Passed players: {passedPlayers.map((player) => player.name).join(', ')}
-      <br />
-
-      Finished players: {game.players.filter((player) => player.finished).map((player) => player.name).join(', ')}
       <br />
 
       {/* Player view: current hand */}
@@ -70,14 +72,26 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           {/* <Heading size="md" mb={2}>{game.currentPlayer?.name}&apos;s Turn</Heading> */}
 
           Player hands:
-          {game.players.sort((a, b) => a.index - b.index).map((player, index) =>
-            <Text
-              key={index}
-              fontWeight={(game.currentPlayer?.name === player.name) ? 'bold' : ''}
-              color={(player.index === ((lastInGame) ? game.lastPlaymaker : game.backupNext)) ? 'blue.500' : ''}
-            >
-              {player.name}: {player.hand.length} cards
-            </Text>
+          {game.players.sort((a, b) => a.index - b.index).map((player2, index) =>
+            <Box key={index}>
+              <Text
+                fontWeight={(game.currentPlayer?.name === player2.name) ? 'bold' : ''}
+                color={(player2.index === ((lastInGame) ? game.lastPlaymaker : game.backupNext)) ? 'blue.500' : ''}
+                title={(player2.index === ((lastInGame) ? game.lastPlaymaker : game.backupNext)) ? 'Round leader' : ''}
+              >
+                {player2.name}: {player2.hand.length} cards {RANK_EMOJIS[player2.finishedRank]}
+                {game.passedPlayers.includes(player2.index) ? '⏭️' : ''}
+              </Text>
+              {player2.name !== player.name &&
+                <Stack direction="row" spacing="-5em">
+                  {player2.hand.map((card, cardIndex) =>
+                    <Box key={cardIndex}>
+                      <CardImage card={card} />
+                    </Box>
+                  )}
+                </Stack>
+              }
+            </Box>
           )}
           <br />
 
@@ -98,11 +112,13 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
             }
           </PlayerHand>
 
-          <Divider my={4} />
+          {/* <Divider my={4} /> */}
 
-          <Button onClick={() => handleAction(Action.End)} colorScheme="red">
-            End Game
-          </Button>
+          {remainingPlayers.length === 1 &&
+            <Button onClick={() => handleAction(Action.End)} colorScheme="red">
+              End Game
+            </Button>
+          }
         </Box>
       }
 

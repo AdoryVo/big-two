@@ -33,7 +33,7 @@ export default async function handler(
     return res.status(401).end()
   }
 
-  const gameInstance = new Game(game.players.length, Rules.SUIT_ORDER_ALPHA, game)
+  const gameInstance = new Game(game.players.length, Rules.DEFAULT, game)
   const currentPlayerIndex = gameInstance.current_player
   const result = gameInstance.play(combo)
 
@@ -55,7 +55,7 @@ export default async function handler(
       where: { id: game.players[result].id },
       data: {
         hand: [],
-        finished: true,
+        finishedRank: finishedPlayer.finished_rank ?? 0,
         points: { increment: finishedPlayer.score },
       },
     })

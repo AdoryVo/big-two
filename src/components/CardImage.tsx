@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-const BASE_CARD_IMAGE_URL = 'https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/'
+const BASE_CARD_IMAGE_URL = '/assets/cards/classic-theme/'
 
 const RANK_NAMES: { [abbrn: string]: string } = {
   'J': 'jack',
@@ -11,6 +11,11 @@ const RANK_NAMES: { [abbrn: string]: string } = {
 
 function cardToUrl(card: string) {
   const [rank, suit] = card.split(';')
+
+  if (!rank) {
+    console.log(BASE_CARD_IMAGE_URL + 'back.png')
+    return BASE_CARD_IMAGE_URL + 'back.png'
+  }
 
   return BASE_CARD_IMAGE_URL + [RANK_NAMES[rank] || rank, suit].join('_of_') + '.png'
 }

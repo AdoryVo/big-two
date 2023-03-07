@@ -23,7 +23,7 @@ export default async function handler(
     return res.status(404).end()
   }
 
-  const gameInstance = new Game(game.players.length, Rules.SUIT_ORDER_ALPHA)
+  const gameInstance = new Game(game.players.length, Rules.DEFAULT)
   const lowestCard = gameInstance.util.card_to_string(gameInstance.lowest_card)
   const currentPlayer = game.players[gameInstance.current_player]
 
@@ -51,6 +51,7 @@ export default async function handler(
       data: {
         index: (i + rng) % game.players.length,
         hand: gameInstance.util.cards_to_strings(instancePlayer.hand),
+        finishedRank: 0,
       },
     })
   }

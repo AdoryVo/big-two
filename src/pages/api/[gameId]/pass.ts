@@ -32,7 +32,7 @@ export default async function handler(
     return res.status(401).end()
   }
 
-  const gameInstance = new Game(game.players.length, Rules.SUIT_ORDER_ALPHA, game)
+  const gameInstance = new Game(game.players.length, Rules.DEFAULT, game)
   const result = gameInstance.pass()
 
   if (result === -2) {
