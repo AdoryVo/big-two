@@ -6,7 +6,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'streetspot.s3.amazonaws.com',
+        hostname: 'raw.githubusercontent.com',
       },
     ],
   },

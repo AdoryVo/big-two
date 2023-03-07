@@ -1,20 +1,33 @@
 import {
-  Box, Button,
-  Checkbox, CheckboxGroup,   Heading,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-  VStack
+  Box,
+  Button,
+  Checkbox, CheckboxGroup,
+  Grid, GridItem,
+  Heading,
+  Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
+  Text,
+  useDisclosure
 } from '@chakra-ui/react'
+import Image from 'next/image'
 import { useState } from 'react'
 
 import { GameWithPlayers } from '../lib/prisma'
 import { Action, ActionData } from '../pages/game/[gameId]'
+
+const BASE_CARD_IMAGE_URL = 'https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/'
+
+const RANK_NAMES: { [abbrn: string]: string } = {
+  'J': 'jack',
+  'Q': 'queen',
+  'K': 'king',
+  'A': 'ace',
+}
+
+function cardToUrl(card: string) {
+  const [rank, suit] = card.split(';')
+
+  return BASE_CARD_IMAGE_URL + [RANK_NAMES[rank] || rank, suit].join('_of_') + '.png'
+}
 
 interface Props {
   game: GameWithPlayers,
@@ -48,9 +61,32 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           <br />
           <br />
 
-          Your hand:
+          Player hands:
+          {game.players.sort((a, b) => a.index - b.index).map((player, index) =>
+            <Text key={index}>
+              {player.name}: {player.hand.length} cards
+            </Text>
+          )}
           <br />
-          {player.hand.join(', ')}
+
+          Your hand ({player.hand.length} cards):
+          <br />
+          {player.hand.map((card, index) =>
+            <Image
+              key={index}
+              alt={card}
+              src={cardToUrl(card)}
+              style={{
+                display: 'inline',
+                width: '4em',
+                height: 'auto',
+                marginRight: '1em',
+                border: 'medium double #68D391',
+              }}
+              width={50}
+              height={100}
+            />
+          )}
 
           {/* Current turn: Display actions */}
           {game.currentPlayer?.id === player.id &&
@@ -65,7 +101,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
             </Box>
           }
 
-          <Modal isOpen={isOpen} onClose={onClose}>
+          <Modal size="xl" isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
               <ModalHeader>Play a combo</ModalHeader>
@@ -73,11 +109,28 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
 
               <ModalBody>
                 <CheckboxGroup colorScheme="green" onChange={(combo) => setComboToPlay(combo.map(String))}>
-                  <VStack align="start">
-                    {player.hand.map((card) =>
-                      <Checkbox key={card} value={card}>{card}</Checkbox>
+                  <Grid templateColumns="repeat(5, 1fr)" gap={5}>
+                    {player.hand.map((card, index) =>
+                      <GridItem key={index}>
+                        <Checkbox value={card}>
+                          <Image
+                            key={index}
+                            alt={card}
+                            src={cardToUrl(card)}
+                            style={{
+                              display: 'inline',
+                              width: '4em',
+                              height: 'auto',
+                              marginRight: '1em',
+                              border: 'medium double #68D391',
+                            }}
+                            width={50}
+                            height={100}
+                          />
+                        </Checkbox>
+                      </GridItem>
                     )}
-                  </VStack>
+                  </Grid>
                 </CheckboxGroup>
               </ModalBody>
 
