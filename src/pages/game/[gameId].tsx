@@ -16,6 +16,7 @@ import { NextSeo } from 'next-seo'
 import { useEffect, useState } from 'react'
 
 import ActiveGame from '../../components/ActiveGame'
+import EditLobby from '../../components/EditLobby'
 import HomeButton from '../../components/HomeButton'
 import WaitingLobby from '../../components/WaitingLobby'
 import { describe, rulesToArray } from '../../lib/game/Rules'
@@ -269,6 +270,9 @@ export default function Game() {
             <ListItem key={rule}>{describe(rule)}</ListItem>
           )}
         </UnorderedList>
+        {!gameInProgress &&
+          <EditLobby game={game} />
+        }
       </BasePage>
     </Box>
   )
