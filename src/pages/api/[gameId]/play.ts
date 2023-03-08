@@ -27,8 +27,7 @@ export default async function handler(
   }
 
   // Double check that the request is from the current player
-  const cookies = req.headers.cookie?.split('; ')
-  const playerId = cookies?.find((cookie) => cookie.startsWith('playerId'))?.split('=')[1]
+  const playerId = req.cookies.playerId
   if (playerId !== game.currentPlayer.id) {
     return res.status(401).end()
   }
@@ -74,24 +73,7 @@ export default async function handler(
     include: { players: true, currentPlayer: true },
   })
 
-  // Authorization - obscuring player data
-  const player = updatedGame.players.find((player) => player.id === playerId)
-  if (playerId && player && player.finishedRank === 0) {
-    // If a player is requesting game data, obscure other players' id's & cards
-    updatedGame.players.forEach((player) => {
-      if (player.id !== playerId) {
-        player.id = ''
-        player.hand = player.hand.map(() => '')
-      }
-    })
-  } else if (!playerId) {
-    // Obscure ID's from spectating players
-    updatedGame.players.forEach((player) => {
-      player.id = ''
-    })
-  }
-
-  await pusher.trigger(id, Event.LobbyUpdate, updatedGame)
+  await pusher.trigger(id, Event.LobbyUpdate, null)
     .catch((err) => {
       console.error(err)
     })

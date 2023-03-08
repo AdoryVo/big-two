@@ -11,7 +11,7 @@ export default async function handler(
 ) {
   const id = String(req.query.gameId)
 
-  const updatedGame = await prisma.game.update({
+  await prisma.game.update({
     where: { id },
     data: {
       combo: { set: [] },
@@ -27,12 +27,7 @@ export default async function handler(
     },
   })
 
-  // Obscure ID's from spectating players
-  updatedGame.players.forEach((player) => {
-    player.id = ''
-  })
-
-  await pusher.trigger(id, Event.EndGame, updatedGame)
+  await pusher.trigger(id, Event.LobbyUpdate, null)
     .catch((err) => {
       console.error(err)
     })

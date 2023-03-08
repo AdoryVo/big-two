@@ -56,19 +56,7 @@ export default async function handler(
     })
   }
 
-  const updatedGame = await prisma.game.findUnique({
-    where: { id },
-    include: { players: true, currentPlayer: true },
-  })
-
-  if (!updatedGame) return res.status(500).end()
-
-  // Obscure ID's from spectating players
-  updatedGame.players.forEach((player) => {
-    player.id = ''
-  })
-
-  await pusher.trigger(id, Event.StartGame, updatedGame)
+  await pusher.trigger(id, Event.LobbyUpdate, null)
     .catch((err) => {
       console.error(err)
     })

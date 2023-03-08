@@ -1,13 +1,17 @@
 import {
-  Button, Container, Heading, Input, Text
+  Button, Container, Heading, Input, Text, useToast
 } from '@chakra-ui/react'
+import ky from 'ky'
 import React from 'react'
 import { useEffect, useState } from 'react'
 
+import HomeButton from '../components/HomeButton'
 import Game from '../lib/game/Game'
 import Rules from '../lib/game/Rules'
 
 export default function Sandbox() {
+  const toast = useToast()
+
   const [game, setGame] = useState<Game>()
 
   const [action, setAction] = useState('')
@@ -43,6 +47,21 @@ export default function Sandbox() {
         game?.pass()
         refreshGame()
         break
+      case 'clear-lobbies':
+        ky.delete('/api/lobby').then(() => {
+          toast({
+            title: 'Expired lobbies cleared!',
+            status: 'success',
+            duration: 2000,
+          })
+        }).catch((err) => {
+          toast({
+            title: 'Error!',
+            description: `${err.response.statusText}`,
+            status: 'error',
+            duration: 2000,
+          })
+        })
       default:
         if (args) console.log('Args:', args)
         break
@@ -55,6 +74,8 @@ export default function Sandbox() {
 
   return (
     <Container maxW="container.lg">
+      <HomeButton mt={2} />
+
       <Heading>Sandbox</Heading>
       <Text mb={3}>
         Current player: {game.current_player}

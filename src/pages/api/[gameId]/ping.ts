@@ -9,7 +9,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const id = String(req.query.gameId)
-  await pusher.trigger(id, Event.Pong, { message: 'hello world' })
+
+  await pusher.trigger(id, Event.Pong, null)
     .catch((err) => {
       console.error(err)
     })

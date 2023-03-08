@@ -13,27 +13,22 @@ export default async function handler(
   const { name } = req.body
 
   const data = { name: String(name) }
-
   const game = await prisma.game.update({
     where: { id },
     data: { players: { create: data } },
-    include: { players: true },
+    include: { players: true, currentPlayer: true },
   })
+
+  if (!game) {
+    res.status(404).end()
+  }
 
   // Set cookie
   const player = game.players.at(-1)
   const playerId = player?.id
   res.setHeader('Set-Cookie', `playerId=${playerId}; Path=/`)
 
-  // Authorization - obscuring player data
-  if (game) {
-    // Obscure ID's from spectating players
-    game.players.forEach((player) => {
-      player.id = ''
-    })
-  }
-
-  await pusher.trigger(id, Event.LobbyUpdate, game)
+  await pusher.trigger(id, Event.LobbyUpdate, null)
     .catch((err) => {
       console.error(err)
     })

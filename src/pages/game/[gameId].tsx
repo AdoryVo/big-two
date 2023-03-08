@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Container,
   Divider,
   Heading,
@@ -11,15 +10,14 @@ import {
   useToast
 } from '@chakra-ui/react'
 import ky from 'ky'
-import Link from 'next/link'
 import { NextSeo } from 'next-seo'
 import { useEffect, useState } from 'react'
 
 import ActiveGame from '../../components/ActiveGame'
+import HomeButton from '../../components/HomeButton'
 import WaitingLobby from '../../components/WaitingLobby'
 import useGame from '../../lib/hooks/useGame'
 import { usePusher } from '../../lib/hooks/usePusher'
-import { GameWithPlayers } from '../../lib/prisma'
 import { Event } from '../../lib/pusher'
 
 export const enum Action {
@@ -41,10 +39,7 @@ export interface ActionData {
 function BasePage({ children }: { children?: React.ReactNode }) {
   return (
     <Container p={5} backgroundColor="white" borderRadius="lg" maxW="container.md">
-      <Link href="/" passHref>
-        <Button colorScheme="facebook" mb={4} me={2}>Home</Button>
-      </Link>
-
+      <HomeButton />
       {children}
     </Container>
   )
@@ -103,16 +98,6 @@ export default function Game() {
         duration: 2500,
         isClosable: true,
       })
-    })
-
-    channel.bind(Event.StartGame, (game: GameWithPlayers) => {
-      setGameInProgress(true)
-      mutate(game)
-    })
-
-    channel.bind(Event.EndGame, (game: GameWithPlayers) => {
-      setGameInProgress(false)
-      mutate(game)
     })
 
     channel.bind(Event.Pong, () => {

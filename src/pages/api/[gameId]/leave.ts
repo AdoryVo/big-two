@@ -11,15 +11,6 @@ export default async function handler(
 ) {
   const id = String(req.query.gameId)
 
-  const cookies = req.headers.cookie?.split('; ')
-  const playerId = cookies?.find((cookie) => cookie.startsWith('playerId'))?.split('=')[1]
-
-  if (!playerId) {
-    return res.status(404).end()
-  }
-
-  await prisma.player.delete({ where: { id: playerId } })
-
   const game = await prisma.game.findUnique({
     where: { id },
     include: {
@@ -28,14 +19,14 @@ export default async function handler(
     },
   })
 
-  if (game) {
-    // Obscure ID's from spectating players
-    game.players.forEach((player) => {
-      player.id = ''
-    })
+  const playerId = req.cookies.playerId
+  if (!playerId || !game) {
+    return res.status(404).end()
   }
 
-  await pusher.trigger(id, Event.LobbyUpdate, game)
+  await prisma.player.delete({ where: { id: playerId } })
+
+  await pusher.trigger(id, Event.LobbyUpdate, null)
     .catch((err) => {
       console.error(err)
     })
