@@ -39,10 +39,5 @@ export default async function handler(
     })
   }
 
-  // If a game is not in progress, remove cookie (temp disabled - async issues)
-  if (!game.players.find((player) => player.id === playerId)) {
-    // res.setHeader('Set-Cookie', 'playerId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT')
-  }
-
   return res.status(200).json(game)
 }

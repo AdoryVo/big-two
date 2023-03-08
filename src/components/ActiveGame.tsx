@@ -2,6 +2,10 @@ import {
   Box,
   Button,
   Heading,
+  Slider,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderTrack,
   Stack,
   Text
 } from '@chakra-ui/react'
@@ -22,8 +26,9 @@ const RANK_EMOJIS = ['', '🥇', '🥈', '🥉']
 
 export default function ActiveGame({ game, playerId, handleAction }: Props) {
   const [comboToPlay, setComboToPlay] = useState(new Set<string>())
+  const [cardSpacing, setCardSpacing] = useState('-5.5em')
 
-  const player = game.players.find((player) => (playerId && player.id === playerId))
+  const thisPlayer = game.players.find((player) => (playerId && player.id === playerId))
   const remainingPlayers = game.players.filter((player) => !player.finishedRank)
   // Check if last playmaker is in the remaining players
   const lastInGame = remainingPlayers.some((player) => player.index === game.lastPlaymaker)
@@ -54,7 +59,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
   return (
     <>
       Current combo:
-      <Stack direction="row" spacing="-5.5em">
+      <Stack direction="row" spacing={cardSpacing}>
         {game.combo.map((card, index) =>
           <Box key={index}>
             <CardImage card={card} />
@@ -65,28 +70,23 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
         }
       </Stack>
 
-      {/* Turn order: {game.players.sort((a, b) => a.index - b.index).map((player) => player.name).join(', ')}
-      <br /> */}
-
       {/* Player view: current hand */}
-      {player &&
+      {thisPlayer &&
         <Box my={5} py={2}>
-          {/* <Heading size="md" mb={2}>{game.currentPlayer?.name}&apos;s Turn</Heading> */}
-
           Player hands:
-          {game.players.sort((a, b) => a.index - b.index).map((player2, index) =>
+          {game.players.sort((a, b) => a.index - b.index).map((player, index) =>
             <Box key={index}>
               <Text
-                fontWeight={(game.currentPlayer?.name === player2.name) ? 'bold' : ''}
-                color={(player2.index === ((lastInGame) ? game.lastPlaymaker : game.backupNext)) ? 'blue.500' : ''}
-                title={(player2.index === ((lastInGame) ? game.lastPlaymaker : game.backupNext)) ? 'Round leader' : ''}
+                fontWeight={(game.currentPlayer?.name === player.name) ? 'bold' : ''}
+                color={(player.index === ((lastInGame) ? game.lastPlaymaker : game.backupNext)) ? 'blue.500' : ''}
+                title={(player.index === ((lastInGame) ? game.lastPlaymaker : game.backupNext)) ? 'Round leader' : ''}
               >
-                {player2.name} {player.name === player2.name && '(You)'}: {player2.hand.length} cards {RANK_EMOJIS[player2.finishedRank]}
-                {game.passedPlayers.includes(player2.index) ? '⏭️' : ''}
+                {player.name} {thisPlayer.name === player.name && '(You)'}: {player.hand.length} cards {RANK_EMOJIS[player.finishedRank]}
+                {game.passedPlayers.includes(player.index) && '⏭️'}
               </Text>
-              {player2.name !== player.name &&
-                <Stack direction="row" spacing="-5.5em">
-                  {player2.hand.map((card, cardIndex) =>
+              {player.name !== thisPlayer.name &&
+                <Stack direction="row" spacing={cardSpacing}>
+                  {player.hand.map((card, cardIndex) =>
                     <Box key={cardIndex}>
                       <CardImage card={card} />
                     </Box>
@@ -97,11 +97,11 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           )}
           <br />
 
-          Your hand ({player.hand.length} cards):
+          Your hand ({thisPlayer.hand.length} cards):
           <br />
-          <PlayerHand hand={player.hand} handleClick={handleClick} comboToPlay={comboToPlay}>
+          <PlayerHand hand={thisPlayer.hand} comboToPlay={comboToPlay} cardSpacing={cardSpacing} handleClick={handleClick}>
             {/* Current turn: Display actions */}
-            {(game.currentPlayer && game.currentPlayer.id === player.id) &&
+            {(game.currentPlayer && game.currentPlayer.id === thisPlayer.id) &&
               <Box>
                 <Heading size="md" my={4}>Take your action!</Heading>
                 <Button onClick={handlePlay} colorScheme="green" me={2}>
@@ -131,13 +131,12 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           {game.players.map((player, index) => (
             <Box key={index} mb={5}>
               <Heading size="sm" mb={1}>{player.name}&apos;s hand</Heading>
-              <Stack key={index} direction="row" spacing="-5em">
+              <Stack key={index} direction="row" spacing={cardSpacing}>
                 {player.hand.map((card, cardIndex) =>
                   <Box key={cardIndex} onClick={() => handleClick(card)}>
                     <CardImage
                       card={card}
-                      border={comboToPlay.has(card) ? 'thin solid #68D391' : 'thin solid black'}
-                      value={comboToPlay.has(card) ? 'translate(0, -1em)' : ''}
+                      selected={comboToPlay.has(card)}
                     />
                   </Box>
                 )}
@@ -146,6 +145,20 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           ))}
         </Box>
       )}
+
+      <Slider
+        aria-label="card-spread-spacing"
+        min={4.75}
+        max={6.25}
+        step={-0.075}
+        defaultValue={5.5}
+        onChange={(val) => setCardSpacing(-1 * val + 'em')}>
+        <SliderTrack>
+          <SliderFilledTrack />
+        </SliderTrack>
+        <SliderThumb />
+      </Slider>
+      <Text textAlign="center">Card spread spacing</Text>
     </>
   )
 }

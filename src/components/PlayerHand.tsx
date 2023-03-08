@@ -9,23 +9,23 @@ interface Props {
   hand: string[],
   children?: React.ReactNode,
   comboToPlay: Set<string>,
+  cardSpacing: string,
   handleClick: (card: string) => void
 }
 
 export default function PlayerHand({
-  hand, children, comboToPlay, handleClick,
+  hand, children, comboToPlay, cardSpacing, handleClick,
 }: Props) {
   const [toggleGrid, setToggleGrid] = useState(false)
 
   return (
     <>
-      <Stack direction="row" spacing="-5.5em">
+      <Stack direction="row" spacing={cardSpacing}>
         {hand.map((card, index) =>
           <Box key={index} onClick={() => handleClick(card)}>
             <CardImage
               card={card}
-              border={comboToPlay.has(card) ? 'thin solid #68D391' : 'thin solid black'}
-              value={comboToPlay.has(card) ? 'translate(0, -1em)' : ''}
+              selected={comboToPlay.has(card)}
             />
           </Box>
         )}
@@ -42,7 +42,7 @@ export default function PlayerHand({
           {hand.map((card, index) =>
             <GridItem key={index}>
               <Box onClick={() => handleClick(card)}>
-                <CardImage card={card} border={comboToPlay.has(card) ? 'thin solid #68D391' : 'thin solid black'} />
+                <CardImage card={card} selected={comboToPlay.has(card)} style={{ transform: '' }} />
               </Box>
             </GridItem>
           )}

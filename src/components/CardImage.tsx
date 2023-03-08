@@ -3,8 +3,6 @@ import { CSSProperties } from 'react'
 
 import { getTheme } from '../lib/theme'
 
-const BASE_CARD_IMAGE_URL = '/assets/cards/'
-
 const RANK_NAMES: { [abbrn: string]: string } = {
   'J': 'jack',
   'Q': 'queen',
@@ -14,14 +12,13 @@ const RANK_NAMES: { [abbrn: string]: string } = {
 
 interface Props {
   card: string,
-  border?: string,
-  value?: string,
+  selected?: boolean,
   theme?: string,
   style?: CSSProperties
 }
 
 export default function CardImage({
-  card, border, value, theme, style,
+  card, selected, theme, style,
 }: Props) {
   function cardToUrl(card: string) {
     const [rank, suit] = card.split(';')
@@ -30,7 +27,7 @@ export default function CardImage({
       return '/assets/cards/classic/back.png'
     }
 
-    return `${BASE_CARD_IMAGE_URL}${theme || getTheme()}/${[RANK_NAMES[rank] || rank, suit].join('_of_')}.png`
+    return `/assets/cards/${theme || getTheme()}/${[RANK_NAMES[rank] || rank, suit].join('_of_')}.png`
   }
 
   return (
@@ -42,10 +39,10 @@ export default function CardImage({
         width: '6em',
         height: 'auto',
         marginRight: '1em',
-        border: border || 'thin solid black',
+        border: selected ? 'thin solid #68D391' : 'thin solid black',
         backgroundColor: 'white',
         cursor: 'pointer',
-        transform: value,
+        transform: selected ? 'translate(0, -1em)' : '',
         position: 'relative',
         ...style,
       }}

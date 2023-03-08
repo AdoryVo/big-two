@@ -1,6 +1,6 @@
 {
   "name": "big-two",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,42 +10,35 @@
     "vercel-build": "prisma generate && prisma migrate deploy && next build"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.272.0",
-    "@babel/core": "^7.20.12",
+    "@babel/core": "^7.21.0",
     "@chakra-ui/react": "^2.5.1",
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
     "@prisma/client": "^4.11.0",
-    "cards": "^2.0.2",
-    "formidable": "^2.1.1",
-    "formik": "^2.2.9",
-    "framer-motion": "^9.0.3",
+    "cards": "^2.0.3",
+    "framer-motion": "^10.2.3",
     "ky": "^0.33.2",
     "lodash": "^4.17.21",
-    "next": "13.1.6",
+    "next": "13.2.3",
     "next-seo": "^5.15.0",
     "pusher": "^5.1.2",
     "pusher-js": "^8.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-icons": "^4.7.1",
-    "request-ip": "^3.3.0",
-    "swr": "^2.0.3",
-    "uuid": "^9.0.0"
+    "react-icons": "^4.8.0",
+    "swr": "^2.1.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.191",
-    "@types/node": "^18.13.0",
+    "@types/node": "^18.14.6",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
-    "@types/request-ip": "^0.0.37",
-    "@types/uuid": "^9.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.52.0",
-    "@typescript-eslint/parser": "^5.52.0",
-    "eslint": "8.34.0",
-    "eslint-config-next": "13.1.6",
+    "@typescript-eslint/eslint-plugin": "^5.54.1",
+    "@typescript-eslint/parser": "^5.54.1",
+    "eslint": "8.35.0",
+    "eslint-config-next": "13.2.3",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "prisma": "^4.11.0",
-    "typescript": "^4.9.5"
+    "typescript": "4.9.5"
   }
 }
