@@ -33,11 +33,18 @@ export default async function handler(
         player.hand = player.hand.map(() => '')
       }
     })
-  } else if (!playerId) {
+  } else {
     // Obscure ID's from spectating players
     game.players.forEach((player) => {
       player.id = ''
     })
+
+    if (!game.settings.spectating) {
+      // Hide all cards if spectating is not allowed
+      game.players.forEach((player) => {
+        player.hand = player.hand.map(() => '')
+      })
+    }
   }
 
   return res.status(200).json(game)

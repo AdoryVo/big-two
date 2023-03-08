@@ -34,7 +34,7 @@ export default function Preferences() {
         Preferences
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Preferences</ModalHeader>

@@ -19,6 +19,7 @@ interface Props {
 export default function LobbyForm({ game, submitForm }: Props) {
   const defaults = game?.settings ?? {
     rules: Rules.DEFAULT,
+    public: false,
     spectating: true,
     playerMax: 4,
   }
@@ -27,6 +28,7 @@ export default function LobbyForm({ game, submitForm }: Props) {
 
   const formik = useFormik({
     initialValues: {
+      public: defaults.public,
       spectating: defaults.spectating,
       playerMax: defaults.playerMax,
     },
@@ -74,13 +76,27 @@ export default function LobbyForm({ game, submitForm }: Props) {
         </NumberInput>
       </FormControl>
 
-      <Checkbox
-        name="spectating"
-        onChange={formik.handleChange}
-        isChecked={formik.values.spectating}
-      >
-        Allow spectating
-      </Checkbox>
+      <FormControl mb={2}>
+        <Checkbox
+          name="spectating"
+          onChange={formik.handleChange}
+          isChecked={formik.values.spectating}
+          colorScheme="green"
+        >
+          Allow spectating
+        </Checkbox>
+      </FormControl>
+
+      <FormControl>
+        <Checkbox
+          name="public"
+          onChange={formik.handleChange}
+          isChecked={formik.values.public}
+          colorScheme="green"
+        >
+          Public lobby
+        </Checkbox>
+      </FormControl>
     </form>
   )
 }

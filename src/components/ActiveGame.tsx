@@ -146,19 +146,22 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
         </Box>
       )}
 
-      <Slider
-        aria-label="card-spread-spacing"
-        min={4.75}
-        max={6.25}
-        step={-0.075}
-        defaultValue={5.5}
-        onChange={(val) => setCardSpacing(-1 * val + 'em')}>
-        <SliderTrack>
-          <SliderFilledTrack />
-        </SliderTrack>
-        <SliderThumb />
-      </Slider>
-      <Text textAlign="center">Card spread spacing</Text>
+      <Box maxW="50%">
+        <Text>Card spread spacing</Text>
+        <Slider
+          aria-label="card-spread-spacing"
+          min={5.4}
+          max={6}
+          step={0.05}
+          defaultValue={5.7}
+          isReversed={true}
+          onChange={(val) => setCardSpacing(-1 * val + 'em')}>
+          <SliderTrack bg="green.500">
+            <SliderFilledTrack bg="green.100" />
+          </SliderTrack>
+          <SliderThumb />
+        </Slider>
+      </Box>
     </>
   )
 }

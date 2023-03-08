@@ -29,6 +29,7 @@ model Settings {
   game Game?
 
   rules      Int
+  public     Boolean @default(false)
   spectating Boolean @default(true)
   playerMax  Int     @default(4)
 }

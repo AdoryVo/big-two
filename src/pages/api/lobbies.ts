@@ -9,6 +9,7 @@ export default async function handler(
 ) {
   if (req.method === 'GET') {
     const games = await prisma.game.findMany({
+      where: { settings: { public: true } },
       include: {
         players: true,
         currentPlayer: true,
