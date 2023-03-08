@@ -14,6 +14,7 @@ export default async function handler(
     include: {
       players: true,
       currentPlayer: true,
+      settings: true,
     },
   })
 

@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.10.6",
     "@prisma/client": "^4.11.0",
     "cards": "^2.0.3",
+    "formik": "^2.2.9",
     "framer-motion": "^10.2.3",
     "ky": "^0.33.2",
     "lodash": "^4.17.21",
