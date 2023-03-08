@@ -3,27 +3,20 @@ import {
   Button,
   Card, CardBody, CardFooter, CardHeader,
   Container,
-  Heading
+  Heading,
+  ListItem,
+  UnorderedList
 } from '@chakra-ui/react'
-import type { Game } from '@prisma/client'
-import ky from 'ky'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
 
+import CreateLobby from '../components/CreateLobby'
 import Preferences from '../components/Preferences'
+import { describe, rulesToArray } from '../lib/game/Rules'
 import useLobbies from '../lib/hooks/useLobbies'
 
 export default function Home() {
-  const router = useRouter()
   const { lobbies, isLoading, error } = useLobbies()
-
-  function handleStartGame() {
-    // Create a new game and then redirect them
-    ky.post('api/lobby').json<Game>().then((game) => {
-      router.push({ pathname: '/game/[gameId]', query: { gameId: game.id } })
-    })
-  }
 
   return (
     <Box background="green.100" minH="100vh">
@@ -33,9 +26,7 @@ export default function Home() {
       />
       <Container p={5}>
         <Heading mb={5}>♠️ Big Two</Heading>
-        <Button onClick={handleStartGame} colorScheme="green" mb={4} me={2}>
-          Create Lobby
-        </Button>
+        <CreateLobby />
         <Preferences />
 
         <Heading size="lg" my={5}>🏠 Public Lobbies</Heading>
@@ -50,9 +41,17 @@ export default function Home() {
               &nbsp;|&nbsp;{lobby.players && lobby.players.length} current players
             </CardHeader>
             <CardBody>
-              Rules: Classic
+              Max players: {lobby.settings.playerMax}
               <br />
-              Spectating: On
+              Spectating: {lobby.settings.spectating ? 'On' : 'Off'}
+              <br />
+              Rules:
+              <br />
+              <UnorderedList>
+                {rulesToArray(lobby.settings.rules).map((rule) =>
+                  <ListItem key={rule}>{describe(rule)}</ListItem>
+                )}
+              </UnorderedList>
             </CardBody>
             <CardFooter>
               <Link href={`/game/${lobby.id}`} passHref>

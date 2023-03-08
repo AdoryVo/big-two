@@ -4,9 +4,11 @@ import {
   Divider,
   Heading,
   Link as ChakraLink,
+  ListItem,
   Table, TableContainer, Tbody, Td,
   Text,
   Th, Thead, Tr,
+  UnorderedList,
   useToast
 } from '@chakra-ui/react'
 import ky from 'ky'
@@ -16,6 +18,7 @@ import { useEffect, useState } from 'react'
 import ActiveGame from '../../components/ActiveGame'
 import HomeButton from '../../components/HomeButton'
 import WaitingLobby from '../../components/WaitingLobby'
+import { describe, rulesToArray } from '../../lib/game/Rules'
 import useGame from '../../lib/hooks/useGame'
 import { usePusher } from '../../lib/hooks/usePusher'
 import { Event } from '../../lib/pusher'
@@ -251,6 +254,21 @@ export default function Game() {
             </Tbody>
           </Table>
         </TableContainer>
+
+        <Divider my={5} />
+
+        <Heading size="lg" mb={3}>📜 Lobby Rules</Heading>
+        Max players: {game.settings.playerMax}
+        <br />
+        Spectating: {game.settings.spectating ? 'On' : 'Off'}
+        <br />
+        Rules:
+        <br />
+        <UnorderedList>
+          {rulesToArray(game.settings.rules).map((rule) =>
+            <ListItem key={rule}>{describe(rule)}</ListItem>
+          )}
+        </UnorderedList>
       </BasePage>
     </Box>
   )

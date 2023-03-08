@@ -2,34 +2,14 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from '../../lib/prisma'
 
-// POST, DELETE /api/lobby
+// POST /api/lobby
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === 'POST') {
-    const lobby = await prisma.game.create({ data: {} })
+  const data = req.body
 
-    return res.status(201).json(lobby)
-  } else if (req.method === 'DELETE') {
-    if (req.cookies.secret !== process.env.ADMIN_SECRET) {
-      return res.status(401).end()
-    }
+  const lobby = await prisma.game.create({ data: { settings: { create: data } } })
 
-    const THREE_HOURS = 3 * 60 * 60 * 1000
-    const threeHoursAgo = new Date().getTime() - THREE_HOURS
-
-    const expiredGames = await prisma.game.findMany({ where: { createdAt: { lt: new Date(threeHoursAgo) } } })
-    const expiredGameIds = expiredGames.map((game) => game.id)
-
-    // Delete players in expired games
-    await prisma.player.deleteMany({ where: { gameId: { in: expiredGameIds } } })
-
-    // Delete expired games
-    await prisma.game.deleteMany({ where: { id: { in: expiredGameIds } } })
-
-    return res.status(204).end()
-  } else {
-    return res.status(404).end()
-  }
+  return res.status(201).json(lobby)
 }

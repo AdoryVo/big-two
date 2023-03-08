@@ -9,6 +9,9 @@ datasource db {
 
 model Game {
   id         String   @id @default(uuid())
+  settings   Settings @relation(fields: [settingsId], references: [id])
+  settingsId String   @unique
+
   combo      String[] @default([])
   lowestCard String?
 
@@ -19,6 +22,15 @@ model Game {
   backupNext    Int?
 
   createdAt DateTime @default(now())
+}
+
+model Settings {
+  id   String @id @default(uuid())
+  game Game?
+
+  rules      Int
+  spectating Boolean @default(true)
+  playerMax  Int     @default(4)
 }
 
 model Player {

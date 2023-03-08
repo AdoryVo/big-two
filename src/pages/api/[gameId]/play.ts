@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import Game from '../../../lib/game/Game'
-import Rules from '../../../lib/game/Rules'
 import prisma from '../../../lib/prisma'
 import pusher from '../../../lib/pusher'
 import { Event } from '../../../lib/pusher'
@@ -19,6 +18,7 @@ export default async function handler(
     include: {
       players: true,
       currentPlayer: true,
+      settings: true,
     },
   })
 
@@ -32,7 +32,7 @@ export default async function handler(
     return res.status(401).end()
   }
 
-  const gameInstance = new Game(game.players.length, Rules.DEFAULT, game)
+  const gameInstance = new Game(game.players.length, game.settings.rules, game)
   const currentPlayerIndex = gameInstance.current_player
   const result = gameInstance.play(combo)
 

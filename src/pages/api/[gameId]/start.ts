@@ -2,7 +2,6 @@ import _ from 'lodash'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import Game from '../../../lib/game/Game'
-import Rules from '../../../lib/game/Rules'
 import prisma from '../../../lib/prisma'
 import { Event } from '../../../lib/pusher'
 import pusher from '../../../lib/pusher'
@@ -16,14 +15,14 @@ export default async function handler(
 
   const game = await prisma.game.findUnique({
     where: { id },
-    include: { players: true, currentPlayer: true },
+    include: { players: true, currentPlayer: true, settings: true },
   })
 
   if (!game) {
     return res.status(404).end()
   }
 
-  const gameInstance = new Game(game.players.length, Rules.DEFAULT)
+  const gameInstance = new Game(game.players.length, game.settings.rules)
   const lowestCard = gameInstance.util.card_to_string(gameInstance.lowest_card)
   const currentPlayer = game.players[gameInstance.current_player]
 
