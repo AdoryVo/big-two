@@ -54,7 +54,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
   return (
     <>
       Current combo:
-      <Stack direction="row" spacing="-5em">
+      <Stack direction="row" spacing="-5.5em">
         {game.combo.map((card, index) =>
           <Box key={index}>
             <CardImage card={card} />
@@ -85,7 +85,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                 {game.passedPlayers.includes(player2.index) ? '⏭️' : ''}
               </Text>
               {player2.name !== player.name &&
-                <Stack direction="row" spacing="-5em">
+                <Stack direction="row" spacing="-5.5em">
                   {player2.hand.map((card, cardIndex) =>
                     <Box key={cardIndex}>
                       <CardImage card={card} />
@@ -101,7 +101,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           <br />
           <PlayerHand hand={player.hand} handleClick={handleClick} comboToPlay={comboToPlay}>
             {/* Current turn: Display actions */}
-            {game.currentPlayer?.id === player.id &&
+            {(game.currentPlayer && game.currentPlayer.id === player.id) &&
               <Box>
                 <Heading size="md" my={4}>Take your action!</Heading>
                 <Button onClick={handlePlay} colorScheme="green" me={2}>

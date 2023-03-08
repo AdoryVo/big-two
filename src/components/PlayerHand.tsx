@@ -19,7 +19,7 @@ export default function PlayerHand({
 
   return (
     <>
-      <Stack direction="row" spacing="-5em">
+      <Stack direction="row" spacing="-5.5em">
         {hand.map((card, index) =>
           <Box key={index} onClick={() => handleClick(card)}>
             <CardImage
@@ -38,7 +38,7 @@ export default function PlayerHand({
       </Button>
 
       {toggleGrid &&
-        <Grid templateColumns="repeat(8, 1fr)" gap={0}>
+        <Grid templateColumns="repeat(7, 1fr)" gap={0}>
           {hand.map((card, index) =>
             <GridItem key={index}>
               <Box onClick={() => handleClick(card)}>
