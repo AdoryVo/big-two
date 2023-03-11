@@ -1,5 +1,5 @@
 import {
-  Box, Button, Grid, GridItem, Stack
+  Box, Button, Grid, GridItem, Stack,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 

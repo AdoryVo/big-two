@@ -1,10 +1,10 @@
 import _ from 'lodash'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import Game from '../../../lib/game/Game'
-import prisma from '../../../lib/prisma'
-import { Event } from '../../../lib/pusher'
-import pusher from '../../../lib/pusher'
+import Game from '@big-two/Game'
+import prisma from '@utils/prisma'
+import { Event } from '@utils/pusher'
+import pusher from '@utils/pusher'
 
 // PATCH /api/[gameId]/start
 export default async function handler(

@@ -5,15 +5,15 @@ import {
   Container,
   Heading,
   ListItem,
-  UnorderedList
+  UnorderedList,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { NextSeo } from 'next-seo'
 
-import CreateLobby from '../components/CreateLobby'
-import Preferences from '../components/Preferences'
-import { describe, rulesToArray } from '../lib/game/Rules'
-import useLobbies from '../lib/hooks/useLobbies'
+import { describe, rulesToArray } from '@big-two/Rules'
+import CreateLobby from '@components/CreateLobby'
+import Preferences from '@components/Preferences'
+import useLobbies from '@utils/hooks/useLobbies'
 
 export default function Home() {
   const { lobbies, isLoading, error } = useLobbies()

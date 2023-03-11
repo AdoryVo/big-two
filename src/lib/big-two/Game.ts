@@ -1,8 +1,9 @@
-import { Card, decks } from 'cards'
+import { type Card, decks } from 'cards'
 import _ from 'lodash'
 
-import { GameWithPlayers } from '../prisma'
-import { Combo } from './Combo'
+import type { GameWithPlayers } from '@utils/prisma'
+
+import type { Combo } from './Combo'
 import Player from './Player'
 import Rules from './Rules'
 import Util from  './Util'

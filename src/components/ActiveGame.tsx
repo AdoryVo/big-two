@@ -7,12 +7,13 @@ import {
   SliderThumb,
   SliderTrack,
   Stack,
-  Text
+  Text,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 
-import { GameWithPlayers } from '../lib/prisma'
-import { Action, ActionData } from '../pages/game/[gameId]'
+import { Action, type ActionData } from '@utils/actions'
+import type { GameWithPlayers } from '@utils/prisma'
+
 import CardImage from './CardImage'
 import PlayerHand from './PlayerHand'
 

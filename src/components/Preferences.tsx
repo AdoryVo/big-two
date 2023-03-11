@@ -5,14 +5,15 @@ import {
   Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
   Radio, RadioGroup,
   Stack,
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/react'
 import { startCase } from 'lodash'
 import { useEffect, useState } from 'react'
 
 import {
-  getTheme, setTheme as setGlobalTheme, Theme, Themes
-} from '../lib/theme'
+  getTheme, setTheme as setGlobalTheme, Theme, Themes,
+} from '@utils/theme'
+
 import CardImage from './CardImage'
 
 export default function Preferences() {

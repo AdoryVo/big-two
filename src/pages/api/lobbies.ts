@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import prisma from '../../lib/prisma'
+import prisma from '@utils/prisma'
 
 // GET, DELETE /api/lobbies
 export default async function handler(

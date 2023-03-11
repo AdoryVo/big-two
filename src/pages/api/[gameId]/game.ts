@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import prisma from '../../../lib/prisma'
+import prisma from '@utils/prisma'
 
 // GET /api/[gameId]/game
 export default async function handler(

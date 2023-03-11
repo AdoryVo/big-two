@@ -3,7 +3,7 @@ import { Rank } from 'cards/build/ranks'
 import { Suit } from 'cards/build/suits'
 
 import { Combo, Combo_Types } from './Combo'
-import Player from './Player'
+import type Player from './Player'
 import Rules from './Rules'
 
 export const CARD_STRING_SEPARATOR = ';' // "2;clubs"

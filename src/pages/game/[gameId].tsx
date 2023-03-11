@@ -9,36 +9,21 @@ import {
   Text,
   Th, Thead, Tr,
   UnorderedList,
-  useToast
+  useToast,
 } from '@chakra-ui/react'
 import ky from 'ky'
 import { NextSeo } from 'next-seo'
 import { useEffect, useState } from 'react'
 
-import ActiveGame from '../../components/ActiveGame'
-import EditLobby from '../../components/EditLobby'
-import HomeButton from '../../components/HomeButton'
-import WaitingLobby from '../../components/WaitingLobby'
-import { describe, rulesToArray } from '../../lib/game/Rules'
-import useGame from '../../lib/hooks/useGame'
-import { usePusher } from '../../lib/hooks/usePusher'
-import { Event } from '../../lib/pusher'
-
-export const enum Action {
-  Ping = 'ping',
-  Join = 'join',
-  Leave = 'leave',
-  Start = 'start',
-  End = 'end',
-  Pass = 'pass',
-  Play = 'play'
-}
-
-export interface ActionData {
-  name?: string,
-  comboToPlay?: string[],
-  onClose?: () => void
-}
+import { describe, rulesToArray } from '@big-two/Rules'
+import ActiveGame from '@components/ActiveGame'
+import EditLobby from '@components/EditLobby'
+import HomeButton from '@components/HomeButton'
+import WaitingLobby from '@components/WaitingLobby'
+import { Action, type ActionData } from '@utils/actions'
+import useGame from '@utils/hooks/useGame'
+import { usePusher } from '@utils/hooks/usePusher'
+import { Event } from '@utils/pusher'
 
 function BasePage({ children }: { children?: React.ReactNode }) {
   return (

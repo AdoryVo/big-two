@@ -2,14 +2,14 @@ import {
   Checkbox, CheckboxGroup,
   FormControl, FormLabel,
   NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper,
-  VStack
+  VStack,
 } from '@chakra-ui/react'
 import { useFormik } from 'formik'
 import { sum } from 'lodash'
 import { useState } from 'react'
 
-import Rules, { ALL_RULES, describe, rulesToArray } from '../lib/game/Rules'
-import { GameWithPlayers } from '../lib/prisma'
+import Rules, { ALL_RULES, describe, rulesToArray } from '@big-two/Rules'
+import type { GameWithPlayers } from '@utils/prisma'
 
 interface Props {
   game?: GameWithPlayers

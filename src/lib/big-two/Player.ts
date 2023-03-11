@@ -1,4 +1,4 @@
-import { Card } from 'cards'
+import type { Card } from 'cards'
 
 class Player {
   hand!: Card[] // the hand should be initiated from the Game, so it is ignored in the constructor

@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import Game from '../../../lib/game/Game'
-import prisma from '../../../lib/prisma'
-import pusher from '../../../lib/pusher'
-import { Event } from '../../../lib/pusher'
+import Game from '@big-two/Game'
+import prisma from '@utils/prisma'
+import pusher from '@utils/pusher'
+import { Event } from '@utils/pusher'
 
 // PUT /api/[gameId]/play
 export default async function handler(

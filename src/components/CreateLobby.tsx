@@ -1,9 +1,9 @@
 import {
   Button,
   Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/react'
-import { Game } from '@prisma/client'
+import type { Game } from '@prisma/client'
 import ky from 'ky'
 import { useRouter } from 'next/router'
 

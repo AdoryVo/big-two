@@ -1,13 +1,13 @@
 import {
-  Button, Container, Heading, Input, Text, useToast
+  Button, Container, Heading, Input, Text, useToast,
 } from '@chakra-ui/react'
 import ky from 'ky'
 import React from 'react'
 import { useEffect, useState } from 'react'
 
-import HomeButton from '../components/HomeButton'
-import Game from '../lib/game/Game'
-import Rules from '../lib/game/Rules'
+import Game from '@big-two/Game'
+import Rules from '@big-two/Rules'
+import HomeButton from '@components/HomeButton'
 
 export default function Sandbox() {
   const toast = useToast()

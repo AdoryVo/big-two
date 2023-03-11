@@ -1,11 +1,11 @@
 import {
   Button, Heading, Input,
-  ListItem, OrderedList
+  ListItem, OrderedList,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 
-import { GameWithPlayers } from '../lib/prisma'
-import { Action, ActionData } from '../pages/game/[gameId]'
+import { Action, type ActionData } from '@utils/actions'
+import type { GameWithPlayers } from '@utils/prisma'
 
 interface Props {
   game: GameWithPlayers,

@@ -1,8 +1,9 @@
+
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import prisma from '../../../lib/prisma'
-import pusher from '../../../lib/pusher'
-import { Event } from '../../../lib/pusher'
+import prisma from '@utils/prisma'
+import pusher from '@utils/pusher'
+import { Event } from '@utils/pusher'
 
 // PATCH /api/[gameId]/end
 export default async function handler(

@@ -1,7 +1,7 @@
 import Image from 'next/image'
-import { CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
 
-import { getTheme } from '../lib/theme'
+import { getTheme } from '@utils/theme'
 
 const RANK_NAMES: { [abbrn: string]: string } = {
   'J': 'jack',

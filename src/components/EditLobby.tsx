@@ -1,11 +1,12 @@
 import {
   Button,
   Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/react'
 import ky from 'ky'
 
-import { GameWithPlayers } from '../lib/prisma'
+import type { GameWithPlayers } from '@utils/prisma'
+
 import LobbyForm from './LobbyForm'
 
 export default function EditLobby({ game }: { game: GameWithPlayers }) {
