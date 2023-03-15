@@ -5,9 +5,10 @@ import {
 } from '@chakra-ui/react'
 import ky from 'ky'
 
+import LobbyForm from './LobbyForm'
+
 import type { GameWithPlayers } from '@utils/prisma'
 
-import LobbyForm from './LobbyForm'
 
 export default function EditLobby({ game }: { game: GameWithPlayers }) {
   const { isOpen, onOpen, onClose } = useDisclosure()

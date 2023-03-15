@@ -44,7 +44,7 @@ export default function LobbyForm({ game, submitForm }: Props) {
   return (
     <form id="lobbyForm" onSubmit={formik.handleSubmit}>
       <FormControl mb={3}>
-        <FormLabel>Rules</FormLabel>
+        <FormLabel fontWeight="bold">Rules</FormLabel>
         <CheckboxGroup
           onChange={(values) => setRules(values.map(Number))}
           value={rules}
@@ -60,8 +60,8 @@ export default function LobbyForm({ game, submitForm }: Props) {
         </CheckboxGroup>
       </FormControl>
 
-      <FormControl mb={3}>
-        <FormLabel>Max players</FormLabel>
+      <FormControl mb={4}>
+        <FormLabel fontWeight="bold">Max players</FormLabel>
         <NumberInput
           name="playerMax"
           defaultValue={formik.values.playerMax}
@@ -76,12 +76,13 @@ export default function LobbyForm({ game, submitForm }: Props) {
         </NumberInput>
       </FormControl>
 
+      <b>Permissions</b>
       <FormControl mb={2}>
         <Checkbox
           name="spectating"
           onChange={formik.handleChange}
           isChecked={formik.values.spectating}
-          colorScheme="green"
+          colorScheme="blue"
         >
           Allow spectating
         </Checkbox>
@@ -92,7 +93,7 @@ export default function LobbyForm({ game, submitForm }: Props) {
           name="public"
           onChange={formik.handleChange}
           isChecked={formik.values.public}
-          colorScheme="green"
+          colorScheme="blue"
         >
           Public lobby
         </Checkbox>

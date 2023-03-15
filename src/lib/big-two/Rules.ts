@@ -30,18 +30,18 @@ export const ALL_RULES = [
 
 export function describe(rule: Rules) {
   switch (rule) {
-    case Rules.SUIT_ORDER_ALPHA:
-      return 'Suit order alpha (clubs < diamonds < hearts < spades)'
-    case Rules.STRAIGHTS_WRAP_AROUND:
-      return 'Straights wrap around'
-    case Rules.CAN_PLAY_AFTER_PASS:
-      return 'Can play after pass'
-    case Rules.MUST_PLAY_LOWEST_CARD:
-      return 'Must play lowest card on game start (3 of clubs)'
-    case Rules.FLUSH_ALLOW:
-      return 'Allow flushes'
-    default:
-      return ''
+  case Rules.SUIT_ORDER_ALPHA:
+    return 'Suit order alpha (clubs < diamonds < hearts < spades)'
+  case Rules.STRAIGHTS_WRAP_AROUND:
+    return 'Straights wrap around'
+  case Rules.CAN_PLAY_AFTER_PASS:
+    return 'Can play after pass'
+  case Rules.MUST_PLAY_LOWEST_CARD:
+    return 'Must play lowest card on game start (3 of clubs)'
+  case Rules.FLUSH_ALLOW:
+    return 'Allow flushes'
+  default:
+    return ''
   }
 }
 

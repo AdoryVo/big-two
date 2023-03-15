@@ -35,36 +35,36 @@ export default function Sandbox() {
     console.group(action)
 
     switch (action) {
-      case 'play':
-        game?.play(args ? args.split(' ') : [])
-        refreshGame()
-        break
-      case 'reset':
-        game?.reset()
-        refreshGame()
-        break
-      case 'pass':
-        game?.pass()
-        refreshGame()
-        break
-      case 'clear-lobbies':
-        ky.delete('/api/lobbies').then(() => {
-          toast({
-            title: 'Expired lobbies cleared!',
-            status: 'success',
-            duration: 2000,
-          })
-        }).catch((err) => {
-          toast({
-            title: 'Error!',
-            description: `${err.response.statusText}`,
-            status: 'error',
-            duration: 2000,
-          })
+    case 'play':
+      game?.play(args ? args.split(' ') : [])
+      refreshGame()
+      break
+    case 'reset':
+      game?.reset()
+      refreshGame()
+      break
+    case 'pass':
+      game?.pass()
+      refreshGame()
+      break
+    case 'clear-lobbies':
+      ky.delete('/api/lobbies').then(() => {
+        toast({
+          title: 'Expired lobbies cleared!',
+          status: 'success',
+          duration: 2000,
         })
-      default:
-        if (args) console.log('Args:', args)
-        break
+      }).catch((err) => {
+        toast({
+          title: 'Error!',
+          description: `${err.response.statusText}`,
+          status: 'error',
+          duration: 2000,
+        })
+      })
+    default:
+      if (args) console.log('Args:', args)
+      break
     }
 
     console.groupEnd()

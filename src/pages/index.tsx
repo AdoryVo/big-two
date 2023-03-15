@@ -33,6 +33,9 @@ export default function Home() {
         {error && (
           <>An error occurred loading the lobbies...</>
         )}
+        {isLoading && (
+          <Heading size="sm">⌛ Loading...</Heading>
+        )}
         {!isLoading && lobbies && lobbies.map((lobby, index) =>
           <Card key={index} mb={5}>
             <CardHeader>
@@ -61,7 +64,7 @@ export default function Home() {
           </Card>
         )}
         {!isLoading && !lobbies?.length && (
-          <Heading size="sm">0 current public lobbies, create one!</Heading>
+          <Heading size="sm">No current public lobbies, create one!</Heading>
         )}
       </Container>
     </Box>

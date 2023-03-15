@@ -145,18 +145,18 @@ class Util {
   // constructs a combo from a list of SORTED cards.
   _construct_combo(cards: Card[]) {
     switch (cards.length) {
-      case 1:
-        return new Combo(cards, Combo_Types.SINGLE, cards[0])
-      case 2:
-        return new Combo(cards, this._count_cons_eq(cards) === 2 ? Combo_Types.DOUBLE : Combo_Types.INVALID, cards[1])
-      case 3:
-        return new Combo(cards, this._count_cons_eq(cards) === 3 ? Combo_Types.TRIPLE : Combo_Types.INVALID, cards[2])
-      case 4:
-        return new Combo(cards, this._count_cons_eq(cards) === 4 ? Combo_Types.BOMB : Combo_Types.INVALID, cards[3])
-      case 5:
-        return this._construct_5_combo(cards)
-      default:
-        return new Combo(cards, Combo_Types.INVALID, null)
+    case 1:
+      return new Combo(cards, Combo_Types.SINGLE, cards[0])
+    case 2:
+      return new Combo(cards, this._count_cons_eq(cards) === 2 ? Combo_Types.DOUBLE : Combo_Types.INVALID, cards[1])
+    case 3:
+      return new Combo(cards, this._count_cons_eq(cards) === 3 ? Combo_Types.TRIPLE : Combo_Types.INVALID, cards[2])
+    case 4:
+      return new Combo(cards, this._count_cons_eq(cards) === 4 ? Combo_Types.BOMB : Combo_Types.INVALID, cards[3])
+    case 5:
+      return this._construct_5_combo(cards)
+    default:
+      return new Combo(cards, Combo_Types.INVALID, null)
     }
   }
 

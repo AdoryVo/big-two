@@ -10,11 +10,12 @@ import {
 import { startCase } from 'lodash'
 import { useEffect, useState } from 'react'
 
+import CardImage from './CardImage'
+
 import {
-  getTheme, setTheme as setGlobalTheme, Theme, Themes,
+  Theme, Themes, getTheme, setTheme as setGlobalTheme,
 } from '@utils/theme'
 
-import CardImage from './CardImage'
 
 export default function Preferences() {
   const { isOpen, onOpen, onClose } = useDisclosure()

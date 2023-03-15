@@ -1,12 +1,13 @@
 import { type Card, decks } from 'cards'
 import _ from 'lodash'
 
-import type { GameWithPlayers } from '@utils/prisma'
 
 import type { Combo } from './Combo'
 import Player from './Player'
 import Rules from './Rules'
-import Util from  './Util'
+import Util from './Util'
+
+import type { GameWithPlayers } from '@utils/prisma'
 
 class Game {
   players: Player[]

@@ -11,11 +11,12 @@ import {
 } from '@chakra-ui/react'
 import { useState } from 'react'
 
+import CardImage from './CardImage'
+import PlayerHand from './PlayerHand'
+
 import { Action, type ActionData } from '@utils/actions'
 import type { GameWithPlayers } from '@utils/prisma'
 
-import CardImage from './CardImage'
-import PlayerHand from './PlayerHand'
 
 interface Props {
   game: GameWithPlayers,

@@ -1,9 +1,9 @@
 import {
   Box,
+  Link as ChakraLink,
   Container,
   Divider,
   Heading,
-  Link as ChakraLink,
   ListItem,
   Table, TableContainer, Tbody, Td,
   Text,
@@ -108,57 +108,57 @@ export default function Game() {
     const url = `/api/${game.id}/${action}`
 
     switch (action) {
-      case Action.Ping:
-        ky.get(url)
-        break
-      case Action.Join:
-        const name = data.name
-        if (!name ||
+    case Action.Ping:
+      ky.get(url)
+      break
+    case Action.Join:
+      const name = data.name
+      if (!name ||
           game.players.find((player) => player.name.toLowerCase() === name.trim().toLowerCase())) {
-          toast({
-            title: 'Error',
-            description: 'Please enter a valid & unique name!',
-            status: 'error',
-            duration: 1000,
-          })
-          return
-        }
-        const joinBody = { json: { name: name.trim() } }
-        ky.post(url, joinBody).json<string>().then((playerId) => {
-          localStorage.setItem('playerId', playerId)
-          setPlayerId(playerId)
+        toast({
+          title: 'Error',
+          description: 'Please enter a valid & unique name!',
+          status: 'error',
+          duration: 1000,
         })
-        break
-      case Action.Leave:
-        localStorage.removeItem('playerId')
-        setPlayerId('')
-        ky.patch(url)
-        break
-      case Action.Play:
-        const playBody = { json: { combo: data.comboToPlay } }
-        ky.put(url, playBody).catch(() => {
-          toast({
-            title: 'Invalid combination',
-            description: 'Invalid with the current combo - try another combo!',
-            status: 'error',
-            duration: 1000,
-          })
+        return
+      }
+      const joinBody = { json: { name: name.trim() } }
+      ky.post(url, joinBody).json<string>().then((playerId) => {
+        localStorage.setItem('playerId', playerId)
+        setPlayerId(playerId)
+      })
+      break
+    case Action.Leave:
+      localStorage.removeItem('playerId')
+      setPlayerId('')
+      ky.patch(url)
+      break
+    case Action.Play:
+      const playBody = { json: { combo: data.comboToPlay } }
+      ky.put(url, playBody).catch(() => {
+        toast({
+          title: 'Invalid combination',
+          description: 'Invalid with the current combo - try another combo!',
+          status: 'error',
+          duration: 1000,
         })
-        break
-      case Action.Pass:
-        ky.patch(url).catch(() => {
-          toast({
-            title: 'Invalid action',
-            description: 'You cannot pass right now!',
-            status: 'error',
-            duration: 1000,
-          })
+      })
+      break
+    case Action.Pass:
+      ky.patch(url).catch(() => {
+        toast({
+          title: 'Invalid action',
+          description: 'You cannot pass right now!',
+          status: 'error',
+          duration: 1000,
         })
-        break
-      case Action.Start:
-      case Action.End:
-        ky.patch(url)
-        break
+      })
+      break
+    case Action.Start:
+    case Action.End:
+      ky.patch(url)
+      break
     }
   }
 
