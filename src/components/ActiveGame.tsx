@@ -37,7 +37,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
   const lastInGame = remainingPlayers.some((player) => player.index === game.lastPlaymaker)
 
   // Whether we're spectating (either we're not in the game, or we are and we finished)
-  const spectating = !thisPlayer?.finishedRank && game.settings.spectating
+  const spectating = (!playerId || thisPlayer?.finishedRank) && game.settings.spectating
 
   // use dummy flag to force rerenders, so we don't have to copy the comboToPlay set every time to trigger rerender
   const [dummy, setDummy] = useState(false)
