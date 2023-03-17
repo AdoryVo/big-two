@@ -9,13 +9,13 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
+import { Action, type ActionData } from '@utils/actions'
+import type { GameWithPlayers } from '@utils/prisma'
 import { useState } from 'react'
 
 import CardImage from './CardImage'
 import PlayerHand from './PlayerHand'
 
-import { Action, type ActionData } from '@utils/actions'
-import type { GameWithPlayers } from '@utils/prisma'
 
 
 interface Props {
@@ -31,9 +31,13 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
   const [cardSpacing, setCardSpacing] = useState('-5.5em')
 
   const thisPlayer = game.players.find((player) => (playerId && player.id === playerId))
+
   const remainingPlayers = game.players.filter((player) => !player.finishedRank)
   // Check if last playmaker is in the remaining players
   const lastInGame = remainingPlayers.some((player) => player.index === game.lastPlaymaker)
+
+  // Whether we're spectating (either we're not in the game, or we are and we finished)
+  const spectating = !thisPlayer?.finishedRank && game.settings.spectating
 
   // use dummy flag to force rerenders, so we don't have to copy the comboToPlay set every time to trigger rerender
   const [dummy, setDummy] = useState(false)
@@ -103,7 +107,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           <br />
           <PlayerHand hand={thisPlayer.hand} comboToPlay={comboToPlay} cardSpacing={cardSpacing} handleClick={handleClick}>
             {/* Current turn: Display actions */}
-            {(game.currentPlayer && game.currentPlayer.id === thisPlayer.id) &&
+            {(game.currentPlayer && game.currentPlayer.id === thisPlayer.id) && remainingPlayers.length !== 1 &&
               <Box>
                 <Heading size="md" my={4}>Take your action!</Heading>
                 <Button onClick={handlePlay} colorScheme="green" me={2}>
@@ -114,20 +118,12 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                 </Button>
               </Box>
             }
-
-            {remainingPlayers.length === 1 &&
-              <Box my={3}>
-                <Button onClick={() => handleAction(Action.End)} colorScheme="red">
-                  End Game
-                </Button>
-              </Box>
-            }
           </PlayerHand>
         </Box>
       }
 
-      {/* Spectator view */}
-      {!playerId && (
+      {/* Spectator view - display if we're done (or not in the game) */}
+      {spectating &&
         <Box my={5} py={2}>
           <Heading size="md">Spectating...</Heading>
           {game.players.map((player, index) => (
@@ -146,24 +142,36 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
             </Box>
           ))}
         </Box>
-      )}
+      }
 
-      <Box maxW="50%">
-        <Text>Card spread spacing</Text>
-        <Slider
-          aria-label="card-spread-spacing"
-          min={5.4}
-          max={6}
-          step={0.05}
-          defaultValue={5.7}
-          isReversed={true}
-          onChange={(val) => setCardSpacing(-1 * val + 'em')}>
-          <SliderTrack bg="green.500">
-            <SliderFilledTrack bg="green.100" />
-          </SliderTrack>
-          <SliderThumb />
-        </Slider>
-      </Box>
+      {/* Display end button for everyone once the game is over, even if they still have cards in hand */}
+      {remainingPlayers.length === 1 &&
+        <Box my={3}>
+          <Button onClick={() => handleAction(Action.End)} colorScheme="red">
+            End Game
+          </Button>
+        </Box>
+      }
+
+      {/* Don't show slider if there's no cards in our hand (or others' hands, if we're spectating) to display */}
+      {(thisPlayer?.hand?.length || spectating) &&
+        <Box maxW="50%">
+          <Text>Card spread spacing</Text>
+          <Slider
+            aria-label="card-spread-spacing"
+            min={5.4}
+            max={6}
+            step={0.05}
+            defaultValue={5.7}
+            isReversed={true}
+            onChange={(val) => setCardSpacing(-1 * val + 'em')}>
+            <SliderTrack bg="green.500">
+              <SliderFilledTrack bg="green.100" />
+            </SliderTrack>
+            <SliderThumb />
+          </Slider>
+        </Box>
+      }
     </>
   )
 }
