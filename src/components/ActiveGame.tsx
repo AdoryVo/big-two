@@ -9,14 +9,13 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { Action, type ActionData } from '@utils/actions'
-import type { GameWithPlayers } from '@utils/prisma'
 import { useState } from 'react'
 
 import CardImage from './CardImage'
 import PlayerHand from './PlayerHand'
 
-
+import { Action, type ActionData } from '@utils/actions'
+import type { GameWithPlayers } from '@utils/prisma'
 
 interface Props {
   game: GameWithPlayers,
