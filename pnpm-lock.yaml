@@ -25,6 +25,7 @@ specifiers:
   prisma: ^4.11.0
   pusher: ^5.1.2
   pusher-js: ^8.0.1
+  random-word-slugs: ^0.1.6
   react: 18.2.0
   react-dom: 18.2.0
   react-icons: ^4.8.0
@@ -46,6 +47,7 @@ dependencies:
   next-seo: 5.15.0_nvzgbose6yf6w7ijjprgspqefi
   pusher: 5.1.2
   pusher-js: 8.0.1
+  random-word-slugs: 0.1.6
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.8.0_react@18.2.0
@@ -3780,6 +3782,10 @@ packages:
   /queue-microtask/1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
     dev: true
+
+  /random-word-slugs/0.1.6:
+    resolution: {integrity: sha512-EVPGKyhXTdnBlMCrqBvby3nf9Jz+W/rVuP2nOi68aDZa6VJ2OXvz+VDCwl8jULBLZ1Ht8wscRA+/SogeI9NYGw==}
+    dev: false
 
   /react-clientside-effect/1.2.6_react@18.2.0:
     resolution: {integrity: sha512-XGGGRQAKY+q25Lz9a/4EPqom7WRjz3z9R2k4jhVKA/puQFH/5Nt27vFZYql4m4NVNdUvX8PS3O7r/Zzm7cjUlg==}

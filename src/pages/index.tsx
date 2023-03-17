@@ -5,6 +5,7 @@ import {
   Container,
   Heading,
   ListItem,
+  Text,
   UnorderedList,
 } from '@chakra-ui/react'
 import Link from 'next/link'
@@ -29,7 +30,7 @@ export default function Home() {
         <CreateLobby />
         <Preferences />
 
-        <Heading size="lg" my={5}>🏠 Public Lobbies</Heading>
+        <Heading size="lg" my={5}>🏠Public Lobbies</Heading>
         {error && (
           <>An error occurred loading the lobbies...</>
         )}
@@ -39,8 +40,8 @@ export default function Home() {
         {!isLoading && lobbies && lobbies.map((lobby, index) =>
           <Card key={index} mb={5}>
             <CardHeader>
-              <Heading size="md">Lobby {lobby.id.split('-')[0]}</Heading>
-              {lobby.currentPlayer ? '⚔️ Game in progress' : '🧍 Waiting for more players'}
+              <Heading size="md">Lobby: <Text as="span" color="crimson">{lobby.id}</Text></Heading>
+              {lobby.currentPlayer ? '⚔️ Game in progress' : '🚶 Waiting for more players'}
               &nbsp;|&nbsp;{lobby.players && lobby.players.length} current players
             </CardHeader>
             <CardBody>

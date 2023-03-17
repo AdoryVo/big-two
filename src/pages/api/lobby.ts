@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { generateSlug } from 'random-word-slugs'
 
 import prisma from '@utils/prisma'
 
@@ -9,7 +10,10 @@ export default async function handler(
 ) {
   const data = req.body
 
-  const lobby = await prisma.game.create({ data: { settings: { create: data } } })
+  const lobby = await prisma.game.create({ data: {
+    id: generateSlug(),
+    settings: { create: data },
+  } })
 
   return res.status(201).json(lobby)
 }

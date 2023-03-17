@@ -199,7 +199,6 @@ export default function Game() {
         <Text mb={5}>
           <ChakraLink
             onClick={copyGameLink}
-            _focus={{ fontStyle: 'italic' }}
             tabIndex={1}
             title="Copy lobby link"
             color="teal.500"
