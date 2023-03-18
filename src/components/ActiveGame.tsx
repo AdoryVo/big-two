@@ -1,4 +1,5 @@
 import {
+  Alert, AlertDescription, AlertTitle,
   Box,
   Button,
   Heading,
@@ -30,7 +31,6 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
   const [cardSpacing, setCardSpacing] = useState('-5.5em')
 
   const thisPlayer = game.players.find((player) => (playerId && player.id === playerId))
-
   const remainingPlayers = game.players.filter((player) => !player.finishedRank)
   // Check if last playmaker is in the remaining players
   const lastInGame = remainingPlayers.some((player) => player.index === game.lastPlaymaker)
@@ -66,9 +66,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
       Current combo:
       <Stack direction="row" spacing={cardSpacing}>
         {game.combo.map((card, index) =>
-          <Box key={index}>
-            <CardImage card={card} />
-          </Box>
+          <CardImage key={index} card={card} />
         )}
         {!game.combo.length &&
           <CardImage card="" />
@@ -107,27 +105,49 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           <PlayerHand hand={thisPlayer.hand} comboToPlay={comboToPlay} cardSpacing={cardSpacing} handleClick={handleClick}>
             {/* Current turn: Display actions */}
             {(game.currentPlayer && game.currentPlayer.id === thisPlayer.id) && remainingPlayers.length !== 1 &&
-              <Box>
-                <Heading size="md" my={4}>Take your action!</Heading>
-                <Button onClick={handlePlay} colorScheme="green" me={2}>
-                  Play a combo
-                </Button>
-                <Button onClick={() => handleAction(Action.Pass)} isDisabled={!game.combo.length} colorScheme="blue">
-                  Pass
-                </Button>
-              </Box>
+              <Alert
+                backgroundColor="blackAlpha.800"
+                variant="solid"
+                position="fixed"
+                bottom="2"
+                zIndex={2}
+                left="50%"
+                transform="translate(-50%, 0)"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                borderRadius="lg"
+                width={{ base: '95%', md: 'auto' }}
+                mx="auto"
+                px={{ base: 0, md: 8 }}
+              >
+                <AlertTitle fontWeight="bold" me={0}>
+                  <Heading size="md">Take your action!</Heading>
+                </AlertTitle>
+                <AlertDescription textAlign="center">
+                  <Text mb={2}>
+                    Select cards in your hand to play or pass!
+                  </Text>
+                  <Button onClick={handlePlay} colorScheme="green" me={2}>
+                    Play a combo
+                  </Button>
+                  <Button onClick={() => handleAction(Action.Pass)} isDisabled={!game.combo.length} colorScheme="blue">
+                    Pass
+                  </Button>
+                </AlertDescription>
+              </Alert>
             }
           </PlayerHand>
         </Box>
       }
 
       {/* Spectator view - display if we're done (or not in the game) */}
-      {spectating &&
+      {Boolean(spectating) &&
         <Box my={5} py={2}>
           <Heading size="md">Spectating...</Heading>
           {game.players.map((player, index) => (
             <Box key={index} mb={5}>
-              <Heading size="sm" mb={1}>{player.name}&apos;s hand</Heading>
+              <Text size="sm" mb={1}>{player.name}&apos;s hand</Text>
               <Stack key={index} direction="row" spacing={cardSpacing}>
                 {player.hand.map((card, cardIndex) =>
                   <Box key={cardIndex} onClick={() => handleClick(card)}>

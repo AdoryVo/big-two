@@ -46,6 +46,11 @@ export default async function handler(
       where: { id: game.currentPlayer.id },
       data: { hand: gameInstance.util.cards_to_strings(gameInstance.players[currentPlayerIndex].hand) },
     })
+
+    await pusher.trigger(id, Event.Play, `${game.currentPlayer.name} played ${combo.join(', ')}!`)
+      .catch((err) => {
+        console.error(err)
+      })
   } else {
     // Player finished - mark them as finished!
     const finishedPlayer = gameInstance.players[result]
@@ -58,6 +63,11 @@ export default async function handler(
         points: { increment: finishedPlayer.score },
       },
     })
+
+    await pusher.trigger(id, Event.Play, `🏅 ${game.currentPlayer.name} finished their hand with ${combo.join(', ')}!`)
+      .catch((err) => {
+        console.error(err)
+      })
   }
 
   const updatedGame = await prisma.game.update({
@@ -74,11 +84,6 @@ export default async function handler(
   })
 
   await pusher.trigger(id, Event.LobbyUpdate, null)
-    .catch((err) => {
-      console.error(err)
-    })
-
-  await pusher.trigger(id, Event.Play, `Played ${updatedGame.combo.join(', ')}!`)
     .catch((err) => {
       console.error(err)
     })

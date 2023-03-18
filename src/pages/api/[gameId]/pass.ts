@@ -56,7 +56,7 @@ export default async function handler(
       console.error(err)
     })
 
-  await pusher.trigger(id, Event.Play, 'Passed!')
+  await pusher.trigger(id, Event.Play, `${game.currentPlayer.name} passed!`)
     .catch((err) => {
       console.error(err)
     })

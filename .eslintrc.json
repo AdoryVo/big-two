@@ -7,7 +7,7 @@
     }],
     "react/jsx-curly-spacing": ["error", {"when": "never", "children": true}],
     "react/jsx-equals-spacing": ["error", "never"],
-    "react/jsx-indent": ["error", 2],
+    "react/jsx-indent": ["error", 2, {"indentLogicalExpressions": true}],
     "react/jsx-tag-spacing": "error",
 
     "comma-dangle": ["error", "always-multiline"],

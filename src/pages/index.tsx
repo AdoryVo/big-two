@@ -30,12 +30,12 @@ export default function Home() {
         <CreateLobby />
         <Preferences />
 
-        <Heading size="lg" my={5}>🏠Public Lobbies</Heading>
+        <Heading size="lg" my={5}>🏠 Public Lobbies</Heading>
         {error && (
-          <>An error occurred loading the lobbies...</>
+          <Text as="b" color="red.500">An error occurred loading the lobbies...</Text>
         )}
         {isLoading && (
-          <Heading size="sm">⌛ Loading...</Heading>
+          <Text as="b">⌛ Loading...</Text>
         )}
         {!isLoading && lobbies && lobbies.map((lobby, index) =>
           <Card key={index} mb={5}>
@@ -65,7 +65,7 @@ export default function Home() {
           </Card>
         )}
         {!isLoading && !lobbies?.length && (
-          <Heading size="sm">No current public lobbies, create one!</Heading>
+          <Text as="b">No current public lobbies, create one!</Text>
         )}
       </Container>
     </Box>

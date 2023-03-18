@@ -81,9 +81,10 @@ export default function Game() {
 
     channel.bind(Event.Play, (play: string) => {
       toast({
-        title: 'Action taken',
+        title: 'Next turn!',
         description: play,
         status: 'info',
+        position: 'top',
         duration: 2500,
         isClosable: true,
       })
@@ -141,7 +142,8 @@ export default function Game() {
           title: 'Invalid combination',
           description: 'Invalid with the current combo - try another combo!',
           status: 'error',
-          duration: 1000,
+          position: 'top',
+          duration: 2000,
         })
       })
       break

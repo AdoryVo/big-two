@@ -37,7 +37,7 @@ export default function CardImage({
       style={{
         display: 'inline',
         width: '6em',
-        height: 'auto',
+        height: '8.2em',
         marginRight: '1em',
         border: selected ? 'thin solid #68D391' : 'thin solid black',
         backgroundColor: 'white',

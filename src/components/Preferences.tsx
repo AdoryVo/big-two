@@ -1,10 +1,12 @@
 import {
   Box,
   Button,
+  FormControl, FormLabel,
   Heading,
   Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
   Radio, RadioGroup,
   Stack,
+  Text,
   useDisclosure,
 } from '@chakra-ui/react'
 import { startCase } from 'lodash'
@@ -42,21 +44,24 @@ export default function Preferences() {
           <ModalHeader>Preferences</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Heading size="md">Theme</Heading>
+            <FormControl>
+              <FormLabel fontWeight="bold">Theme</FormLabel>
 
-            <RadioGroup onChange={handleChangeTheme} value={theme}>
-              <Stack direction="row">
-                {Themes.map((theme) =>
-                  <Radio key={theme} value={theme}>
-                    <Box textAlign="center" pt={5}>
-                      <CardImage card="3;clubs" theme={theme} style={{ width: '5em', marginRight: '0' }} />
-                      <br />
-                      {startCase(theme)}
+              <RadioGroup onChange={handleChangeTheme} value={theme}>
+                <Stack direction="row">
+                  {Themes.map((theme) =>
+                    <Box key={theme} textAlign="center">
+                      <Radio value={theme}>
+                        <CardImage card="3;clubs" theme={theme} style={{ width: '5em', height: '7em', marginRight: '0' }} />
+                      </Radio>
+                      <Text ps={6}>
+                        {startCase(theme)}
+                      </Text>
                     </Box>
-                  </Radio>
-                )}
-              </Stack>
-            </RadioGroup>
+                  )}
+                </Stack>
+              </RadioGroup>
+            </FormControl>
           </ModalBody>
 
           <ModalFooter>
