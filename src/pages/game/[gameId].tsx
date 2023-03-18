@@ -45,7 +45,7 @@ function BasePage({ children, theme, updateTheme }: BaseProps) {
       borderRadius="lg"
       shadow="md"
       maxW="container.md"
-      mt={{ md: '10em' }}
+      mt={{ md: '13em' }}
     >
       <HomeButton
         position={{ md: 'absolute' }}

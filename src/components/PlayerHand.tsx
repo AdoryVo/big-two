@@ -32,7 +32,7 @@ export default function PlayerHand({
             zIndex={2}
             width={{ base: '95%', md: 'auto' }}
           >
-            <Stack direction="row" spacing={{ base: '-2em', md: '-3.5em' }}>
+            <Stack direction="row" spacing="-4em">
               {hand.map((card, index) =>
                 <Box key={index} onMouseDown={() => handleClick(card)}>
                   <CardImage

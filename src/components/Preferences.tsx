@@ -66,7 +66,19 @@ export default function Preferences({ props, theme, updateTheme }: Props) {
 
               <RadioGroup onChange={(value) => updateTheme({ ...theme, colorScheme: value })} value={theme.colorScheme}>
                 <Stack direction="row" gap={2}>
-                  {THEME_OPTIONS.colorScheme.map((colorScheme) =>
+                  {THEME_OPTIONS.colorScheme.slice(0, 4).map((colorScheme) =>
+                    <Box key={colorScheme} textAlign="center">
+                      <Radio value={colorScheme}>
+                        <Box {...COLOR_SCHEME_STYLES[colorScheme].bg} width={10} height={10} borderRadius={10} />
+                      </Radio>
+                      <Text ps={6}>
+                        {startCase(colorScheme)}
+                      </Text>
+                    </Box>
+                  )}
+                </Stack>
+                <Stack direction="row" gap={2} mt={4}>
+                  {THEME_OPTIONS.colorScheme.slice(4).map((colorScheme) =>
                     <Box key={colorScheme} textAlign="center">
                       <Radio value={colorScheme}>
                         <Box {...COLOR_SCHEME_STYLES[colorScheme].bg} width={10} height={10} borderRadius={10} />

@@ -42,7 +42,7 @@ export default function Home() {
           <Text as="b" color="red.500">An error occurred loading the lobbies...</Text>
         )}
         {isLoading && (
-          <Text as="b">⌛ Loading...</Text>
+          <Text {...styles.text} as="b">⌛ Loading...</Text>
         )}
         {!isLoading && lobbies && lobbies.map((lobby, index) =>
           <Card key={index} mb={5}>
@@ -72,7 +72,7 @@ export default function Home() {
           </Card>
         )}
         {!isLoading && !lobbies?.length && (
-          <Text as="b">No current public lobbies, create one!</Text>
+          <Text {...styles.text} as="b">No current public lobbies, create one!</Text>
         )}
       </Container>
     </Box>

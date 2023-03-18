@@ -1,6 +1,7 @@
 import {
   Alert, AlertDescription, AlertTitle,
   Box,
+  BoxProps,
   Button,
   Heading,
   Slider,
@@ -9,6 +10,7 @@ import {
   SliderTrack,
   Stack,
   Text,
+  Tooltip,
   useMediaQuery,
 } from '@chakra-ui/react'
 import { useState } from 'react'
@@ -28,7 +30,43 @@ interface Props {
 }
 
 const RANK_EMOJIS = ['', '🥇', '🥈', '🥉']
+const PLAYER_EMOJIS = [
+  ['🐸', '🐊', '🦎', '🐍'],
+  ['🐶', '😺', '🐟', '🦜'],
+  ['🍔', '🌭', '🍕', '🍟'],
+  ['💀', '🥶', '😂', '🗿'],
+]
 
+const INFO_STYLES = [
+  {
+    bottom: '8em',
+    left: '50%',
+    transform: 'translate(-50%, 0)',
+  },
+  {
+    top: '50%',
+    left: '8em',
+    transform: 'translate(0, -50%)',
+  },
+  {
+    top: '8em',
+    left: '50%',
+    transform: 'translate(-50%, 0)',
+  },
+  {
+    top: '50%',
+    right: '8em',
+    transform: 'translate(0, -50%)',
+  },
+]
+
+const fixedComboStyles: BoxProps = {
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  backgroundColor: 'blackAlpha.100',
+}
 
 export default function ActiveGame({ game, playerId, handleAction }: Props) {
   const [isDesktop] = useMediaQuery('(min-width: 48em)')
@@ -40,11 +78,15 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
   const remainingPlayers = game.players.filter((player) => !player.finishedRank)
   // Check if last playmaker is in the remaining players
   const lastInGame = remainingPlayers.some((player) => player.index === game.lastPlaymaker)
+  const roundLeaderIndex = ((lastInGame) ? game.lastPlaymaker : game.backupNext)
 
   // Whether we're spectating (either we're not in the game, or we are and we finished)
   const spectating = (!playerId || thisPlayer?.finishedRank) && game.settings.spectating
 
+  /** Game instance to check whether a combo is playable. */
   const gameInstance = new Game(game.players.length, game.settings.rules, game)
+  /** Set of emojis to be randomly chosen from for player icons. */
+  const playerEmojis = PLAYER_EMOJIS[game.id.length % PLAYER_EMOJIS.length]
 
   // use dummy flag to force rerenders, so we don't have to copy the comboToPlay set every time to trigger rerender
   const [dummy, setDummy] = useState(false)
@@ -88,36 +130,75 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
     <>
       {isDesktop ? (
         <Box>
+          <Text>
+            Turn order goes clockwise!
+          </Text>
+
           {/* Centered combo */}
-          <Box
-            position="fixed"
-            display="inline-block"
-            zIndex={2}
-            top="50%"
-            left="50%"
-            transform="translate(-50%, -50%)"
-            width="auto"
-            backgroundColor="blackAlpha.100"
-            borderRadius="lg"
-            p={4}
-          >
-            <Stack direction="row" spacing={cardSpacing}>
-              {game.combo.map((card, index) =>
-                <CardImage key={index} card={card} />
-              )}
-              {!game.combo.length &&
-                <CardImage card="" />
-              }
-            </Stack>
-          </Box>
+          <Tooltip label="Current combo">
+            <Box
+              {...(remainingPlayers.length !== 1 && fixedComboStyles)}
+              display="inline-block"
+              zIndex={2}
+              width="auto"
+              borderRadius="lg"
+              p={4}
+            >
+              <Stack direction="row" spacing={cardSpacing}>
+                {game.combo.map((card, index) =>
+                  <CardImage key={index} card={card} />
+                )}
+                {!game.combo.length &&
+                  <CardImage card="" />
+                }
+              </Stack>
+            </Box>
+          </Tooltip>
 
           {/* game */}
           <Box>
             {game.players.sort((a, b) => a.index - b.index).map((player) =>
               <Box key={player.index}>
                 {(spectating || player.index !== thisPlayer?.index) && (
-                  <OpponentHand position={indexToPosition(player.index)} player={player} />
+                  <OpponentHand
+                    game={game}
+                    position={indexToPosition(player.index)}
+                    player={player}
+                    roundLeaderIndex={roundLeaderIndex}
+                  />
                 )}
+
+                {/* Player Info */}
+                <Tooltip
+                  label={
+                    <Text textAlign="center">
+                      {playerEmojis[player.index]} {player.name} | {player.hand.length} cards | {player.points} points
+                      <br />
+                      {game.currentPlayer?.name === player.name && 'Current turn'}
+                      {player.index === roundLeaderIndex && 'Round leader'}
+                      {game.passedPlayers.includes(player.index) && 'Passed'}
+                    </Text>
+                  }
+                >
+                  <Box
+                    position="fixed"
+                    {...INFO_STYLES[indexToPosition(player.index)]}
+                    textAlign="center"
+                    backgroundColor={game.currentPlayer?.name === player.name ? 'green.400' : 'blue.50'}
+                    borderRadius="md"
+                    shadow="md"
+                    _hover={{ cursor: 'default' }}
+                    p={2}
+                  >
+                    <Text fontWeight="bold">
+                      {playerEmojis[player.index]} {player.name}
+                      <br />
+                      {player.index === roundLeaderIndex && '🎩'}
+                      {game.passedPlayers.includes(player.index) && '⏭️'}
+                      {RANK_EMOJIS[player.finishedRank]}
+                    </Text>
+                  </Box>
+                </Tooltip>
               </Box>
             )}
 
@@ -174,26 +255,6 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
             )}
           </Box>
 
-          {/* Don't show slider if there's no cards in our hand (or others' hands, if we're spectating) to display */}
-          {(thisPlayer?.hand?.length || spectating) &&
-            <Box maxW="50%">
-              <Text>Card spread spacing</Text>
-              <Slider
-                aria-label="card-spread-spacing"
-                min={5.4}
-                max={6}
-                step={0.05}
-                defaultValue={5.7}
-                isReversed={true}
-                onChange={(val) => setCardSpacing(-1 * val + 'em')}>
-                <SliderTrack bg="green.500">
-                  <SliderFilledTrack bg="green.100" />
-                </SliderTrack>
-                <SliderThumb />
-              </Slider>
-            </Box>
-          }
-
           {/* Display end button for everyone once the game is over, even if they still have cards in hand */}
           {remainingPlayers.length === 1 &&
             <Box my={3}>
@@ -231,8 +292,8 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
               <Box key={player.index}>
                 <Text
                   fontWeight={(game.currentPlayer?.name === player.name) ? 'bold' : ''}
-                  color={(player.index === ((lastInGame) ? game.lastPlaymaker : game.backupNext)) ? 'blue.500' : ''}
-                  title={(player.index === ((lastInGame) ? game.lastPlaymaker : game.backupNext)) ? 'Round leader' : ''}
+                  color={(player.index === roundLeaderIndex) ? 'blue.500' : ''}
+                  title={(player.index === roundLeaderIndex) ? 'Round leader' : ''}
                 >
                   {player.name} {thisPlayer?.name === player.name && '(You)'}: {player.hand.length} cards {RANK_EMOJIS[player.finishedRank]}
                   {game.passedPlayers.includes(player.index) && '⏭️'}

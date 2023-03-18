@@ -48,9 +48,10 @@ export default function Sandbox() {
       refreshGame()
       break
     case 'clear-lobbies':
-      ky.delete('/api/lobbies').then(() => {
+      // Specify minutes for expired lobbies
+      ky.delete('/api/lobbies', { json: { minutes: args } }).then(() => {
         toast({
-          title: 'Expired lobbies cleared!',
+          title: 'Lobbies cleared!',
           status: 'success',
           duration: 2000,
         })

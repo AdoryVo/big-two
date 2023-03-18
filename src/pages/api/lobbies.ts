@@ -23,10 +23,16 @@ export default async function handler(
       return res.status(401).end()
     }
 
-    const THREE_HOURS = 3 * 60 * 60 * 1000
-    const threeHoursAgo = new Date().getTime() - THREE_HOURS
+    const minutes = Number(req.body.minutes)
 
-    const expiredGames = await prisma.game.findMany({ where: { createdAt: { lt: new Date(threeHoursAgo) } } })
+    if (minutes < 0 || isNaN(minutes)) {
+      return res.status(422).end()
+    }
+
+    const maxAge = minutes * 60 * 1000
+    const maxAgeTime = new Date().getTime() - maxAge
+
+    const expiredGames = await prisma.game.findMany({ where: { createdAt: { lt: new Date(maxAgeTime) } } })
     const expiredGameIds = expiredGames.map((game) => game.id)
 
     // Delete players in expired games

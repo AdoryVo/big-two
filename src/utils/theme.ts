@@ -11,7 +11,9 @@ export const enum ColorScheme {
   Classic = 'classic',
   Night = 'night',
   Seafoam = 'seafoam',
-  Casino = 'casino'
+  Casino = 'casino',
+  Frosting = 'frosting',
+  Topaz = 'topaz'
 }
 
 export interface Theme {
@@ -34,15 +36,23 @@ export const COLOR_SCHEME_STYLES: { [scheme: string]: Styles } = {
   },
   [ColorScheme.Night]: {
     bg: { bgGradient: 'radial(#5E636C, #36393E)' },
-    text: { color: 'purple.200', textShadow: '1px 1.5px black' },
+    text: { color: 'purple.300', textShadow: '1px 1.5px black' },
   },
   [ColorScheme.Seafoam]: {
-    bg: { bgGradient: 'radial(green.100, blue.200)' },
+    bg: { bgGradient: 'linear(green.100, blue.200)' },
     text: { color: 'gray.600' },
   },
   [ColorScheme.Casino]: {
-    bg: { bgGradient: 'radial(red.500, red.900)' },
+    bg: { bgGradient: 'radial(yellow.600, red.600, red.900)' },
     text: { color: 'gray.200', textShadow: '1px 2px black' },
+  },
+  [ColorScheme.Frosting]: {
+    bg: { bgGradient: 'repeating-linear(45deg, purple.100, purple.200 1em)' },
+    text: { color: 'red.400', textShadow: '0 1px purple', fontFamily: `'Comic Sans MS', sans-serif` },
+  },
+  [ColorScheme.Topaz]: {
+    bg: { bgGradient: 'repeating-conic(orange.500 0 9deg, orange.400 9deg 18deg)' },
+    text: { color: 'yellow.200', textShadow: '1px 2px black' },
   },
 }
 
@@ -53,6 +63,8 @@ export const THEME_OPTIONS = {
     ColorScheme.Night,
     ColorScheme.Seafoam,
     ColorScheme.Casino,
+    ColorScheme.Frosting,
+    ColorScheme.Topaz,
   ],
 }
 
