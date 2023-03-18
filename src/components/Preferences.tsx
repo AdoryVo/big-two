@@ -34,7 +34,7 @@ export default function Preferences() {
 
   return (
     <>
-      <Button colorScheme="facebook" mb={4} me={2} onClick={onOpen}>
+      <Button colorScheme="purple" mb={4} me={2} onClick={onOpen}>
         Preferences
       </Button>
 

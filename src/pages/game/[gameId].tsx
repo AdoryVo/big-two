@@ -19,6 +19,7 @@ import { describe, rulesToArray } from '@big-two/Rules'
 import ActiveGame from '@components/ActiveGame'
 import EditLobby from '@components/EditLobby'
 import HomeButton from '@components/HomeButton'
+import Preferences from '@components/Preferences'
 import WaitingLobby from '@components/WaitingLobby'
 import { Action, type ActionData } from '@utils/actions'
 import useGame from '@utils/hooks/useGame'
@@ -29,6 +30,7 @@ function BasePage({ children }: { children?: React.ReactNode }) {
   return (
     <Container p={5} backgroundColor="white" borderRadius="lg" maxW="container.md">
       <HomeButton />
+      <Preferences />
       {children}
     </Container>
   )
