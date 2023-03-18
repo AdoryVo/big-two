@@ -147,7 +147,10 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           <Heading size="md">Spectating...</Heading>
           {game.players.map((player, index) => (
             <Box key={index} mb={5}>
-              <Text size="sm" mb={1}>{player.name}&apos;s hand</Text>
+              <Text size="sm" mb={1}>
+                {player.name}&apos;s hand
+                {!player.hand.length && ` is finished! ${RANK_EMOJIS[player.finishedRank]}`}
+              </Text>
               <Stack key={index} direction="row" spacing={cardSpacing}>
                 {player.hand.map((card, cardIndex) =>
                   <Box key={cardIndex} onClick={() => handleClick(card)}>
@@ -160,15 +163,6 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
               </Stack>
             </Box>
           ))}
-        </Box>
-      }
-
-      {/* Display end button for everyone once the game is over, even if they still have cards in hand */}
-      {remainingPlayers.length === 1 &&
-        <Box my={3}>
-          <Button onClick={() => handleAction(Action.End)} colorScheme="red">
-            End Game
-          </Button>
         </Box>
       }
 
@@ -189,6 +183,24 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
             </SliderTrack>
             <SliderThumb />
           </Slider>
+        </Box>
+      }
+
+      {/* Display end button for everyone once the game is over, even if they still have cards in hand */}
+      {remainingPlayers.length === 1 &&
+        <Box my={3}>
+          <hr />
+          <Heading size="lg" my={2}>
+            🎉 The game has finished!
+          </Heading>
+          <Text mb={2}>
+            Points have been awarded to players in the scoreboard!
+            <br />
+            Click the button below to finalize the game & return to the lobby.
+          </Text>
+          <Button onClick={() => handleAction(Action.End)} colorScheme="blue">
+            Return to the lobby
+          </Button>
         </Box>
       }
     </>

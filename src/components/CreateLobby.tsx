@@ -22,7 +22,7 @@ export default function CreateLobby() {
   return (
     <>
       <Button colorScheme="green" mb={4} me={2} onClick={onOpen}>
-        Create Lobby
+        Create lobby
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">

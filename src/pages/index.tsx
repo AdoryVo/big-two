@@ -40,7 +40,7 @@ export default function Home() {
         {!isLoading && lobbies && lobbies.map((lobby, index) =>
           <Card key={index} mb={5}>
             <CardHeader>
-              <Heading size="md">Lobby: <Text as="span" color="crimson">{lobby.id}</Text></Heading>
+              <Text fontWeight="bold">Lobby: <Text as="span" color="crimson">{lobby.id}</Text></Text>
               {lobby.currentPlayer ? '⚔️ Game in progress' : '🚶 Waiting for more players'}
               &nbsp;|&nbsp;{lobby.players && lobby.players.length} current players
             </CardHeader>

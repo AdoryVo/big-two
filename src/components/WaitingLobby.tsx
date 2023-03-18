@@ -27,7 +27,7 @@ export default function WaitingLobby({ game, playerId, handleAction }: Props) {
         mb={4}
         me={2}
       >
-        Start Game
+        Start game
       </Button>
       <Button onClick={() => handleAction(Action.Ping)} colorScheme="purple" mb={4}>
         Ping game channel
