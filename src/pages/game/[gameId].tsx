@@ -1,24 +1,15 @@
+import type { ContainerProps } from '@chakra-ui/react'
 import {
-  Box,
-  Link as ChakraLink,
+  Box, Link as ChakraLink,
   Container,
-  Divider,
-  Heading,
-  ListItem,
-  Table, TableContainer, Tbody, Td,
-  Text,
-  Th, Thead, Tr,
-  UnorderedList,
-  useMediaQuery,
+  Divider, Heading, Text, useMediaQuery,
   useToast,
 } from '@chakra-ui/react'
 import ky from 'ky'
 import { NextSeo } from 'next-seo'
 import { useEffect, useState } from 'react'
 
-import { describe, rulesToArray } from '@big-two/Rules'
 import ActiveGame from '@components/ActiveGame'
-import EditLobby from '@components/EditLobby'
 import GameInfo from '@components/GameInfo'
 import GameInfoModal from '@components/GameInfoModal'
 import HomeButton from '@components/HomeButton'
@@ -29,15 +20,17 @@ import useGame from '@utils/hooks/useGame'
 import { usePusher } from '@utils/hooks/usePusher'
 import { useTheme } from '@utils/hooks/useTheme'
 import { Event } from '@utils/pusher'
-import { Theme, getStyles } from '@utils/theme'
+import type { Theme } from '@utils/theme'
+import { getStyles } from '@utils/theme'
 
 interface BaseProps {
   children?: React.ReactNode,
   theme: Theme,
   updateTheme: (update: Theme) => void,
+  props?: ContainerProps
 }
 
-function BasePage({ children, theme, updateTheme }: BaseProps) {
+function BasePage({ children, theme, updateTheme, props }: BaseProps) {
   return (
     <Container
       p={5}
@@ -45,7 +38,7 @@ function BasePage({ children, theme, updateTheme }: BaseProps) {
       borderRadius="lg"
       shadow="md"
       maxW="container.md"
-      mt={{ md: '13em' }}
+      {...props}
     >
       <HomeButton
         position={{ md: 'absolute' }}
@@ -232,7 +225,11 @@ export default function Game() {
       <NextSeo
         title={`${getPageTitle()} | Big Two`}
       />
-      <BasePage theme={theme} updateTheme={updateTheme}>
+      <BasePage
+        theme={theme}
+        updateTheme={updateTheme}
+        props={gameInProgress ? { mt: { md: '13em' } } : {}}
+      >
         <Heading>Game Lobby</Heading>
         <Text mb={5}>
           <ChakraLink
@@ -242,8 +239,9 @@ export default function Game() {
             color="teal.500"
             fontWeight="bold"
           >
-            Lobby ID: {game.id} 🔗
+            Lobby ID: {game.id}
           </ChakraLink>
+          &nbsp;🔗
         </Text>
 
         {gameInProgress ? (
@@ -252,12 +250,14 @@ export default function Game() {
           <WaitingLobby game={game} playerId={playerId} handleAction={handleAction} />
         )}
 
-        {isDesktop ? (
-          <GameInfoModal game={game} gameInProgress={gameInProgress} />
+        {(isDesktop && gameInProgress) ? (
+          <>
+            <GameInfoModal game={game} />
+          </>
         ) : (
           <>
             <Divider my={5} />
-            <GameInfo game={game} gameInProgress={gameInProgress} />
+            <GameInfo game={game} />
           </>
         )}
       </BasePage>

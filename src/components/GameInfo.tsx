@@ -1,4 +1,5 @@
-import { Divider,
+import {
+  Divider,
   Heading,
   ListItem,
   Table,
@@ -18,10 +19,9 @@ import { type GameWithPlayers } from '@utils/prisma'
 
 interface Props {
   game: GameWithPlayers
-  gameInProgress: boolean
 }
 
-export default function GameInfo({ game, gameInProgress } : Props) {
+export default function GameInfo({ game } : Props) {
   return (
     <>
       <Heading size="lg">🏆 Scoreboard</Heading>

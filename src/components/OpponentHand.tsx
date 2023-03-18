@@ -1,9 +1,9 @@
 import { Box, Stack } from '@chakra-ui/react'
-import { Player } from '@prisma/client'
+import type { Player } from '@prisma/client'
 
 import CardImage from './CardImage'
 
-import { GameWithPlayers } from '@utils/prisma'
+import type { GameWithPlayers } from '@utils/prisma'
 
 const HAND_ROTATIONS = [
   '0', '90', '180', '270',
@@ -49,7 +49,7 @@ export default function OpponentHand({ game, position, player }: Props) {
       >
         <Stack
           direction={position % 2 ? 'column' : 'row'}
-          spacing={position % 2 ? '-5.5em' : '-3em'}
+          spacing={position % 2 ? '-5.8em' : '-3.2em'}
         >
           {player.hand.map((card, cardIndex) =>
             <Box key={cardIndex}>

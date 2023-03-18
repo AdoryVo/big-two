@@ -1,9 +1,5 @@
 import {
   Button,
-  type ButtonProps,
-  Divider,
-  Heading,
-  ListItem,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -11,10 +7,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Table, TableContainer, Tbody, Td,
-  Text,
-  Th, Thead, Tr,
-  UnorderedList,
   useDisclosure,
 } from '@chakra-ui/react'
 
@@ -24,10 +16,9 @@ import type { GameWithPlayers } from '@utils/prisma'
 
 interface Props {
   game: GameWithPlayers
-  gameInProgress: boolean
 }
 
-export default function GameInfoModal({ game, gameInProgress }: Props) {
+export default function GameInfoModal({ game }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <>
@@ -48,7 +39,7 @@ export default function GameInfoModal({ game, gameInProgress }: Props) {
           <ModalHeader>Game Info</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <GameInfo game={game} gameInProgress={gameInProgress} />
+            <GameInfo game={game} />
           </ModalBody>
 
           <ModalFooter>

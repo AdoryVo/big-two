@@ -1,8 +1,8 @@
 import {
   Box,
   Button, type ButtonProps,
-  Divider, FormControl,
-  FormLabel,
+  Divider,
+  FormControl, FormLabel,
   Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
   Radio, RadioGroup,
   Stack,
@@ -13,10 +13,10 @@ import { startCase } from 'lodash'
 
 import CardImage from './CardImage'
 
+import type { Theme } from '@utils/theme'
 import {
   COLOR_SCHEME_STYLES,
   THEME_OPTIONS,
-  Theme,
 } from '@utils/theme'
 
 interface Props {

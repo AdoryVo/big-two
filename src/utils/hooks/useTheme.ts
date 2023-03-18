@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
 
+import type { Theme } from '@utils/theme'
 import {
-  DEFAULT_THEME,
-  Theme,
-  getThemeOption,
-  setThemeOption,
+  DEFAULT_THEME, getThemeOption, setThemeOption,
 } from '@utils/theme'
 
 export function useTheme(): [Theme, (update: Theme) => void] {

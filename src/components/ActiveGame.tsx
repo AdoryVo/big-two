@@ -1,13 +1,10 @@
+import type { BoxProps } from '@chakra-ui/react'
 import {
   Alert, AlertDescription, AlertTitle,
   Box,
-  BoxProps,
   Button,
   Heading,
-  Slider,
-  SliderFilledTrack,
-  SliderThumb,
-  SliderTrack,
+  Slider, SliderFilledTrack, SliderThumb, SliderTrack,
   Stack,
   Text,
   Tooltip,
@@ -174,8 +171,8 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                     <Text textAlign="center">
                       {playerEmojis[player.index]} {player.name} | {player.hand.length} cards | {player.points} points
                       <br />
-                      {game.currentPlayer?.name === player.name && 'Current turn'}
-                      {player.index === roundLeaderIndex && 'Round leader'}
+                      {game.currentPlayer?.name === player.name && <p>Current turn</p>}
+                      {player.index === roundLeaderIndex && <p>Round leader</p>}
                       {game.passedPlayers.includes(player.index) && 'Passed'}
                     </Text>
                   }
@@ -203,7 +200,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
             )}
 
             {thisPlayer && (
-              <Box mt={4}>
+              <Box>
                 <PlayerHand
                   hand={thisPlayer.hand}
                   comboToPlay={comboToPlay}
@@ -257,7 +254,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
 
           {/* Display end button for everyone once the game is over, even if they still have cards in hand */}
           {remainingPlayers.length === 1 &&
-            <Box my={3}>
+            <Box mt={3}>
               <hr />
               <Heading size="lg" my={2}>
                 🎉 The game has finished!

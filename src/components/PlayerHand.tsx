@@ -1,5 +1,5 @@
 import {
-  Box, Button, Grid, GridItem, Stack, useMediaQuery,
+  Box, Button, Grid, GridItem, Stack,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 
@@ -32,7 +32,7 @@ export default function PlayerHand({
             zIndex={2}
             width={{ base: '95%', md: 'auto' }}
           >
-            <Stack direction="row" spacing="-4em">
+            <Stack direction="row" spacing="-4.5em">
               {hand.map((card, index) =>
                 <Box key={index} onMouseDown={() => handleClick(card)}>
                   <CardImage
