@@ -74,7 +74,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
       </Stack>
 
       {/* Player view: current hand */}
-      {thisPlayer &&
+      {thisPlayer && !spectating &&
         <Box my={5} py={2}>
           Player hands:
           {game.players.sort((a, b) => a.index - b.index).map((player, index) =>

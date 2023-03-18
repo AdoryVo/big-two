@@ -25,7 +25,7 @@ export default async function handler(
   // Authorization - obscuring player data
   const playerId = req.cookies.playerId
   const player = game.players.find((player) => player.id === playerId)
-  if (playerId && player && player.finishedRank === 0) {
+  if (playerId && player) {
     // If a remaining player is requesting game data, obscure other players' id's & cards
     game.players.forEach((player) => {
       if (player.id !== playerId) {
