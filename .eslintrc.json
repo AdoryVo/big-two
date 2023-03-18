@@ -1,6 +1,10 @@
 {
   "extends": "next/core-web-vitals",
+  "plugins": [
+    "@typescript-eslint"
+  ],
   "rules": {
+    "@typescript-eslint/consistent-type-imports": "error",
     "import/order": ["error", {
       "alphabetize": {"order": "asc"},
       "newlines-between": "always"

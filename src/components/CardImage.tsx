@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import type { CSSProperties } from 'react'
 
-import { getTheme } from '@utils/theme'
-
+import { useTheme } from '@utils/hooks/useTheme'
+import { CardTheme } from '@utils/theme'
 
 const RANK_NAMES: { [abbrn: string]: string } = {
   'J': 'jack',
@@ -19,16 +19,18 @@ interface Props {
 }
 
 export default function CardImage({
-  card, selected, theme, style,
+  card, selected, theme: prefTheme, style,
 }: Props) {
+  const [theme] = useTheme()
+
   function cardToUrl(card: string) {
     const [rank, suit] = card.split(';')
 
     if (!rank) {
-      return '/assets/cards/classic/back.png'
+      return `/assets/cards/${CardTheme.Classic}/back.png`
     }
 
-    return `/assets/cards/${theme || getTheme()}/${[RANK_NAMES[rank] || rank, suit].join('_of_')}.png`
+    return `/assets/cards/${prefTheme || theme.cardTheme}/${[RANK_NAMES[rank] || rank, suit].join('_of_')}.png`
   }
 
   return (
@@ -39,7 +41,7 @@ export default function CardImage({
         display: 'inline',
         width: '6em',
         height: '8.2em',
-        marginRight: '1em',
+        // marginRight: '1em',
         border: selected ? 'thin solid #68D391' : 'thin solid black',
         backgroundColor: 'white',
         cursor: 'pointer',

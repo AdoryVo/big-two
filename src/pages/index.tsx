@@ -15,27 +15,34 @@ import { describe, rulesToArray } from '@big-two/Rules'
 import CreateLobby from '@components/CreateLobby'
 import Preferences from '@components/Preferences'
 import useLobbies from '@utils/hooks/useLobbies'
+import { useTheme } from '@utils/hooks/useTheme'
+import { getStyles } from '@utils/theme'
 
 export default function Home() {
   const { lobbies, isLoading, error } = useLobbies()
+  const [theme, updateTheme] = useTheme()
+  const styles = getStyles(theme)
 
   return (
-    <Box background="green.100" minH="100vh">
+    <Box {...styles.bg} minH="100vh">
       <NextSeo
         title="Big Two"
         description="Play big two online with your friends or in public lobbies!"
       />
       <Container p={5}>
-        <Heading mb={5}>♠️ Big Two</Heading>
+        <Heading {...styles.text} mb={5}>♠️ Big Two</Heading>
         <CreateLobby />
-        <Preferences />
+        <Preferences
+          theme={theme}
+          updateTheme={updateTheme}
+        />
 
-        <Heading size="lg" my={5}>🏠 Public Lobbies</Heading>
+        <Heading {...styles.text} size="lg" my={5}>🏠 Public Lobbies</Heading>
         {error && (
           <Text as="b" color="red.500">An error occurred loading the lobbies...</Text>
         )}
         {isLoading && (
-          <Text as="b">⌛ Loading...</Text>
+          <Text {...styles.text} as="b">⌛ Loading...</Text>
         )}
         {!isLoading && lobbies && lobbies.map((lobby, index) =>
           <Card key={index} mb={5}>
@@ -65,7 +72,7 @@ export default function Home() {
           </Card>
         )}
         {!isLoading && !lobbies?.length && (
-          <Text as="b">No current public lobbies, create one!</Text>
+          <Text {...styles.text} as="b">No current public lobbies, create one!</Text>
         )}
       </Container>
     </Box>

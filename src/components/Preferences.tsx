@@ -1,8 +1,8 @@
 import {
   Box,
-  Button,
+  Button, type ButtonProps,
+  Divider,
   FormControl, FormLabel,
-  Heading,
   Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
   Radio, RadioGroup,
   Stack,
@@ -10,31 +10,27 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { startCase } from 'lodash'
-import { useEffect, useState } from 'react'
 
 import CardImage from './CardImage'
 
+import type { Theme } from '@utils/theme'
 import {
-  Theme, Themes, getTheme, setTheme as setGlobalTheme,
+  COLOR_SCHEME_STYLES,
+  THEME_OPTIONS,
 } from '@utils/theme'
 
+interface Props {
+  props?: ButtonProps,
+  theme: Theme,
+  updateTheme: (update: Theme) => void,
+}
 
-export default function Preferences() {
+export default function Preferences({ props, theme, updateTheme }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [theme, setTheme] = useState<string>(Theme.Classic)
-
-  useEffect(() => {
-    setTheme(getTheme())
-  }, [setTheme])
-
-  function handleChangeTheme(value: string) {
-    setGlobalTheme(value)
-    setTheme(value)
-  }
 
   return (
     <>
-      <Button colorScheme="purple" mb={4} me={2} onClick={onOpen}>
+      <Button colorScheme="purple" shadow="1px 1px black" mb={4} {...props} onClick={onOpen}>
         Preferences
       </Button>
 
@@ -45,17 +41,50 @@ export default function Preferences() {
           <ModalCloseButton />
           <ModalBody>
             <FormControl>
-              <FormLabel fontWeight="bold">Theme</FormLabel>
+              <FormLabel>Theme</FormLabel>
 
-              <RadioGroup onChange={handleChangeTheme} value={theme}>
-                <Stack direction="row">
-                  {Themes.map((theme) =>
-                    <Box key={theme} textAlign="center">
-                      <Radio value={theme}>
-                        <CardImage card="3;clubs" theme={theme} style={{ width: '5em', height: '7em', marginRight: '0' }} />
+              <RadioGroup onChange={(value) => updateTheme({ ...theme, cardTheme: value })} value={theme.cardTheme}>
+                <Stack direction="row" gap={2}>
+                  {THEME_OPTIONS.cardTheme.map((cardTheme) =>
+                    <Box key={cardTheme} textAlign="center">
+                      <Radio value={cardTheme}>
+                        <CardImage card="3;clubs" theme={cardTheme} style={{ width: '5em', height: '7em', marginRight: '0' }} />
                       </Radio>
                       <Text ps={6}>
-                        {startCase(theme)}
+                        {startCase(cardTheme)}
+                      </Text>
+                    </Box>
+                  )}
+                </Stack>
+              </RadioGroup>
+            </FormControl>
+
+            <Divider my={5} />
+
+            <FormControl>
+              <FormLabel>Color Scheme</FormLabel>
+
+              <RadioGroup onChange={(value) => updateTheme({ ...theme, colorScheme: value })} value={theme.colorScheme}>
+                <Stack direction="row" gap={2}>
+                  {THEME_OPTIONS.colorScheme.slice(0, 4).map((colorScheme) =>
+                    <Box key={colorScheme} textAlign="center">
+                      <Radio value={colorScheme}>
+                        <Box {...COLOR_SCHEME_STYLES[colorScheme].bg} width={10} height={10} borderRadius={10} />
+                      </Radio>
+                      <Text ps={6}>
+                        {startCase(colorScheme)}
+                      </Text>
+                    </Box>
+                  )}
+                </Stack>
+                <Stack direction="row" gap={2} mt={4}>
+                  {THEME_OPTIONS.colorScheme.slice(4).map((colorScheme) =>
+                    <Box key={colorScheme} textAlign="center">
+                      <Radio value={colorScheme}>
+                        <Box {...COLOR_SCHEME_STYLES[colorScheme].bg} width={10} height={10} borderRadius={10} />
+                      </Radio>
+                      <Text ps={6}>
+                        {startCase(colorScheme)}
                       </Text>
                     </Box>
                   )}
