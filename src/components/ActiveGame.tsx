@@ -97,7 +97,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
             left="50%"
             transform="translate(-50%, -50%)"
             width="auto"
-            backgroundColor="green.100"
+            backgroundColor="blackAlpha.100"
             borderRadius="lg"
             p={4}
           >
@@ -297,32 +297,6 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
               </Box>
             )}
           </Box>
-
-
-          {/* Spectator view - display if we're done (or not in the game) */}
-          {Boolean(spectating) &&
-            <Box my={5} py={2}>
-              <Heading size="md">Spectating...</Heading>
-              {game.players.map((player, index) => (
-                <Box key={index} mb={5}>
-                  <Text size="sm" mb={1}>
-                    {player.name}&apos;s hand
-                    {!player.hand.length && ` is finished! ${RANK_EMOJIS[player.finishedRank]}`}
-                  </Text>
-                  <Stack key={index} direction="row" spacing={cardSpacing}>
-                    {player.hand.map((card, cardIndex) =>
-                      <Box key={cardIndex} onClick={() => handleClick(card)}>
-                        <CardImage
-                          card={card}
-                          selected={comboToPlay.has(card)}
-                        />
-                      </Box>
-                    )}
-                  </Stack>
-                </Box>
-              ))}
-            </Box>
-          }
 
           {/* Don't show slider if there's no cards in our hand (or others' hands, if we're spectating) to display */}
           {(thisPlayer?.hand?.length || spectating) &&

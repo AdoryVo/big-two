@@ -1,53 +1,36 @@
 import {
   Box,
-  Button,
-  type ButtonProps,
+  Button, type ButtonProps,
   Divider, FormControl,
   FormLabel,
-  Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader,
-  ModalOverlay, Radio,
-  RadioGroup,
+  Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
+  Radio, RadioGroup,
   Stack,
-  Switch,
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
 import { startCase } from 'lodash'
-import { useEffect, useState } from 'react'
 
 import CardImage from './CardImage'
 
-import { useColorScheme } from '@utils/hooks/useTheme'
 import {
-  COLOR_SCHEME_STYLES, CardTheme, CardThemes, ColorScheme,
-  ColorSchemes, getCardTheme,
-  getColorScheme, setCardTheme, setColorScheme,
+  COLOR_SCHEME_STYLES,
+  THEME_OPTIONS,
+  Theme,
 } from '@utils/theme'
 
 interface Props {
   props?: ButtonProps,
-  localColorScheme: string,
-  handleChangeColor: (value: string) => void
+  theme: Theme,
+  updateTheme: (update: Theme) => void,
 }
 
-export default function Preferences({ props, localColorScheme, handleChangeColor }: Props) {
+export default function Preferences({ props, theme, updateTheme }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [localCardTheme, setLocalCardTheme] = useState<string>(CardTheme.Classic)
-
-  useEffect(() => {
-    setLocalCardTheme(getCardTheme())
-  }, [])
-
-  function handleChangeTheme(value: string) {
-    setCardTheme(value)
-    setLocalCardTheme(value)
-
-    window.location.reload()
-  }
 
   return (
     <>
-      <Button colorScheme="purple" mb={4} {...props} onClick={onOpen}>
+      <Button colorScheme="purple" shadow="1px 1px black" mb={4} {...props} onClick={onOpen}>
         Preferences
       </Button>
 
@@ -58,17 +41,17 @@ export default function Preferences({ props, localColorScheme, handleChangeColor
           <ModalCloseButton />
           <ModalBody>
             <FormControl>
-              <FormLabel fontWeight="bold">Theme</FormLabel>
+              <FormLabel>Theme</FormLabel>
 
-              <RadioGroup onChange={handleChangeTheme} value={localCardTheme}>
-                <Stack direction="row">
-                  {CardThemes.map((theme) =>
-                    <Box key={theme} textAlign="center">
-                      <Radio value={theme}>
-                        <CardImage card="3;clubs" theme={theme} style={{ width: '5em', height: '7em', marginRight: '0' }} />
+              <RadioGroup onChange={(value) => updateTheme({ ...theme, cardTheme: value })} value={theme.cardTheme}>
+                <Stack direction="row" gap={2}>
+                  {THEME_OPTIONS.cardTheme.map((cardTheme) =>
+                    <Box key={cardTheme} textAlign="center">
+                      <Radio value={cardTheme}>
+                        <CardImage card="3;clubs" theme={cardTheme} style={{ width: '5em', height: '7em', marginRight: '0' }} />
                       </Radio>
                       <Text ps={6}>
-                        {startCase(theme)}
+                        {startCase(cardTheme)}
                       </Text>
                     </Box>
                   )}
@@ -81,9 +64,9 @@ export default function Preferences({ props, localColorScheme, handleChangeColor
             <FormControl>
               <FormLabel>Color Scheme</FormLabel>
 
-              <RadioGroup onChange={handleChangeColor} value={localColorScheme}>
-                <Stack direction="row">
-                  {ColorSchemes.map((colorScheme) =>
+              <RadioGroup onChange={(value) => updateTheme({ ...theme, colorScheme: value })} value={theme.colorScheme}>
+                <Stack direction="row" gap={2}>
+                  {THEME_OPTIONS.colorScheme.map((colorScheme) =>
                     <Box key={colorScheme} textAlign="center">
                       <Radio value={colorScheme}>
                         <Box {...COLOR_SCHEME_STYLES[colorScheme].bg} width={10} height={10} borderRadius={10} />

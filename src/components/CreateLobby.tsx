@@ -21,7 +21,7 @@ export default function CreateLobby() {
 
   return (
     <>
-      <Button colorScheme="green" mb={4} me={2} onClick={onOpen}>
+      <Button colorScheme="green" shadow="1px 1px black" mb={4} me={2} onClick={onOpen}>
         Create lobby
       </Button>
 

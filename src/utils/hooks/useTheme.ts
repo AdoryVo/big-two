@@ -1,37 +1,30 @@
 import { useEffect, useState } from 'react'
 
 import {
-  COLOR_SCHEME_STYLES, CardTheme, CardThemes, ColorScheme,
-  ColorSchemes, getCardTheme,
-  getColorScheme, setCardTheme, setColorScheme,
+  DEFAULT_THEME,
+  Theme,
+  getThemeOption,
+  setThemeOption,
 } from '@utils/theme'
 
-// export function useTheme() {
-//   const [localCardTheme, setLocalCardTheme] = useState<string>(CardTheme.Classic)
-//   const [localColorScheme, setLocalColorScheme] = useState<string>(ColorScheme.Dark)
-
-//   useEffect(() => {
-//     setLocalCardTheme(getCardTheme())
-//     setLocalColorScheme(getColorScheme())
-//   }, [])
-
-//   return [localCardTheme, localColorScheme]
-// }
-
-export function useColorScheme() {
-  const [localColorScheme, setLocalColorScheme] = useState<string>(ColorScheme.Dark)
+export function useTheme(): [Theme, (update: Theme) => void] {
+  const [theme, setTheme] = useState<Theme>(DEFAULT_THEME)
 
   useEffect(() => {
-    setLocalColorScheme(getColorScheme())
+    // Set theme from local storage
+    setTheme({
+      cardTheme: getThemeOption('cardTheme'),
+      colorScheme: getThemeOption('colorScheme'),
+    })
   }, [])
 
-  function handleChangeColor(value: string) {
-    setColorScheme(value)
-    setLocalColorScheme(value)
+  function updateTheme(update: Theme) {
+    setTheme(update)
+    // Set local storage from update
+    for (const option in update) {
+      setThemeOption(option, update[option])
+    }
   }
 
-  return {
-    localColorScheme,
-    handleChangeColor,
-  }
+  return [theme, updateTheme]
 }

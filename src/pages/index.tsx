@@ -15,28 +15,29 @@ import { describe, rulesToArray } from '@big-two/Rules'
 import CreateLobby from '@components/CreateLobby'
 import Preferences from '@components/Preferences'
 import useLobbies from '@utils/hooks/useLobbies'
-import { useColorScheme } from '@utils/hooks/useTheme'
-import { COLOR_SCHEME_STYLES } from '@utils/theme'
+import { useTheme } from '@utils/hooks/useTheme'
+import { getStyles } from '@utils/theme'
 
 export default function Home() {
   const { lobbies, isLoading, error } = useLobbies()
-  const { localColorScheme, handleChangeColor } = useColorScheme()
+  const [theme, updateTheme] = useTheme()
+  const styles = getStyles(theme)
 
   return (
-    <Box {...COLOR_SCHEME_STYLES[localColorScheme].bg} minH="100vh">
+    <Box {...styles.bg} minH="100vh">
       <NextSeo
         title="Big Two"
         description="Play big two online with your friends or in public lobbies!"
       />
       <Container p={5}>
-        <Heading {...COLOR_SCHEME_STYLES[localColorScheme].text} mb={5}>♠️ Big Two</Heading>
+        <Heading {...styles.text} mb={5}>♠️ Big Two</Heading>
         <CreateLobby />
         <Preferences
-          handleChangeColor={handleChangeColor}
-          localColorScheme={localColorScheme}
+          theme={theme}
+          updateTheme={updateTheme}
         />
 
-        <Heading {...COLOR_SCHEME_STYLES[localColorScheme].text} size="lg" my={5}>🏠 Public Lobbies</Heading>
+        <Heading {...styles.text} size="lg" my={5}>🏠 Public Lobbies</Heading>
         {error && (
           <Text as="b" color="red.500">An error occurred loading the lobbies...</Text>
         )}

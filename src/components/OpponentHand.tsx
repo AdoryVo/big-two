@@ -9,7 +9,7 @@ const HAND_ROTATIONS = [
 
 const HAND_STYLES = [
   {
-    bottom: '0em',
+    bottom: '-0.5em',
     left: '50%',
     transform: 'translate(-50%, 0)',
   },
@@ -25,7 +25,7 @@ const HAND_STYLES = [
   },
   {
     top: '50%',
-    right: '-7em',
+    right: '1em',
     transform: 'translate(0, -50%)',
   },
 ]
@@ -38,7 +38,7 @@ const INFO_STYLES = [
   },
   {
     top: '50%',
-    left: '7em',
+    left: '6em',
     transform: 'translate(0, -50%)',
   },
   {
@@ -48,7 +48,7 @@ const INFO_STYLES = [
   },
   {
     top: '50%',
-    right: '7em',
+    right: '6em',
     transform: 'translate(0, -50%)',
   },
 ]
@@ -88,6 +88,7 @@ export default function OpponentHand({ position, player }: Props) {
         textAlign="right"
         backgroundColor="blue.100"
         borderRadius="md"
+        shadow="md"
         p={2}
       >
         <Text fontWeight="bold">

@@ -27,16 +27,23 @@ import WaitingLobby from '@components/WaitingLobby'
 import { Action, type ActionData } from '@utils/actions'
 import useGame from '@utils/hooks/useGame'
 import { usePusher } from '@utils/hooks/usePusher'
-import { useColorScheme } from '@utils/hooks/useTheme'
+import { useTheme } from '@utils/hooks/useTheme'
 import { Event } from '@utils/pusher'
-import { COLOR_SCHEME_STYLES, getColorScheme } from '@utils/theme'
+import { Theme, getStyles } from '@utils/theme'
 
-function BasePage({ children, localColorScheme, handleChangeColor }: { children?: React.ReactNode, handleChangeColor: (value: string) => void, localColorScheme: string}) {
+interface BaseProps {
+  children?: React.ReactNode,
+  theme: Theme,
+  updateTheme: (update: Theme) => void,
+}
+
+function BasePage({ children, theme, updateTheme }: BaseProps) {
   return (
     <Container
       p={5}
       backgroundColor="white"
       borderRadius="lg"
+      shadow="md"
       maxW="container.md"
       mt={{ md: '10em' }}
     >
@@ -51,8 +58,8 @@ function BasePage({ children, localColorScheme, handleChangeColor }: { children?
           top: { md: '1em' },
           right: { md: '1em' },
         }}
-        handleChangeColor={handleChangeColor}
-        localColorScheme={localColorScheme}
+        theme={theme}
+        updateTheme={updateTheme}
       />
       {children}
     </Container>
@@ -71,7 +78,8 @@ export default function Game() {
   const [gameInProgress, setGameInProgress] = useState(false)
   const [playerId, setPlayerId] = useState('')
 
-  const { localColorScheme, handleChangeColor } = useColorScheme()
+  const [theme, updateTheme] = useTheme()
+  const styles = getStyles(theme)
 
   useEffect(() => {
     if (isLoading || !game) {
@@ -213,18 +221,18 @@ export default function Game() {
   if (isLoading || !game || error) {
     return <>
       <NextSeo title="Lobby | Big Two" description="Join and play!" />
-      <BasePage localColorScheme={localColorScheme} handleChangeColor={handleChangeColor}>
+      <BasePage theme={theme} updateTheme={updateTheme}>
         {error && <Container><Heading>💀 Game could not load!</Heading></Container>}
       </BasePage>
     </>
   }
 
   return (
-    <Box {...COLOR_SCHEME_STYLES[getColorScheme()].bg} minH="100vh" p={5}>
+    <Box {...styles.bg} minH="100vh" p={5}>
       <NextSeo
         title={`${getPageTitle()} | Big Two`}
       />
-      <BasePage localColorScheme={localColorScheme} handleChangeColor={handleChangeColor}>
+      <BasePage theme={theme} updateTheme={updateTheme}>
         <Heading>Game Lobby</Heading>
         <Text mb={5}>
           <ChakraLink

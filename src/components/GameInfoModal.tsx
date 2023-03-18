@@ -33,15 +33,16 @@ export default function GameInfoModal({ game, gameInProgress }: Props) {
     <>
       <Button
         backgroundColor="#FFD100"
-        onClick={onOpen}
+        shadow="1px 1px black"
         position={{ md: 'absolute' }}
         top={{ md: '4.5em' }}
         right={{ md: '1em' }}
+        onClick={onOpen}
       >
         Game Info
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Game Info</ModalHeader>
