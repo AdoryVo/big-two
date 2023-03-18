@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import type { CSSProperties } from 'react'
 
-import { getTheme } from '@utils/theme'
+import { getCardTheme } from '@utils/theme'
 
 
 const RANK_NAMES: { [abbrn: string]: string } = {
@@ -28,7 +28,7 @@ export default function CardImage({
       return '/assets/cards/classic/back.png'
     }
 
-    return `/assets/cards/${theme || getTheme()}/${[RANK_NAMES[rank] || rank, suit].join('_of_')}.png`
+    return `/assets/cards/${theme || getCardTheme()}/${[RANK_NAMES[rank] || rank, suit].join('_of_')}.png`
   }
 
   return (
@@ -39,7 +39,7 @@ export default function CardImage({
         display: 'inline',
         width: '6em',
         height: '8.2em',
-        marginRight: '1em',
+        // marginRight: '1em',
         border: selected ? 'thin solid #68D391' : 'thin solid black',
         backgroundColor: 'white',
         cursor: 'pointer',

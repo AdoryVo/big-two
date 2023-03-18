@@ -12,6 +12,7 @@ import type { GameWithPlayers } from '@utils/prisma'
 
 export default function EditLobby({ game }: { game: GameWithPlayers }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const gameInProgress = Boolean(game.currentPlayer)
 
   function submitForm(body: object) {
     ky.put(`/api/${game.id}/settings`, { json: body }).then(() => {
@@ -21,7 +22,12 @@ export default function EditLobby({ game }: { game: GameWithPlayers }) {
 
   return (
     <>
-      <Button colorScheme="gray" mt={4} me={2} onClick={onOpen}>
+      <Button
+        colorScheme="gray"
+        mt={4}
+        isDisabled={gameInProgress}
+        onClick={onOpen}
+      >
         Edit rules
       </Button>
 

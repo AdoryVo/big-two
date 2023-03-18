@@ -9,6 +9,7 @@ import {
   Text,
   Th, Thead, Tr,
   UnorderedList,
+  useMediaQuery,
   useToast,
 } from '@chakra-ui/react'
 import ky from 'ky'
@@ -18,25 +19,48 @@ import { useEffect, useState } from 'react'
 import { describe, rulesToArray } from '@big-two/Rules'
 import ActiveGame from '@components/ActiveGame'
 import EditLobby from '@components/EditLobby'
+import GameInfo from '@components/GameInfo'
+import GameInfoModal from '@components/GameInfoModal'
 import HomeButton from '@components/HomeButton'
 import Preferences from '@components/Preferences'
 import WaitingLobby from '@components/WaitingLobby'
 import { Action, type ActionData } from '@utils/actions'
 import useGame from '@utils/hooks/useGame'
 import { usePusher } from '@utils/hooks/usePusher'
+import { useColorScheme } from '@utils/hooks/useTheme'
 import { Event } from '@utils/pusher'
+import { COLOR_SCHEME_STYLES, getColorScheme } from '@utils/theme'
 
-function BasePage({ children }: { children?: React.ReactNode }) {
+function BasePage({ children, localColorScheme, handleChangeColor }: { children?: React.ReactNode, handleChangeColor: (value: string) => void, localColorScheme: string}) {
   return (
-    <Container p={5} backgroundColor="white" borderRadius="lg" maxW="container.md">
-      <HomeButton />
-      <Preferences />
+    <Container
+      p={5}
+      backgroundColor="white"
+      borderRadius="lg"
+      maxW="container.md"
+      mt={{ md: '10em' }}
+    >
+      <HomeButton
+        position={{ md: 'absolute' }}
+        top={{ md: '1em' }}
+        left={{ md: '1em' }}
+      />
+      <Preferences
+        props={{
+          position: { md: 'absolute' },
+          top: { md: '1em' },
+          right: { md: '1em' },
+        }}
+        handleChangeColor={handleChangeColor}
+        localColorScheme={localColorScheme}
+      />
       {children}
     </Container>
   )
 }
 
 export default function Game() {
+  const [isDesktop] = useMediaQuery('(min-width: 48em)')
   const pusher = usePusher()
   const toast = useToast()
 
@@ -46,6 +70,8 @@ export default function Game() {
   } = useGame()
   const [gameInProgress, setGameInProgress] = useState(false)
   const [playerId, setPlayerId] = useState('')
+
+  const { localColorScheme, handleChangeColor } = useColorScheme()
 
   useEffect(() => {
     if (isLoading || !game) {
@@ -187,18 +213,18 @@ export default function Game() {
   if (isLoading || !game || error) {
     return <>
       <NextSeo title="Lobby | Big Two" description="Join and play!" />
-      <BasePage>
+      <BasePage localColorScheme={localColorScheme} handleChangeColor={handleChangeColor}>
         {error && <Container><Heading>💀 Game could not load!</Heading></Container>}
       </BasePage>
     </>
   }
 
   return (
-    <Box backgroundColor="green.100" minH="100vh" p={5}>
+    <Box {...COLOR_SCHEME_STYLES[getColorScheme()].bg} minH="100vh" p={5}>
       <NextSeo
         title={`${getPageTitle()} | Big Two`}
       />
-      <BasePage>
+      <BasePage localColorScheme={localColorScheme} handleChangeColor={handleChangeColor}>
         <Heading>Game Lobby</Heading>
         <Text mb={5}>
           <ChakraLink
@@ -218,49 +244,14 @@ export default function Game() {
           <WaitingLobby game={game} playerId={playerId} handleAction={handleAction} />
         )}
 
-        <Divider my={5} />
-
-        <Heading size="lg">🏆 Scoreboard</Heading>
-        <TableContainer>
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>Rank</Th>
-                <Th>Name</Th>
-                <Th isNumeric>Games</Th>
-                <Th isNumeric>Score</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {game.players.sort((a, b) => b.points - a.points).map((player, index) =>
-                <Tr key={index}>
-                  <Td>{game.players.findIndex((p) => player.points === p.points) + 1}</Td>
-                  <Td>{player.name}</Td>
-                  <Td isNumeric>#</Td>
-                  <Td isNumeric>{player.points}</Td>
-                </Tr>
-              )}
-            </Tbody>
-          </Table>
-        </TableContainer>
-
-        <Divider my={5} />
-
-        <Heading size="lg" mb={3}>📜 Lobby Rules</Heading>
-        Max players: {game.settings.playerMax}
-        <br />
-        Spectating: {game.settings.spectating ? 'On' : 'Off'}
-        <br />
-        Rules:
-        <br />
-        <UnorderedList>
-          {rulesToArray(game.settings.rules).map((rule) =>
-            <ListItem key={rule}>{describe(rule)}</ListItem>
-          )}
-        </UnorderedList>
-        {!gameInProgress &&
-          <EditLobby game={game} />
-        }
+        {isDesktop ? (
+          <GameInfoModal game={game} gameInProgress={gameInProgress} />
+        ) : (
+          <>
+            <Divider my={5} />
+            <GameInfo game={game} gameInProgress={gameInProgress} />
+          </>
+        )}
       </BasePage>
     </Box>
   )
