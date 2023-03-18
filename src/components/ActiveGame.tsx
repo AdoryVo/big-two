@@ -15,6 +15,7 @@ import { useState } from 'react'
 import CardImage from './CardImage'
 import PlayerHand from './PlayerHand'
 
+import Game from '@big-two/Game'
 import { Action, type ActionData } from '@utils/actions'
 import type { GameWithPlayers } from '@utils/prisma'
 
@@ -37,6 +38,8 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
 
   // Whether we're spectating (either we're not in the game, or we are and we finished)
   const spectating = (!playerId || thisPlayer?.finishedRank) && game.settings.spectating
+
+  const gameInstance = new Game(game.players.length, game.settings.rules, game)
 
   // use dummy flag to force rerenders, so we don't have to copy the comboToPlay set every time to trigger rerender
   const [dummy, setDummy] = useState(false)
@@ -128,7 +131,12 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                   <Text mb={2}>
                     Select cards in your hand to play or pass!
                   </Text>
-                  <Button onClick={handlePlay} colorScheme="green" me={2}>
+                  <Button
+                    onClick={handlePlay}
+                    colorScheme="green"
+                    isDisabled={!gameInstance.can_play(Array.from(comboToPlay))}
+                    me={2}
+                  >
                     Play a combo
                   </Button>
                   <Button onClick={() => handleAction(Action.Pass)} isDisabled={!game.combo.length} colorScheme="blue">

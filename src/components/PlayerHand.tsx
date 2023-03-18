@@ -22,7 +22,7 @@ export default function PlayerHand({
     <>
       <Stack direction="row" spacing={cardSpacing}>
         {hand.map((card, index) =>
-          <Box key={index} onClick={() => handleClick(card)}>
+          <Box key={index} onMouseDown={() => handleClick(card)}>
             <CardImage
               card={card}
               selected={comboToPlay.has(card)}
