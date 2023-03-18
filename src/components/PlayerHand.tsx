@@ -41,7 +41,7 @@ export default function PlayerHand({
         <Grid templateColumns="repeat(7, 1fr)" gap={0}>
           {hand.map((card, index) =>
             <GridItem key={index}>
-              <Box onClick={() => handleClick(card)}>
+              <Box onMouseDown={() => handleClick(card)}>
                 <CardImage card={card} selected={comboToPlay.has(card)} style={{ transform: '' }} />
               </Box>
             </GridItem>

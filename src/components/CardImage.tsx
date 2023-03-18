@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react'
 
 import { getTheme } from '@utils/theme'
 
+
 const RANK_NAMES: { [abbrn: string]: string } = {
   'J': 'jack',
   'Q': 'queen',
@@ -48,6 +49,7 @@ export default function CardImage({
       }}
       width={50}
       height={100}
+      draggable={false}
     />
   )
 }
