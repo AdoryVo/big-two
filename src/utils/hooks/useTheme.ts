@@ -1,10 +1,11 @@
 
+import _ from 'lodash'
+import { useEffect, useState } from 'react'
+
 import type { Theme } from '@utils/theme'
 import {
   DEFAULT_THEME, getThemeOption, setThemeOption,
 } from '@utils/theme'
-import _ from 'lodash'
-import { useEffect, useState } from 'react'
 
 export function useTheme(): [Theme, (update: Theme) => void] {
   const [theme, setTheme] = useState<Theme>(DEFAULT_THEME)
