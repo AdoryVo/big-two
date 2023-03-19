@@ -5,6 +5,10 @@ import {
   Divider, Heading, Text,
   useToast,
 } from '@chakra-ui/react'
+import ky from 'ky'
+import { NextSeo } from 'next-seo'
+import { useEffect, useState } from 'react'
+
 import ActiveGame from '@components/ActiveGame'
 import GameInfo from '@components/GameInfo'
 import GameInfoModal from '@components/GameInfoModal'
@@ -19,9 +23,6 @@ import { useTheme } from '@utils/hooks/useTheme'
 import { Event } from '@utils/pusher'
 import type { Theme } from '@utils/theme'
 import { getStyles } from '@utils/theme'
-import ky from 'ky'
-import { NextSeo } from 'next-seo'
-import { useEffect, useState } from 'react'
 
 interface BaseProps {
   children?: React.ReactNode,
