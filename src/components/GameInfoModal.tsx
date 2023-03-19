@@ -33,7 +33,7 @@ export default function GameInfoModal({ game }: Props) {
         Game Info
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size="xl">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Game Info</ModalHeader>

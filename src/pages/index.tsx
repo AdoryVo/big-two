@@ -27,7 +27,11 @@ export default function Home() {
     <Box {...styles.bg} minH="100vh">
       <NextSeo
         title="Big Two"
-        description="Play big two online with your friends or in public lobbies!"
+        description="Play Big Two online with your friends or in public lobbies!"
+        canonical="https://bigtwo.vercel.app/"
+        openGraph={{
+          images: [{ url: 'https://bigtwo.vercel.app/assets/site-preview.png' }],
+        }}
       />
       <Container p={5}>
         <Heading {...styles.text} mb={5}>♠️ Big Two</Heading>

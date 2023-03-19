@@ -158,6 +158,7 @@ export default function Game() {
       ky.post(url, joinBody).json<string>().then((playerId) => {
         localStorage.setItem('playerId', playerId)
         setPlayerId(playerId)
+        mutate()
       })
       break
     case Action.Leave:

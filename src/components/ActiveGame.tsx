@@ -170,7 +170,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                 {/* Player Info */}
                 <Tooltip
                   label={
-                    <Text textAlign="center">
+                    <Text as="div" textAlign="center">
                       {playerEmojis[player.index]} {player.name} | {player.hand.length} cards | {player.points} points
                       <br />
                       {game.currentPlayer?.name === player.name && <p>Current turn</p>}
