@@ -4,6 +4,7 @@ import type { CSSProperties } from 'react'
 import { useTheme } from '@utils/hooks/useTheme'
 import { CardTheme } from '@utils/theme'
 
+
 const RANK_NAMES: { [abbrn: string]: string } = {
   'J': 'jack',
   'Q': 'queen',
@@ -27,7 +28,7 @@ export default function CardImage({
     const [rank, suit] = card.split(';')
 
     if (!rank) {
-      return `/assets/cards/${CardTheme.Classic}/back.png`
+      return `/assets/cards/${prefTheme || theme.cardTheme}/back.png`
     }
 
     return `/assets/cards/${prefTheme || theme.cardTheme}/${[RANK_NAMES[rank] || rank, suit].join('_of_')}.png`
