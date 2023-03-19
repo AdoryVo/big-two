@@ -1,4 +1,5 @@
 import type { BoxProps } from '@chakra-ui/react'
+import { useIds } from '@chakra-ui/react'
 import {
   Alert, AlertDescription, AlertTitle,
   Box,
@@ -8,7 +9,6 @@ import {
   Stack,
   Text,
   Tooltip,
-  useMediaQuery,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 
@@ -18,6 +18,7 @@ import PlayerHand from './PlayerHand'
 
 import Game from '@big-two/Game'
 import { Action, type ActionData } from '@utils/actions'
+import useIsDesktop from '@utils/hooks/useIsDesktop'
 import type { GameWithPlayers } from '@utils/prisma'
 
 interface Props {
@@ -66,7 +67,7 @@ const fixedComboStyles: BoxProps = {
 }
 
 export default function ActiveGame({ game, playerId, handleAction }: Props) {
-  const [isDesktop] = useMediaQuery('(min-width: 48em)')
+  const isDesktop = useIsDesktop()
 
   const [comboToPlay, setComboToPlay] = useState(new Set<string>())
   const [cardSpacing, setCardSpacing] = useState('-4.5em')

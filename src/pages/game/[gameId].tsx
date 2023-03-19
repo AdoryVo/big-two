@@ -2,7 +2,7 @@ import type { ContainerProps } from '@chakra-ui/react'
 import {
   Box, Link as ChakraLink,
   Container,
-  Divider, Heading, Text, useMediaQuery,
+  Divider, Heading, Text,
   useToast,
 } from '@chakra-ui/react'
 import ky from 'ky'
@@ -17,6 +17,7 @@ import Preferences from '@components/Preferences'
 import WaitingLobby from '@components/WaitingLobby'
 import { Action, type ActionData } from '@utils/actions'
 import useGame from '@utils/hooks/useGame'
+import useIsDesktop from '@utils/hooks/useIsDesktop'
 import { usePusher } from '@utils/hooks/usePusher'
 import { useTheme } from '@utils/hooks/useTheme'
 import { Event } from '@utils/pusher'
@@ -60,7 +61,7 @@ function BasePage({ children, theme, updateTheme, props }: BaseProps) {
 }
 
 export default function Game() {
-  const [isDesktop] = useMediaQuery('(min-width: 48em)')
+  const isDesktop = useIsDesktop
   const pusher = usePusher()
   const toast = useToast()
 
