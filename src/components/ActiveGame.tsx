@@ -21,6 +21,7 @@ import { Action, type ActionData } from '@utils/actions'
 import useIsDesktop from '@utils/hooks/useIsDesktop'
 import type { GameWithPlayers } from '@utils/prisma'
 
+
 interface Props {
   game: GameWithPlayers,
   playerId: string,
@@ -147,7 +148,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                   <CardImage key={index} card={card} />
                 )}
                 {!game.combo.length &&
-                  <CardImage card="" />
+                  <Box width={'6em'} height={'8.2em'} />
                 }
               </Stack>
             </Box>
