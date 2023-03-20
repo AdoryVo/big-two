@@ -22,10 +22,6 @@ export default async function handler(
       lastPlaymaker: null,
       backupNext: null,
     },
-    include: {
-      players: true,
-      currentPlayer: true,
-    },
   })
 
   await pusher.trigger(id, Event.LobbyUpdate, null)

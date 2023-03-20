@@ -26,7 +26,7 @@ export default async function handler(
   }
 
   // Double check that the request is from the current player
-  const playerId = req.cookies.playerId
+  const playerId = req.cookies[game.id]
   if (playerId !== game.currentPlayer.id) {
     return res.status(401).end()
   }

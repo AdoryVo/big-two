@@ -23,9 +23,13 @@ export default async function handler(
   }
 
   // Authorization - obscuring player data
-  const playerId = req.cookies.playerId
+  if (game.currentPlayer) {
+    game.currentPlayer.id = ''
+  }
+
+  const playerId = req.cookies[game.id]
   const player = game.players.find((player) => player.id === playerId)
-  if (playerId && player) {
+  if (playerId && player && player.finishedRank === 0) {
     // If a remaining player is requesting game data, obscure other players' id's & cards
     game.players.forEach((player) => {
       if (player.id !== playerId) {
@@ -36,6 +40,11 @@ export default async function handler(
   } else {
     // Obscure ID's from spectating players
     game.players.forEach((player) => {
+      // Do not obscure id if this player is the spectator
+      if (playerId && player.id === playerId) {
+        return
+      }
+
       player.id = ''
     })
 

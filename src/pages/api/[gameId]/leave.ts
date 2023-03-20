@@ -13,13 +13,9 @@ export default async function handler(
 
   const game = await prisma.game.findUnique({
     where: { id },
-    include: {
-      players: true,
-      currentPlayer: true,
-    },
   })
 
-  const playerId = req.cookies.playerId
+  const playerId = req.cookies[game?.id ?? '']
   if (!playerId || !game) {
     return res.status(404).end()
   }
@@ -32,7 +28,7 @@ export default async function handler(
     })
 
   // Remove cookie
-  res.setHeader('Set-Cookie', 'playerId=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT')
+  res.setHeader('Set-Cookie', `${game.id}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT`)
 
   return res.status(200).end()
 }

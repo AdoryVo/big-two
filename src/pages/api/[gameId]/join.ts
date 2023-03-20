@@ -12,26 +12,31 @@ export default async function handler(
   const id = String(req.query.gameId)
   const { name } = req.body
 
-  const data = { name: String(name) }
-  const game = await prisma.game.update({
-    where: { id },
-    data: { players: { create: data } },
-    include: { players: true, currentPlayer: true },
-  })
-
-  if (!game) {
-    res.status(404).end()
-  }
-
-  // Set cookie
-  const player = game.players.at(-1)
-  const playerId = player?.id
-  res.setHeader('Set-Cookie', `playerId=${playerId}; Path=/`)
-
-  await pusher.trigger(id, Event.LobbyUpdate, null)
-    .catch((err) => {
-      console.error(err)
+  try {
+    const data = { name: String(name) }
+    const game = await prisma.game.update({
+      where: { id },
+      data: { players: { create: data } },
+      include: { players: true },
     })
 
-  return res.status(201).json(playerId)
+    if (!game) {
+      res.status(404).end()
+    }
+
+    // Set cookie
+    const player = game.players.find((player) => player.name === name)
+    const playerId = player?.id
+    res.setHeader('Set-Cookie', `${game.id}=${playerId}; Path=/`)
+
+    // Update lobby player list
+    await pusher.trigger(id, Event.LobbyUpdate, null)
+      .catch((err) => {
+        console.error(err)
+      })
+
+    return res.status(201).json(playerId)
+  } catch (e) {
+    return res.status(422).end()
+  }
 }

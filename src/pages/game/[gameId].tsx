@@ -82,29 +82,13 @@ export default function Game() {
 
     setGameInProgress(Boolean(game.currentPlayer))
 
-    // If the game refresh is from web socket or spectating, ignore player id logic
-    if (!(game.players.every((player) => player.id === '') ||
-      game.players.every((player) => player.id !== ''))
-    ) {
-      // If we are retrieving a player ID, join back in
-      const player = game.players.find((player) => player.id)
-      if (player) {
-        localStorage.setItem('playerId', player.id)
-        setPlayerId(player.id)
-      }
-
-      const storedPlayerId = localStorage.getItem('playerId')
-      if (storedPlayerId) {
-        if (!game.players.find((player) => player.id === storedPlayerId)) {
-          localStorage.removeItem('playerId')
-        } else {
-          setPlayerId(storedPlayerId)
-        }
-      }
+    // If we are entering a lobby previously joined, set player id
+    const storedPlayerId = localStorage.getItem(game.id)
+    if (storedPlayerId) {
+      setPlayerId(storedPlayerId)
     }
 
     const channel = pusher.subscribe(game.id)
-    channel.unbind()
     channel.bind(Event.LobbyUpdate, () => {
       mutate()
     })
@@ -128,7 +112,25 @@ export default function Game() {
         isClosable: true,
       })
     })
+
+    return () => {
+      channel.unbind()
+    }
   }, [game, isLoading, pusher, mutate, toast])
+
+  // Remove old game id cookies
+  useEffect(() => {
+    async function clear() {
+      for (let i = 0; i < localStorage.length; i++) {
+        const cleared = await ky.patch('/api/clear').json<string|null>()
+        if (cleared) {
+          localStorage.removeItem(cleared)
+        }
+      }
+    }
+
+    clear()
+  }, [])
 
   // Handles player actions by sending server requests
   function handleAction(action: Action, data: ActionData = {}) {
@@ -156,13 +158,13 @@ export default function Game() {
       }
       const joinBody = { json: { name: name.trim() } }
       ky.post(url, joinBody).json<string>().then((playerId) => {
-        localStorage.setItem('playerId', playerId)
+        localStorage.setItem(game.id, playerId)
         setPlayerId(playerId)
         mutate()
       })
       break
     case Action.Leave:
-      localStorage.removeItem('playerId')
+      localStorage.removeItem(game.id)
       setPlayerId('')
       ky.patch(url)
       break
@@ -214,12 +216,12 @@ export default function Game() {
   }
 
   if (isLoading || !game || error) {
-    return <>
+    return <Box {...styles.bg} minH="100vh" p={5}>
       <NextSeo title="Lobby | Big Two" description="Join and play!" />
       <BasePage theme={theme} updateTheme={updateTheme}>
-        {error && <Container><Heading>💀 Game could not load!</Heading></Container>}
+        {error && <Heading>💀 Game could not load!</Heading>}
       </BasePage>
-    </>
+    </Box>
   }
 
   return (

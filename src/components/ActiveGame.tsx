@@ -36,25 +36,26 @@ const PLAYER_EMOJIS = [
   ['💀', '🥶', '😂', '🗿'],
 ]
 
+const HAND_MARGIN = '9em'
 const INFO_STYLES = [
   {
-    bottom: '8em',
+    bottom: HAND_MARGIN,
     left: '50%',
     transform: 'translate(-50%, 0)',
   },
   {
     top: '50%',
-    left: '8em',
+    left: HAND_MARGIN,
     transform: 'translate(0, -50%)',
   },
   {
-    top: '8em',
+    top: HAND_MARGIN,
     left: '50%',
     transform: 'translate(-50%, 0)',
   },
   {
     top: '50%',
-    right: '8em',
+    right: HAND_MARGIN,
     transform: 'translate(0, -50%)',
   },
 ]
@@ -187,6 +188,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                     borderRadius="md"
                     shadow="md"
                     _hover={{ cursor: 'default' }}
+                    visibility={(thisPlayer === player && player.name === game.currentPlayer?.name && remainingPlayers.length !== 1) ? 'hidden' : 'visible'}
                     p={2}
                   >
                     <Text fontWeight="bold">
@@ -211,12 +213,12 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                   handleClick={handleClick}
                 >
                   {/* Current turn: Display actions */}
-                  {(game.currentPlayer && game.currentPlayer.id === thisPlayer.id) && remainingPlayers.length !== 1 &&
+                  {(game.currentPlayer && game.currentPlayer.name === thisPlayer.name) && remainingPlayers.length !== 1 &&
                     <Alert
                       backgroundColor="blackAlpha.800"
                       variant="solid"
                       position="fixed"
-                      bottom="8em"
+                      bottom={HAND_MARGIN}
                       zIndex={2}
                       left="50%"
                       transform="translate(-50%, 0)"
@@ -315,7 +317,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                 <br />
                 <PlayerHand hand={thisPlayer.hand} comboToPlay={comboToPlay} cardSpacing={cardSpacing} isDesktop={isDesktop} handleClick={handleClick}>
                   {/* Current turn: Display actions */}
-                  {(game.currentPlayer && game.currentPlayer.id === thisPlayer.id) && remainingPlayers.length !== 1 &&
+                  {(game.currentPlayer && game.currentPlayer.name === thisPlayer.name) && remainingPlayers.length !== 1 &&
                     <Alert
                       backgroundColor="blackAlpha.800"
                       variant="solid"
