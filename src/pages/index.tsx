@@ -52,7 +52,7 @@ export default function Home() {
           <Text as="b" color="red.500">An error occurred loading the lobbies...</Text>
         )}
         {isLoading && (
-          <Text {...styles.text} as="b">⌛ Loading...</Text>
+          <Text {...styles.text} as="b">⏳ Loading...</Text>
         )}
         {!isLoading && lobbies && lobbies.map((lobby, index) =>
           <Card key={index} textAlign="start" maxW="lg" mx="auto" mb={5}>

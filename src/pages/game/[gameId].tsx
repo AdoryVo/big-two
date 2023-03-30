@@ -219,7 +219,9 @@ export default function Game() {
     return <Box {...styles.bg} minH="100vh" p={5}>
       <NextSeo title="Lobby | Big Two" description="Join and play!" />
       <BasePage theme={theme} updateTheme={updateTheme}>
-        {error && <Heading>💀 Game could not load!</Heading>}
+        <Heading textAlign="center">
+          {error ? '💀 Game could not load!' : '⏳ Loading!'}
+        </Heading>
       </BasePage>
     </Box>
   }
