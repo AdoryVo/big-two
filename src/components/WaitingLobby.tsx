@@ -49,7 +49,7 @@ export default function WaitingLobby({ game, playerId, handleAction }: Props) {
       </OrderedList>
 
       {/* Join game prompt */}
-      {!playerId && (
+      {!playerId && game.players.length < game.settings.playerMax && (
         <>
           <Input
             value={name}

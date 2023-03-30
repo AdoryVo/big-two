@@ -11,7 +11,6 @@ import {
   Text,
   UnorderedList,
 } from '@chakra-ui/react'
-import gamePreview from '@public/assets/site-preview.png'
 import Image from 'next/image'
 import Link from 'next/link'
 import { NextSeo } from 'next-seo'
@@ -19,6 +18,7 @@ import { NextSeo } from 'next-seo'
 import { describe, rulesToArray } from '@big-two/Rules'
 import CreateLobby from '@components/CreateLobby'
 import Preferences from '@components/Preferences'
+import gamePreview from '@public/assets/site-preview.png'
 import useLobbies from '@utils/hooks/useLobbies'
 import { useTheme } from '@utils/hooks/useTheme'
 import { getStyles } from '@utils/theme'
@@ -72,7 +72,7 @@ export default function Home() {
                 )}
               </UnorderedList>
               <Tag colorScheme="cyan" me={2}>{lobby.settings.playerMax} Player Lobby</Tag>
-              {lobby.settings.spectating && <Tag colorScheme="green">Spectating Enabled</Tag>}
+              {lobby.settings.spectating ? <Tag colorScheme="green">Spectating Enabled</Tag> : <Tag colorScheme="red">Spectating Disabled</Tag>}
             </CardBody>
             <CardFooter>
               <Link href={`/game/${lobby.id}`} passHref>
@@ -155,7 +155,7 @@ export default function Home() {
         </Card>
 
         {/* Footer */}
-        <Divider mt={10} />
+        <Divider mt={8} />
         <Box textAlign="center" {...styles.text} pb={2}>
           Made with 💖 from San Diego
           <br />

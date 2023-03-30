@@ -4,6 +4,7 @@ import {
   ListItem,
   Table,
   TableContainer,
+  Tag,
   Tbody,
   Td,
   Th,
@@ -51,17 +52,16 @@ export default function GameInfo({ game } : Props) {
       <Divider my={5} />
 
       <Heading size="lg" mb={3}>📜 Lobby Rules</Heading>
-      Max players: {game.settings.playerMax}
-      <br />
-      Spectating: {game.settings.spectating ? 'On' : 'Off'}
-      <br />
       Rules:
       <br />
-      <UnorderedList>
+      <UnorderedList mb={2}>
         {rulesToArray(game.settings.rules).map((rule) =>
           <ListItem key={rule}>{describe(rule)}</ListItem>
         )}
       </UnorderedList>
+      <Tag colorScheme="cyan" me={2}>{game.settings.playerMax} Player Lobby</Tag>
+      {game.settings.spectating ? <Tag colorScheme="green">Spectating Enabled</Tag> : <Tag colorScheme="red">Spectating Disabled</Tag>}
+      <br />
       <EditLobby game={game} />
     </>
   )

@@ -66,6 +66,7 @@ export default function LobbyForm({ game, submitForm }: Props) {
           name="playerMax"
           defaultValue={formik.values.playerMax}
           onChange={(v) => formik.values.playerMax = parseInt(v)}
+          min={2}
           maxW={20}
         >
           <NumberInputField />
