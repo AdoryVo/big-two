@@ -18,7 +18,8 @@
     "paths": {
       "@utils/*": ["./utils/*"],
       "@components/*": ["./components/*"],
-      "@big-two/*": ["./lib/big-two/*"]
+      "@big-two/*": ["./lib/big-two/*"],
+      "@public/*": ["../public/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
