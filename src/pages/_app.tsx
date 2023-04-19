@@ -1,4 +1,5 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+import { Analytics } from '@vercel/analytics/react'
 import type { AppProps } from 'next/app'
 import { Alegreya, Montserrat } from 'next/font/google'
 import { DefaultSeo } from 'next-seo'
@@ -31,6 +32,7 @@ export default function App({ Component, pageProps }: AppProps) {
         }}
       />
       <Component {...pageProps} />
+      <Analytics />
     </ChakraProvider>
   )
 }
