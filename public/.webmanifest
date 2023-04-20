@@ -1,0 +1,23 @@
+{
+  "short_name": "Big Two",
+  "name": "Big Two - Play Big Two online!",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "type": "image/x-icon",
+      "sizes": "32x32"
+    }
+  ],
+  "display": "standalone",
+  "background_color": "#14532D",
+  "theme_color": "#14532D",
+  "description": "Play Big Two online with your friends or in public lobbies!",
+  "screenshots": [
+    {
+      "src": "/assets/site-preview.png",
+      "type": "image/png",
+      "sizes": "2494x1240",
+      "form_factor": "wide"
+    }
+  ]
+}

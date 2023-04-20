@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { NextSeo } from 'next-seo'
+import { NextSeo, VideoGameJsonLd } from 'next-seo'
 
 import { describe, rulesToArray } from '@big-two/Rules'
 import CreateLobby from '@components/CreateLobby'
@@ -37,6 +37,23 @@ export default function Home() {
         openGraph={{
           images: [{ url: 'https://bigtwo.vercel.app/assets/site-preview.png' }],
         }}
+        additionalLinkTags={[
+          {
+            rel: 'manifest',
+            href: '/.webmanifest',
+          },
+        ]}
+      />
+      <VideoGameJsonLd
+        name="Big Two"
+        languageName={['English']}
+        description="Big two is a card game of Cantonese origin usually played with two to four players."
+        playMode="MultiPlayer"
+        applicationCategory="Game"
+        url="https://bigtwo.vercel.app"
+        platformName={['Web-based game']}
+        keywords="cards, game, multiplayer"
+        image="https://bigtwo.vercel.app/assets/site-preview.png"
       />
       <Container maxW="5xl" textAlign="center" p={5}>
         <Heading {...styles.text} size="4xl" mb={5}>♠️ Big Two</Heading>
