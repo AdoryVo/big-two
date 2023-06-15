@@ -1,4 +1,4 @@
-<h1>♠️ big-two </h1>
+# ♠️ big-two
 
 ## 🚀 Getting Started
 
@@ -44,9 +44,7 @@ npm run dev
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-### Workflow Cycle
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the app.
 
 ### Directory Structure
 
@@ -58,15 +56,18 @@ Key:
 prisma/
 └── schema.prisma           # 📄 Database schema
 src/
-├── components/             # 📝 React components
+├── components/             # ⭐ React components
 ├── lib/
-│   └── game/               # ⭐ Game logic
+│   └── big-two/            # ⭐ Game logic
+├── utils/                  ## Constants and exports
 │   └── hooks/              # 📝 Hooks
-└── pages/                  # 📄 Visitable routes
+│   └── theme.ts/           # 📝 Theme specifications
+└── pages/                  ## Visitable routes
     └── api/                # ⭐ Server API routes
     └── _app.tsx            # 📄 Page component wrapper
     └── game/[gameId].tsx   # ⭐ Game lobby page
     └── index.tsx           # 📝 Home page
+    └── sandbox.tsx         # 📄 Development page for debugging game logic
 .env                        # 📝 Environment variables
 package.json                # 📄 Dependencies
 ```
@@ -76,25 +77,23 @@ package.json                # 📄 Dependencies
 - `migrate dev`: Create migrations from your Prisma schema, apply them to the database, generate artifacts (e.g. Prisma Client)
 - `studio`: Run Prisma's local browser tool for viewing models
 
-## Collaboration (GitHub branches, issues, PR's, etc.)
+## 🥞 Stack
+### Major functionality
+- [Next.js](https://nextjs.org/) - React framework
+- [Prisma](https://www.prisma.io/) - Typescript-first ORM for database operations dealing with active games
+- [Pusher](https://pusher.com/) - Realtime web socket channels for multiplayer functionality
+- [Supabase](https://supabase.com/) - Cloud Postgres database
+- [SWR](https://swr.vercel.app/) - Optimized data fetching for streamlined game updates
 
-- [TODO]
+### UI
+- [Chakra UI](https://chakra-ui.com/) - Component library inspired by Tailwind CSS
+- [Formik](https://formik.org/) - Form logic
+- [Material Design icons via react-icons](https://react-icons.github.io/react-icons/icons?name=md) - Icons
 
-## Learn More
+### Misc
+- [cards](http://kbjr.github.io/node-cards/) - Basic deck operation functionality
+- [random-word-slugs](https://www.npmjs.com/package/random-word-slugs) - Creative game ID generation
 
-- [TODO]
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-To learn more about Next.js, take a look at the following resources:
-
+## ⭐ See also
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
