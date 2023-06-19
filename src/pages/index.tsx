@@ -107,7 +107,7 @@ export default function Home() {
         <Card>
           <CardBody textAlign="start">
             <Box borderStart="3px solid" borderStartColor="green.200" ps={2}>
-              <b>Big two (also known as deuces, capsa, pusoy dos, dai di and various other names) is a card game of Cantonese origin.</b>
+              <b>Big two (also known as Tiến lên, deuces, capsa, pusoy dos, dai di and various other names) is a card game of Cantonese origin.</b>
               <br />
               ...
               <br />
@@ -144,7 +144,7 @@ export default function Home() {
                     the current player must play a pair with cards higher than 3 or else pass.
                   </ListItem>
                   <ListItem>
-                    There is also a suit hierarchy used in some comparisons: clubs &lt; diamonds &lt; hearts &lt; spades
+                    There is also a suit hierarchy used in some comparisons, typically: clubs &lt; diamonds &lt; hearts &lt; spades
                   </ListItem>
                 </UnorderedList>
               </ListItem>
@@ -158,9 +158,9 @@ export default function Home() {
                     If a player plays a card and everyone after them passes, the combo will reset to be blank on their turn.
                   </ListItem>
                   <ListItem>
-                    If a combo is blank, the current player can play any card to start the combo.
+                    If a combo is blank, the current player can play any card(s) to start the combo.
                     <br />
-                    Note: Traditionally, on the very first turn, the first player must play the 3 of clubs.
+                    Note: Traditionally, on the very first turn, the first player must start the game by playing the lowest card (ex: 3 of clubs).
                   </ListItem>
                 </UnorderedList>
               </ListItem>
