@@ -160,7 +160,7 @@ export default function Home() {
                   <ListItem>
                     If a combo is blank, the current player can play any card(s) to start the combo.
                     <br />
-                    Note: Traditionally, on the very first turn, the first player must start the game by playing the lowest card (ex: 3 of clubs).
+                    Note: Traditionally, on the very first turn, the first player starts the game by playing the lowest card (ex: 3 of clubs).
                   </ListItem>
                 </UnorderedList>
               </ListItem>

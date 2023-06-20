@@ -1,7 +1,10 @@
 import {
   Checkbox, CheckboxGroup,
+  Divider,
   FormControl, FormLabel,
   NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper,
+  Radio,
+  RadioGroup,
   VStack,
 } from '@chakra-ui/react'
 import { useFormik } from 'formik'
@@ -24,7 +27,8 @@ export default function LobbyForm({ game, submitForm }: Props) {
     playerMax: 4,
   }
 
-  const [rules, setRules] = useState<number[]>(rulesToArray(defaults.rules))
+  const [suitOrder, setSuitOrder] = useState(`${defaults.rules & Rules.SUIT_ORDER_ALPHA}`)
+  const [rules, setRules] = useState<number[]>(rulesToArray(defaults.rules & ~Rules.SUIT_ORDER_ALPHA))
 
   const formik = useFormik({
     initialValues: {
@@ -35,7 +39,7 @@ export default function LobbyForm({ game, submitForm }: Props) {
     onSubmit: (values) => {
       const body = {
         ...values,
-        rules: sum(rules),
+        rules: sum(rules) + parseInt(suitOrder),
       }
       submitForm(body)
     },
@@ -45,14 +49,26 @@ export default function LobbyForm({ game, submitForm }: Props) {
     <form id="lobbyForm" onSubmit={formik.handleSubmit}>
       <FormControl mb={3}>
         <FormLabel fontWeight="bold">Rules</FormLabel>
+        <RadioGroup onChange={setSuitOrder} value={suitOrder} colorScheme="purple">
+          <VStack alignItems="start">
+            {ALL_RULES.slice(0, 2).map((suit_order) =>
+              <Radio key={suit_order} value={`${suit_order}`}>
+                {describe(suit_order)}
+              </Radio>
+            )}
+          </VStack>
+        </RadioGroup>
+
+        <Divider my={2} />
+
         <CheckboxGroup
           onChange={(values) => setRules(values.map(Number))}
           value={rules}
           colorScheme="green"
         >
           <VStack alignItems="start">
-            {ALL_RULES.map((rule) =>
-              <Checkbox key={rule} value={rule} isDisabled={rule === Rules.SUIT_ORDER_ALPHA}>
+            {ALL_RULES.slice(2).map((rule) =>
+              <Checkbox key={rule} value={rule}>
                 {describe(rule)}
               </Checkbox>
             )}

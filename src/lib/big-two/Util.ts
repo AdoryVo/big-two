@@ -8,7 +8,10 @@ import Rules from './Rules'
 
 export const CARD_STRING_SEPARATOR = ';' // "2;clubs"
 
-const SUIT_RANKING_ORDERS = { [Rules.SUIT_ORDER_ALPHA] : ['clubs', 'diamonds', 'hearts', 'spades'] }
+const SUIT_RANKING_ORDERS = {
+  [Rules.SUIT_ORDER_ALPHA] : ['clubs', 'diamonds', 'hearts', 'spades'],
+  [Rules.SUIT_ORDER_BETA] : ['spades', 'clubs', 'diamonds', 'hearts'],
+}
 
 const RANK_ABBR_TO_NAME : { [key: string] : string } = {
   '2': 'Two',
@@ -47,7 +50,8 @@ class Util {
     const suit = card.suit.name
     if (this.rules & Rules.SUIT_ORDER_ALPHA)
       return SUIT_RANKING_ORDERS[Rules.SUIT_ORDER_ALPHA].indexOf(suit)
-    return -1
+    else
+      return SUIT_RANKING_ORDERS[Rules.SUIT_ORDER_BETA].indexOf(suit)
   }
 
   compare_cards(c1: Card, c2: Card) {
@@ -142,6 +146,16 @@ class Util {
     return new Combo(cards, Combo_Types.INVALID, null)
   }
 
+  // If Rules.STRAIGHTS_ALLOW_RUNS, see if the combo is a valid straight
+  _construct_loose_straight(cards: Card[]) {
+    if (this.rules & Rules.STRAIGHTS_ALLOW_RUNS) {
+      const value_card = this._straight(cards)
+      return new Combo(cards, value_card ? Combo_Types.STRAIGHT : Combo_Types.INVALID, value_card)
+    }
+
+    return new Combo(cards, Combo_Types.INVALID, null)
+  }
+
   // constructs a combo from a list of SORTED cards.
   _construct_combo(cards: Card[]) {
     switch (cards.length) {
@@ -150,13 +164,19 @@ class Util {
     case 2:
       return new Combo(cards, this._count_cons_eq(cards) === 2 ? Combo_Types.DOUBLE : Combo_Types.INVALID, cards[1])
     case 3:
-      return new Combo(cards, this._count_cons_eq(cards) === 3 ? Combo_Types.TRIPLE : Combo_Types.INVALID, cards[2])
+      if (this._count_cons_eq(cards) === 3)
+        return new Combo(cards, Combo_Types.TRIPLE, cards[2])
+
+      return this._construct_loose_straight(cards)
     case 4:
-      return new Combo(cards, this._count_cons_eq(cards) === 4 ? Combo_Types.BOMB : Combo_Types.INVALID, cards[3])
+      if (this._count_cons_eq(cards) === 4)
+        return new Combo(cards, Combo_Types.BOMB, cards[3])
+
+      return this._construct_loose_straight(cards)
     case 5:
       return this._construct_5_combo(cards)
     default:
-      return new Combo(cards, Combo_Types.INVALID, null)
+      return this._construct_loose_straight(cards)
     }
   }
 
@@ -171,6 +191,10 @@ class Util {
       return false
     else if (!combo || new_combo.type === Combo_Types.BOMB && combo.type !== Combo_Types.BOMB)
       return true
+    else if (new_combo.type === Combo_Types.STRAIGHT && new_combo.cards.length !== combo.cards.length) {
+      // Disallow playing straight of different length on a straight
+      return false
+    }
 
     if (new_combo.value_card && combo.value_card)
       return new_combo.type === combo.type && this.compare_cards(new_combo.value_card, combo.value_card) > 0

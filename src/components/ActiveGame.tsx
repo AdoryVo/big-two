@@ -18,7 +18,7 @@ import PlayerHand from './PlayerHand'
 
 import Game from '@big-two/Game'
 import { Action, type ActionData } from '@utils/actions'
-import useIsDesktop from '@utils/hooks/useIsDesktop'
+import useIsTabletAndAbove from '@utils/hooks/useIsTabletAndAbove'
 import type { GameWithPlayers } from '@utils/prisma'
 
 
@@ -69,7 +69,7 @@ const fixedComboStyles: BoxProps = {
 }
 
 export default function ActiveGame({ game, playerId, handleAction }: Props) {
-  const isDesktop = useIsDesktop()
+  const isTabletAndAbove = useIsTabletAndAbove()
 
   const [comboToPlay, setComboToPlay] = useState(new Set<string>())
   const [cardSpacing, setCardSpacing] = useState('-4.5em')
@@ -128,7 +128,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
 
   return (
     <>
-      {isDesktop ? (
+      {isTabletAndAbove ? (
         <Box>
           <Text>
             Turn order goes clockwise!
@@ -209,7 +209,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                   hand={thisPlayer.hand}
                   comboToPlay={comboToPlay}
                   cardSpacing={cardSpacing}
-                  isDesktop={isDesktop}
+                  isTabletAndAbove={isTabletAndAbove}
                   handleClick={handleClick}
                 >
                   {/* Current turn: Display actions */}
@@ -315,7 +315,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
               <Box mt={4}>
                 Your hand ({thisPlayer.hand.length} cards):
                 <br />
-                <PlayerHand hand={thisPlayer.hand} comboToPlay={comboToPlay} cardSpacing={cardSpacing} isDesktop={isDesktop} handleClick={handleClick}>
+                <PlayerHand hand={thisPlayer.hand} comboToPlay={comboToPlay} cardSpacing={cardSpacing} isTabletAndAbove={isTabletAndAbove} handleClick={handleClick}>
                   {/* Current turn: Display actions */}
                   {(game.currentPlayer && game.currentPlayer.name === thisPlayer.name) && remainingPlayers.length !== 1 &&
                     <Alert

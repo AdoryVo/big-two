@@ -10,18 +10,18 @@ interface Props {
   children?: React.ReactNode,
   comboToPlay: Set<string>,
   cardSpacing: string,
-  isDesktop: boolean,
+  isTabletAndAbove: boolean,
   handleClick: (card: string) => void
 }
 
 export default function PlayerHand({
-  hand, children, comboToPlay, cardSpacing, isDesktop, handleClick,
+  hand, children, comboToPlay, cardSpacing, isTabletAndAbove, handleClick,
 }: Props) {
   const [toggleGrid, setToggleGrid] = useState(false)
 
   return (
     <>
-      {isDesktop ? (
+      {isTabletAndAbove ? (
         <Box>
           {/* Fixed hand */}
           <Box

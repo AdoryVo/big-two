@@ -17,7 +17,7 @@ import Preferences from '@components/Preferences'
 import WaitingLobby from '@components/WaitingLobby'
 import { Action, type ActionData } from '@utils/actions'
 import useGame from '@utils/hooks/useGame'
-import useIsDesktop from '@utils/hooks/useIsDesktop'
+import useIsTabletAndAbove from '@utils/hooks/useIsTabletAndAbove'
 import { usePusher } from '@utils/hooks/usePusher'
 import { useTheme } from '@utils/hooks/useTheme'
 import { Event } from '@utils/pusher'
@@ -38,7 +38,7 @@ function BasePage({ children, theme, updateTheme, props }: BaseProps) {
       backgroundColor="white"
       borderRadius="lg"
       shadow="md"
-      maxW="container.md"
+      maxW={{ base: 'container.md', md: '50vw', lg: 'container.sm' }}
       {...props}
     >
       <HomeButton
@@ -61,7 +61,7 @@ function BasePage({ children, theme, updateTheme, props }: BaseProps) {
 }
 
 export default function Game() {
-  const isDesktop = useIsDesktop()
+  const isTabletAndAbove = useIsTabletAndAbove()
   const pusher = usePusher()
   const toast = useToast()
 
@@ -256,7 +256,7 @@ export default function Game() {
           <WaitingLobby game={game} playerId={playerId} handleAction={handleAction} />
         )}
 
-        {(isDesktop && gameInProgress) ? (
+        {(isTabletAndAbove && gameInProgress) ? (
           <>
             <GameInfoModal game={game} />
           </>
