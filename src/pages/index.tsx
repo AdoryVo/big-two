@@ -107,7 +107,7 @@ export default function Home() {
         <Card>
           <CardBody textAlign="start">
             <Box borderStart="3px solid" borderStartColor="green.200" ps={2}>
-              <b>Big two (also known as Tiến lên, deuces, capsa, pusoy dos, dai di and various other names) is a card game of Cantonese origin.</b>
+              <b>Big two (also known as deuces, capsa, pusoy dos, dai di and various other names) is a card game of Cantonese origin.</b>
               <br />
               ...
               <br />
@@ -115,11 +115,18 @@ export default function Home() {
               <br />
               The objective of the game is to be the first to play off all of one&apos;s cards.
               <br />
+              ...
+              <br />
+              Cards may be played as singles or in groups of two, three or five, in combinations which resemble poker hands.
+              <br />
               <Link href="https://en.wikipedia.org/wiki/Big_two">
                 <Text as="span" color="blue.500" fontWeight="bold">— Wikipedia</Text>
               </Link>
             </Box>
-            <br />
+
+            <Text mb={4}>
+              ⭐ Furthermore, <b>Tiến lên (aka Thirteen)</b> is a popular variant that uses sequences in place of high poker hands.
+            </Text>
 
             <Image
               src={gamePreview}
