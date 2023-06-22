@@ -242,7 +242,7 @@ export default function Game() {
         } : {}}
       >
         <Heading>Game Lobby</Heading>
-        <Text mb={5}>
+        <Text mb={{ base: 5, md: 0 }}>
           <ChakraLink
             onClick={copyGameLink}
             tabIndex={1}

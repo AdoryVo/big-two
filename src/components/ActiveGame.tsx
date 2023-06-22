@@ -3,6 +3,7 @@ import {
   Alert, AlertDescription, AlertTitle,
   Box,
   Button,
+  Divider,
   Heading,
   Slider, SliderFilledTrack, SliderThumb, SliderTrack,
   Stack,
@@ -80,7 +81,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
   const roundLeaderIndex = ((lastInGame) ? game.lastPlaymaker : game.backupNext)
 
   // Whether we're spectating (either we're not in the game, or we are and we finished)
-  const spectating = (!playerId || thisPlayer?.finishedRank) && game.settings.spectating
+  const spectating = (!playerId || thisPlayer?.finishedRank !== 0) && game.settings.spectating
 
   /** Game instance to check whether a combo is playable. */
   const gameInstance = new Game(game.players.length, game.settings.rules, game)
@@ -129,6 +130,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
     <>
       {isTabletAndAbove ? (
         <Box>
+          <Divider my={1} />
           <Text>
             Turn order goes clockwise!
           </Text>
