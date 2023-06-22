@@ -38,7 +38,7 @@ model Player {
   id    String @id @default(uuid())
   index Int    @default(-1)
 
-  name         String   @unique @db.VarChar(255)
+  name         String   @db.VarChar(255)
   hand         String[] @default([])
   finishedRank Int      @default(0)
   points       Int      @default(0)
@@ -48,4 +48,6 @@ model Player {
 
   currentIn   Game?   @relation("CurrentTurn", fields: [currentInId], references: [id])
   currentInId String? @unique
+
+  @@unique([name, gameId])
 }

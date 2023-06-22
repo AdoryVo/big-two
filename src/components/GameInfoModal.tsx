@@ -25,7 +25,7 @@ export default function GameInfoModal({ game }: Props) {
       <Button
         backgroundColor="#FFD100"
         shadow="1px 1px black"
-        position={{ md: 'absolute' }}
+        position={{ md: 'fixed' }}
         top={{ md: '4.5em' }}
         right={{ md: '1em' }}
         onClick={onOpen}

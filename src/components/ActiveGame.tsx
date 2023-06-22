@@ -1,5 +1,4 @@
 import type { BoxProps } from '@chakra-ui/react'
-import { useIds } from '@chakra-ui/react'
 import {
   Alert, AlertDescription, AlertTitle,
   Box,
@@ -255,24 +254,6 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
               </Box>
             )}
           </Box>
-
-          {/* Display end button for everyone once the game is over, even if they still have cards in hand */}
-          {remainingPlayers.length === 1 &&
-            <Box mt={3}>
-              <hr />
-              <Heading size="lg" my={2}>
-                🎉 The game has finished!
-              </Heading>
-              <Text mb={2}>
-                Points have been awarded to players in the scoreboard!
-                <br />
-                Click the button below to finalize the game & return to the lobby.
-              </Text>
-              <Button onClick={() => handleAction(Action.End)} colorScheme="blue">
-                Return to the lobby
-              </Button>
-            </Box>
-          }
         </Box>
       ) : (
         <Box>
@@ -379,26 +360,43 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
               </Slider>
             </Box>
           }
-
-          {/* Display end button for everyone once the game is over, even if they still have cards in hand */}
-          {remainingPlayers.length === 1 &&
-            <Box my={3}>
-              <hr />
-              <Heading size="lg" my={2}>
-                🎉 The game has finished!
-              </Heading>
-              <Text mb={2}>
-                Points have been awarded to players in the scoreboard!
-                <br />
-                Click the button below to finalize the game & return to the lobby.
-              </Text>
-              <Button onClick={() => handleAction(Action.End)} colorScheme="blue">
-                Return to the lobby
-              </Button>
-            </Box>
-          }
         </Box>
       )}
+
+      {/* Display end button for everyone once the game is over, even if they still have cards in hand */}
+      {remainingPlayers.length === 1 &&
+        <Box mt={3}>
+          <hr />
+          <Heading size="lg" my={2}>
+            🎉 The game has finished!
+          </Heading>
+          <Text mb={2}>
+            Points have been awarded to players in the scoreboard!
+            <br />
+            Click the button below to finalize the game & return to the lobby.
+          </Text>
+          <Button onClick={() => handleAction(Action.End)} colorScheme="blue">
+            Return to the lobby
+          </Button>
+        </Box>
+      }
+
+      {spectating &&
+        <Box
+          position="fixed"
+          bottom="1em"
+          left="50%"
+          transform="translate(-50%, 0)"
+          width={{ base: '80vw', md: 'auto' }}
+          background="blackAlpha.800"
+          borderRadius="lg"
+          padding={3}
+        >
+          <Text color="purple.400" fontWeight="bold" fontSize="sm">
+            You are spectating! Wait until the game finishes to join the lobby.
+          </Text>
+        </Box>
+      }
     </>
   )
 }

@@ -42,13 +42,13 @@ function BasePage({ children, theme, updateTheme, props }: BaseProps) {
       {...props}
     >
       <HomeButton
-        position={{ md: 'absolute' }}
+        position={{ md: 'fixed' }}
         top={{ md: '1em' }}
         left={{ md: '1em' }}
       />
       <Preferences
         props={{
-          position: { md: 'absolute' },
+          position: { md: 'fixed' },
           top: { md: '1em' },
           right: { md: '1em' },
         }}
@@ -234,7 +234,12 @@ export default function Game() {
       <BasePage
         theme={theme}
         updateTheme={updateTheme}
-        props={gameInProgress ? { mt: { md: '13em' } } : {}}
+        props={gameInProgress ? {
+          width: { md: '25vw' },
+          position: { md: 'absolute' },
+          bottom: { md: '1em' },
+          right: { md: '1em' },
+        } : {}}
       >
         <Heading>Game Lobby</Heading>
         <Text mb={5}>
