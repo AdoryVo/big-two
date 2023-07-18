@@ -1,9 +1,7 @@
 import Image from 'next/image'
 import type { CSSProperties } from 'react'
 
-import { useTheme } from '@utils/hooks/useTheme'
-import { CardTheme } from '@utils/theme'
-
+import { useStore } from '@utils/hooks/useStore'
 
 const RANK_NAMES: { [abbrn: string]: string } = {
   'J': 'jack',
@@ -22,7 +20,7 @@ interface Props {
 export default function CardImage({
   card, selected, theme: prefTheme, style,
 }: Props) {
-  const [theme] = useTheme()
+  const theme = useStore((state) => state.theme)
 
   function cardToUrl(card: string) {
     const [rank, suit] = card.split(';')

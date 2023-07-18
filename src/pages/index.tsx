@@ -14,19 +14,24 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import { NextSeo, VideoGameJsonLd } from 'next-seo'
+import { useEffect } from 'react'
 
 import { describe, rulesToArray } from '@big-two/Rules'
 import CreateLobby from '@components/CreateLobby'
 import Preferences from '@components/Preferences'
 import gamePreview from '@public/assets/site-preview.png'
 import useLobbies from '@utils/hooks/useLobbies'
-import { useTheme } from '@utils/hooks/useTheme'
+import { useStore } from '@utils/hooks/useStore'
 import { getStyles } from '@utils/theme'
 
 export default function Home() {
   const { lobbies, isLoading, error } = useLobbies()
-  const [theme, updateTheme] = useTheme()
+  const theme = useStore((state) => state.theme)
   const styles = getStyles(theme)
+
+  useEffect(() => {
+    useStore.persist.rehydrate()
+  }, [])
 
   return (
     <Box {...styles.bg} minH="100vh">
@@ -58,10 +63,7 @@ export default function Home() {
       <Container maxW="5xl" textAlign="center" p={5}>
         <Heading {...styles.text} size="4xl" mb={5}>♠️ Big Two</Heading>
         <CreateLobby />
-        <Preferences
-          theme={theme}
-          updateTheme={updateTheme}
-        />
+        <Preferences />
 
         {/* Lobbies */}
         <Heading {...styles.text} size="lg" my={5}>🏠 Public Lobbies</Heading>

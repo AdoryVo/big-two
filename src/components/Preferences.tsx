@@ -13,7 +13,7 @@ import { startCase } from 'lodash'
 
 import CardImage from './CardImage'
 
-import type { Theme } from '@utils/theme'
+import { useStore } from '@utils/hooks/useStore'
 import {
   COLOR_SCHEME_STYLES,
   THEME_OPTIONS,
@@ -21,12 +21,11 @@ import {
 
 interface Props {
   props?: ButtonProps,
-  theme: Theme,
-  updateTheme: (update: Theme) => void,
 }
 
-export default function Preferences({ props, theme, updateTheme }: Props) {
+export default function Preferences({ props }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [theme, updateTheme] = useStore((state) => [state.theme, state.updateTheme])
 
   return (
     <>

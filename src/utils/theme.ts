@@ -74,14 +74,6 @@ export const DEFAULT_THEME: Theme = {
 }
 
 // Functions
-export function setThemeOption(option: string, value: string) {
-  localStorage.setItem(option, value)
-}
-
-export function getThemeOption(option: string) {
-  return localStorage.getItem(option) || DEFAULT_THEME[option]
-}
-
 export function getStyles(theme: Theme) {
   const scheme = theme.colorScheme
 

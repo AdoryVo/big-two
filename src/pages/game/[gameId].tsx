@@ -19,19 +19,16 @@ import { Action, type ActionData } from '@utils/actions'
 import useGame from '@utils/hooks/useGame'
 import useIsTabletAndAbove from '@utils/hooks/useIsTabletAndAbove'
 import { usePusher } from '@utils/hooks/usePusher'
-import { useTheme } from '@utils/hooks/useTheme'
+import { useStore } from '@utils/hooks/useStore'
 import { Event } from '@utils/pusher'
-import type { Theme } from '@utils/theme'
 import { getStyles } from '@utils/theme'
 
 interface BaseProps {
   children?: React.ReactNode,
-  theme: Theme,
-  updateTheme: (update: Theme) => void,
   props?: ContainerProps
 }
 
-function BasePage({ children, theme, updateTheme, props }: BaseProps) {
+function BasePage({ children, props }: BaseProps) {
   return (
     <Container
       p={5}
@@ -52,8 +49,6 @@ function BasePage({ children, theme, updateTheme, props }: BaseProps) {
           top: { md: '1em' },
           right: { md: '1em' },
         }}
-        theme={theme}
-        updateTheme={updateTheme}
       />
       {children}
     </Container>
@@ -72,7 +67,7 @@ export default function Game() {
   const [gameInProgress, setGameInProgress] = useState(false)
   const [playerId, setPlayerId] = useState('')
 
-  const [theme, updateTheme] = useTheme()
+  const theme = useStore((state) => state.theme)
   const styles = getStyles(theme)
 
   useEffect(() => {
@@ -120,6 +115,8 @@ export default function Game() {
 
   // Remove old game id cookies
   useEffect(() => {
+    useStore.persist.rehydrate()
+
     async function clear() {
       for (let i = 0; i < localStorage.length; i++) {
         const cleared = await ky.patch('/api/clear').json<string|null>()
@@ -218,7 +215,7 @@ export default function Game() {
   if (isLoading || !game || error) {
     return <Box {...styles.bg} minH="100vh" p={5}>
       <NextSeo title="Lobby | Big Two" description="Join and play!" />
-      <BasePage theme={theme} updateTheme={updateTheme}>
+      <BasePage>
         <Heading textAlign="center">
           {error ? '💀 Game could not load!' : '⏳ Loading!'}
         </Heading>
@@ -232,8 +229,6 @@ export default function Game() {
         title={`${getPageTitle()} | Big Two`}
       />
       <BasePage
-        theme={theme}
-        updateTheme={updateTheme}
         props={gameInProgress ? {
           width: { md: '25vw' },
           position: { md: 'absolute' },
