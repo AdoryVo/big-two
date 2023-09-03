@@ -6,18 +6,21 @@ import {
   Container,
   Divider,
   Heading,
+  Link,
   ListItem,
   Tag,
   Text,
   UnorderedList,
+  useToast,
 } from '@chakra-ui/react'
 import Image from 'next/image'
-import Link from 'next/link'
+import NextLink from 'next/link'
 import { NextSeo, VideoGameJsonLd } from 'next-seo'
 import { useEffect } from 'react'
 
 import { describe, rulesToArray } from '@big-two/Rules'
 import CreateLobby from '@components/CreateLobby'
+import HomeAnnouncement from '@components/HomeAnnouncement'
 import Preferences from '@components/Preferences'
 import gamePreview from '@public/assets/site-preview.png'
 import useLobbies from '@utils/hooks/useLobbies'
@@ -28,10 +31,34 @@ export default function Home() {
   const { lobbies, isLoading, error } = useLobbies()
   const theme = useStore((state) => state.theme)
   const styles = getStyles(theme)
+  const toast = useToast()
 
   useEffect(() => {
     useStore.persist.rehydrate()
-  }, [])
+
+    toast({
+      render: () => (
+        <HomeAnnouncement title="🎉 Thank you!" onClose={toast.closeAll}>
+          <>
+            We&apos;re surprised to see that many players have started playing big two on our site!
+            As such, we would like to ensure a good player experience for everyone.
+            <Text fontWeight="bold" mt={2}>
+              If there is any feedback you have, we would love to hear your thoughts&nbsp;
+              <Link as={NextLink} href="https://forms.gle/jPd276dcsLVPswBZ7" target="_blank" color="blue.600">
+                here.
+              </Link>
+            </Text>
+          </>
+        </HomeAnnouncement>
+      ),
+      containerStyle: {
+        margin: '1em',
+        fontSize: ['sm', 'md'],
+      },
+      position: 'top',
+      duration: 20000,
+    })
+  }, [toast])
 
   return (
     <Box {...styles.bg} minH="100vh">
@@ -60,6 +87,7 @@ export default function Home() {
         keywords="cards, game, multiplayer"
         image="https://bigtwo.vercel.app/assets/site-preview.png"
       />
+
       <Container maxW="5xl" textAlign="center" p={5}>
         <Heading {...styles.text} size="4xl" mb={5}>♠️ Big Two</Heading>
         <CreateLobby />
@@ -94,9 +122,9 @@ export default function Home() {
               {lobby.settings.spectating ? <Tag colorScheme="green">Spectating Enabled</Tag> : <Tag colorScheme="red">Spectating Disabled</Tag>}
             </CardBody>
             <CardFooter>
-              <Link href={`/game/${lobby.id}`} passHref>
+              <NextLink href={`/game/${lobby.id}`} passHref>
                 <Button colorScheme="blue">Join lobby</Button>
-              </Link>
+              </NextLink>
             </CardFooter>
           </Card>
         )}
@@ -184,6 +212,10 @@ export default function Home() {
         <Divider mt={8} />
         <Box textAlign="center" {...styles.text} pb={2}>
           Made with 💖 from San Diego
+          <br />
+          <Link as={NextLink} href="https://forms.gle/jPd276dcsLVPswBZ7" target="_blank">
+            📋 Feedback Form
+          </Link>
           <br />
           <Link href="https://github.com/AdoryVo/big-two" target="_blank">
             <Text as="span">

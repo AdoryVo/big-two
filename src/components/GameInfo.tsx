@@ -22,7 +22,7 @@ interface Props {
   game: GameWithPlayers
 }
 
-export default function GameInfo({ game } : Props) {
+export default function GameInfo({ game }: Props) {
   return (
     <>
       <Heading size="lg">🏆 Scoreboard</Heading>
