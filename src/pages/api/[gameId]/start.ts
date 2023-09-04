@@ -51,6 +51,7 @@ export default async function handler(
         index: (i + rng) % game.players.length,
         hand: gameInstance.util.cards_to_strings(instancePlayer.hand),
         finishedRank: 0,
+        games: { increment: 1 },
       },
     })
   }

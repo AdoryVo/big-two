@@ -42,6 +42,7 @@ model Player {
   hand         String[] @default([])
   finishedRank Int      @default(0)
   points       Int      @default(0)
+  games        Int      @default(0)
 
   game   Game   @relation("Players", fields: [gameId], references: [id])
   gameId String

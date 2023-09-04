@@ -55,7 +55,7 @@ export default function Home() {
         margin: '1em',
         fontSize: ['sm', 'md'],
       },
-      position: 'top',
+      position: 'top-left',
       duration: 20000,
     })
   }, [toast])

@@ -14,7 +14,7 @@
     "@chakra-ui/react": "^2.5.5",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
-    "@prisma/client": "^4.13.0",
+    "@prisma/client": "^5.2.0",
     "@vercel/analytics": "^1.0.0",
     "cards": "^2.0.3",
     "formik": "^2.2.9",
@@ -42,7 +42,7 @@
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",
-    "prisma": "^4.13.0",
+    "prisma": "^5.2.0",
     "typescript": "5.0.4"
   }
 }

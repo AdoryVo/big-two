@@ -41,7 +41,7 @@ export default function GameInfo({ game }: Props) {
               <Tr key={index}>
                 <Td>{game.players.findIndex((p) => player.points === p.points) + 1}</Td>
                 <Td>{player.name}</Td>
-                <Td isNumeric>#</Td>
+                <Td isNumeric>{player.games}</Td>
                 <Td isNumeric>{player.points}</Td>
               </Tr>
             )}
