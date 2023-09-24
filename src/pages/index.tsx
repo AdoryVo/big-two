@@ -56,7 +56,7 @@ export default function Home() {
         fontSize: ['sm', 'md'],
       },
       position: 'top-left',
-      duration: 20000,
+      duration: 14000,
     })
   }, [toast])
 
@@ -90,7 +90,7 @@ export default function Home() {
 
       <Container maxW="5xl" textAlign="center" p={5}>
         <Heading {...styles.text} size="4xl" mb={5}>♠️ Big Two</Heading>
-        <CreateLobby />
+        <CreateLobby closeToast={toast.closeAll} />
         <Preferences />
 
         {/* Lobbies */}
@@ -123,7 +123,7 @@ export default function Home() {
             </CardBody>
             <CardFooter>
               <NextLink href={`/game/${lobby.id}`} passHref>
-                <Button colorScheme="blue">Join lobby</Button>
+                <Button colorScheme="blue" onClick={() => toast.closeAll()}>Join lobby</Button>
               </NextLink>
             </CardFooter>
           </Card>

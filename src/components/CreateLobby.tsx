@@ -9,9 +9,22 @@ import { useRouter } from 'next/router'
 
 import LobbyForm from './LobbyForm'
 
-export default function CreateLobby() {
+interface Props {
+  closeToast?: () => void
+}
+
+export default function CreateLobby({ closeToast }: Props) {
   const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  function onClick() {
+    // Close toasts from home page if they are open
+    if (closeToast) {
+      closeToast()
+    }
+
+    onOpen()
+  }
 
   function submitForm(body: object) {
     ky.post('/api/lobby', { json: body }).json<Game>().then((lobby) => {
@@ -21,7 +34,7 @@ export default function CreateLobby() {
 
   return (
     <>
-      <Button colorScheme="green" shadow="1px 1px black" mb={4} me={2} onClick={onOpen}>
+      <Button colorScheme="green" shadow="1px 1px black" mb={4} me={2} onClick={onClick}>
         Create lobby
       </Button>
 
