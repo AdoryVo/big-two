@@ -3,6 +3,7 @@ import {
 } from '@chakra-ui/react'
 import { useState } from 'react'
 
+import { overlapStyles } from './ActiveGame'
 import CardImage from './CardImage'
 
 interface Props {
@@ -32,9 +33,9 @@ export default function PlayerHand({
             zIndex={2}
             width={{ base: '95%', md: 'auto' }}
           >
-            <Stack direction="row" spacing="-4.5em">
+            <Stack direction="row">
               {hand.map((card, index) =>
-                <Box key={index} onMouseDown={() => handleClick(card)}>
+                <Box key={index} onMouseDown={() => handleClick(card)} {...overlapStyles(index, cardSpacing)}>
                   <CardImage
                     card={card}
                     selected={comboToPlay.has(card)}
@@ -46,9 +47,9 @@ export default function PlayerHand({
         </Box>
       ) : (
         <Box>
-          <Stack direction="row" spacing={cardSpacing}>
+          <Stack direction="row">
             {hand.map((card, index) =>
-              <Box key={index} onMouseDown={() => handleClick(card)}>
+              <Box key={index} onMouseDown={() => handleClick(card)} {...overlapStyles(index, cardSpacing)}>
                 <CardImage
                   card={card}
                   selected={comboToPlay.has(card)}
@@ -62,7 +63,7 @@ export default function PlayerHand({
           </Button>
 
           {toggleGrid &&
-            <Grid templateColumns="repeat(7, 1fr)" gap={0}>
+            <Grid templateColumns="repeat(7, 1fr)" gap={0.5}>
               {hand.map((card, index) =>
                 <GridItem key={index}>
                   <Box onMouseDown={() => handleClick(card)}>

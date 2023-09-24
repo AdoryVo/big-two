@@ -68,6 +68,15 @@ const fixedComboStyles: BoxProps = {
   backgroundColor: 'blackAlpha.100',
 }
 
+export function overlapStyles(index: number, spacing: string) {
+  // Chakra changed Stack spacing property implementation.
+  // As such, we must manually perform negative spacing via
+  // marginInlineStart, on all elements except the first.
+  return {
+    marginInlineStart: (index == 0) ? '0' : spacing,
+  }
+}
+
 export default function ActiveGame({ game, playerId, handleAction }: Props) {
   const isTabletAndAbove = useIsTabletAndAbove()
 
@@ -145,9 +154,9 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
               borderRadius="lg"
               p={4}
             >
-              <Stack direction="row" spacing={cardSpacing}>
+              <Stack direction="row">
                 {game.combo.map((card, index) =>
-                  <CardImage key={index} card={card} />
+                  <CardImage key={index} card={card} style={overlapStyles(index, cardSpacing)} />
                 )}
                 {!game.combo.length &&
                   <Box width={'6em'} height={'8.2em'} />
@@ -162,7 +171,6 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
               <Box key={player.index}>
                 {(spectating || player.index !== thisPlayer?.index) && (
                   <OpponentHand
-                    game={game}
                     position={indexToPosition(player.index)}
                     player={player}
                     roundLeaderIndex={roundLeaderIndex}
@@ -260,9 +268,9 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
       ) : (
         <Box>
           Current combo:
-          <Stack direction="row" spacing={cardSpacing}>
+          <Stack direction="row">
             {game.combo.map((card, index) =>
-              <CardImage key={index} card={card} />
+              <CardImage key={index} card={card} style={overlapStyles(index, cardSpacing)} />
             )}
             {!game.combo.length &&
               <CardImage card="" />
@@ -283,9 +291,9 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                   {game.passedPlayers.includes(player.index) && '⏭️'}
                 </Text>
                 {player.name !== thisPlayer?.name &&
-                  <Stack direction="row" spacing={cardSpacing}>
+                  <Stack direction="row">
                     {player.hand.map((card, cardIndex) =>
-                      <Box key={cardIndex}>
+                      <Box key={cardIndex} style={overlapStyles(cardIndex, cardSpacing)}>
                         <CardImage card={card} />
                       </Box>
                     )}
@@ -349,10 +357,10 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
               <Text>Card spread spacing</Text>
               <Slider
                 aria-label="card-spread-spacing"
-                min={5.4}
+                min={3}
                 max={6}
                 step={0.05}
-                defaultValue={5.7}
+                defaultValue={4.5}
                 isReversed={true}
                 onChange={(val) => setCardSpacing(-1 * val + 'em')}>
                 <SliderTrack bg="green.500">

@@ -70,7 +70,7 @@ export default async function handler(
       })
   }
 
-  const updatedGame = await prisma.game.update({
+  await prisma.game.update({
     where: { id },
     data: {
       combo: gameInstance.util.cards_to_strings(gameInstance.combo?.cards || []),
