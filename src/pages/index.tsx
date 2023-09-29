@@ -5,9 +5,11 @@ import {
   Card, CardBody, CardFooter, CardHeader,
   Container,
   Divider,
+  Flex,
   Heading,
   Link,
   ListItem,
+  Spacer,
   Tag,
   Text,
   UnorderedList,
@@ -26,6 +28,10 @@ import gamePreview from '@public/assets/site-preview.png'
 import useLobbies from '@utils/hooks/useLobbies'
 import { useStore } from '@utils/hooks/useStore'
 import { getStyles } from '@utils/theme'
+
+function compareByNewest(lobby1: Date, lobby2: Date) {
+  return new Date(lobby2).getTime() - new Date(lobby1).getTime()
+}
 
 export default function Home() {
   const { lobbies, isLoading, error } = useLobbies()
@@ -101,10 +107,14 @@ export default function Home() {
         {isLoading && (
           <Text {...styles.text} as="b">⏳ Loading...</Text>
         )}
-        {!isLoading && lobbies && lobbies.map((lobby, index) =>
+        {!isLoading && lobbies && lobbies.sort((l1, l2) => compareByNewest(l1.createdAt, l2.createdAt)).map((lobby, index) =>
           <Card key={index} textAlign="start" maxW="lg" mx="auto" mb={5}>
             <CardHeader>
-              <Text fontWeight="bold">Lobby: <Text as="span" color="crimson">{lobby.id}</Text></Text>
+              <Flex>
+                <Text fontWeight="bold">Lobby: <Text as="span" color="crimson">{lobby.id}</Text></Text>
+                <Spacer />
+                <Text fontSize="sm" color="gray.600">{new Date(lobby.createdAt).toLocaleString()}</Text>
+              </Flex>
               <Badge>
                 {lobby.currentPlayer ? '⚔️ Game in progress' : '🚶 Waiting for more players'}
                 &nbsp;({lobby.players.length}/{lobby.settings.playerMax})
