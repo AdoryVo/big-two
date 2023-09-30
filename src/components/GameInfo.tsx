@@ -9,6 +9,7 @@ import {
   Td,
   Th,
   Thead,
+  Tooltip,
   Tr,
   UnorderedList,
 } from '@chakra-ui/react'
@@ -32,7 +33,11 @@ export default function GameInfo({ game }: Props) {
             <Tr>
               <Th>Rank</Th>
               <Th>Name</Th>
-              <Th isNumeric>Games</Th>
+              <Th isNumeric>
+                <Tooltip label="* Including current game">
+                  Games *
+                </Tooltip>
+              </Th>
               <Th isNumeric>Score</Th>
             </Tr>
           </Thead>

@@ -15,5 +15,5 @@ export default async function handler(
       console.error(err)
     })
 
-  return res.status(200).end()
+  res.status(200).end()
 }

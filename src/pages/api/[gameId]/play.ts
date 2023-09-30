@@ -23,13 +23,15 @@ export default async function handler(
   })
 
   if (!game || !game.currentPlayer) {
-    return res.status(404).end()
+    res.status(404).end()
+    return
   }
 
   // Double check that the request is from the current player
   const playerId = req.cookies[game.id]
   if (playerId !== game.currentPlayer.id) {
-    return res.status(401).end()
+    res.status(401).end()
+    return
   }
 
   const gameInstance = new Game(game.players.length, game.settings.rules, game)
@@ -37,7 +39,8 @@ export default async function handler(
   const result = gameInstance.play(combo)
 
   if (result === -2) {
-    return res.status(422).end('Invalid combination')
+    res.status(422).end('Invalid combination')
+    return
   }
 
   if (result === -1) {
@@ -88,5 +91,5 @@ export default async function handler(
       console.error(err)
     })
 
-  return res.status(200).end()
+  res.status(200).end()
 }

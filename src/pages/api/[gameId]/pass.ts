@@ -22,20 +22,23 @@ export default async function handler(
   })
 
   if (!game || !game.currentPlayer) {
-    return res.status(404).end()
+    res.status(404).end()
+    return
   }
 
   // Double check that the request is from the current player
   const playerId = req.cookies[game.id]
   if (playerId !== game.currentPlayer.id) {
-    return res.status(401).end()
+    res.status(401).end()
+    return
   }
 
   const gameInstance = new Game(game.players.length, game.settings.rules, game)
   const result = gameInstance.pass()
 
   if (result === -2) {
-    return res.status(422).end('Cannot pass right now!')
+    res.status(422).end('Cannot pass right now!')
+    return
   }
 
   await prisma.game.update({
@@ -61,5 +64,5 @@ export default async function handler(
       console.error(err)
     })
 
-  return res.status(200).end()
+  res.status(200).end()
 }

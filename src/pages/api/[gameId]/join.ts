@@ -22,6 +22,7 @@ export default async function handler(
 
     if (!game) {
       res.status(404).end()
+      return
     }
 
     // Set cookie
@@ -35,8 +36,8 @@ export default async function handler(
         console.error(err)
       })
 
-    return res.status(201).json(playerId)
+    res.status(201).json(playerId)
   } catch (e) {
-    return res.status(422).end()
+    res.status(422).end()
   }
 }

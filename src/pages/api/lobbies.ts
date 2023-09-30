@@ -17,16 +17,18 @@ export default async function handler(
       },
     })
 
-    return res.status(200).json(games)
+    res.status(200).json(games)
   } else if (req.method === 'DELETE') {
     if (req.cookies.secret !== process.env.ADMIN_SECRET) {
-      return res.status(401).end()
+      res.status(401).end()
+      return
     }
 
     const minutes = Number(req.body.minutes)
 
     if (minutes < 0 || isNaN(minutes)) {
-      return res.status(422).end()
+      res.status(422).end()
+      return
     }
 
     const maxAge = minutes * 60 * 1000
@@ -41,8 +43,8 @@ export default async function handler(
     // Delete expired games
     await prisma.game.deleteMany({ where: { id: { in: expiredGameIds } } })
 
-    return res.status(204).end()
+    res.status(204).end()
   }
 
-  return res.status(404).end()
+  res.status(404).end()
 }

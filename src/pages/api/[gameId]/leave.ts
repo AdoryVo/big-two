@@ -17,7 +17,8 @@ export default async function handler(
 
   const playerId = req.cookies[game?.id ?? '']
   if (!playerId || !game) {
-    return res.status(404).end()
+    res.status(404).end()
+    return
   }
 
   await prisma.player.delete({ where: { id: playerId } })
@@ -30,5 +31,5 @@ export default async function handler(
   // Remove cookie
   res.setHeader('Set-Cookie', `${game.id}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT`)
 
-  return res.status(200).end()
+  res.status(200).end()
 }

@@ -19,7 +19,8 @@ export default async function handler(
   })
 
   if (!game) {
-    return res.status(404).end()
+    res.status(404).end()
+    return
   }
 
   // Authorization - obscuring player data
@@ -56,5 +57,5 @@ export default async function handler(
     }
   }
 
-  return res.status(200).json(game)
+  res.status(200).json(game)
 }

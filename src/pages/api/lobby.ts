@@ -15,5 +15,5 @@ export default async function handler(
     settings: { create: data },
   } })
 
-  return res.status(201).json(lobby)
+  res.status(201).json(lobby)
 }

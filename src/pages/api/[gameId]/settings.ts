@@ -19,6 +19,7 @@ export default async function handler(
 
   if (!game) {
     res.status(404).end()
+    return
   }
 
   await pusher.trigger(id, Event.LobbyUpdate, null)
@@ -26,5 +27,5 @@ export default async function handler(
       console.error(err)
     })
 
-  return res.status(204).end()
+  res.status(204).end()
 }

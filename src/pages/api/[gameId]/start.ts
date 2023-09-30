@@ -19,7 +19,8 @@ export default async function handler(
   })
 
   if (!game) {
-    return res.status(404).end()
+    res.status(404).end()
+    return
   }
 
   const gameInstance = new Game(game.players.length, game.settings.rules)
@@ -61,5 +62,5 @@ export default async function handler(
       console.error(err)
     })
 
-  return res.status(200).end()
+  res.status(200).end()
 }

@@ -140,9 +140,11 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
       {isTabletAndAbove ? (
         <Box>
           <Divider my={1} />
-          <Text>
-            Turn order goes clockwise!
-          </Text>
+          {remainingPlayers.length > 1 &&
+            <Text>
+              Turn order goes clockwise!
+            </Text>
+          }
 
           {/* Centered combo */}
           <Tooltip label="Current combo">
