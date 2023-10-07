@@ -15,7 +15,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@prisma/client": "^5.3.1",
-    "@vercel/analytics": "^1.0.2",
+    "@vercel/analytics": "^1.1.0",
     "cards": "^2.0.3",
     "formik": "^2.4.5",
     "framer-motion": "^10.16.4",
