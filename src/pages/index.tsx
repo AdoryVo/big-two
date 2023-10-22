@@ -22,8 +22,8 @@ import { useEffect } from 'react'
 
 import { describe, rulesToArray } from '@big-two/Rules'
 import CreateLobby from '@components/CreateLobby'
-import HomeAnnouncement from '@components/HomeAnnouncement'
 import Preferences from '@components/Preferences'
+import Version from '@components/Version'
 import gamePreview from '@public/assets/site-preview.png'
 import useLobbies from '@utils/hooks/useLobbies'
 import { useStore } from '@utils/hooks/useStore'
@@ -42,6 +42,7 @@ export default function Home() {
   useEffect(() => {
     useStore.persist.rehydrate()
 
+    /*
     toast({
       render: () => (
         <HomeAnnouncement title="🎉 Thank you!" onClose={toast.closeAll}>
@@ -64,13 +65,14 @@ export default function Home() {
       position: 'top-left',
       duration: 14000,
     })
+    */
   }, [toast])
 
   return (
     <Box {...styles.bg} minH="100vh">
       <NextSeo
         title="Big Two"
-        description="Play Big Two online with your friends or in public lobbies!"
+        description="Play Big Two online with your friends or in public lobbies! Tiến lên is also supported!"
         canonical="https://bigtwo.vercel.app/"
         openGraph={{
           images: [{ url: 'https://bigtwo.vercel.app/assets/site-preview.png' }],
@@ -93,6 +95,7 @@ export default function Home() {
         keywords="cards, game, multiplayer"
         image="https://bigtwo.vercel.app/assets/site-preview.png"
       />
+      <Version {...styles.text} />
 
       <Container maxW="5xl" textAlign="center" p={5}>
         <Heading {...styles.text} size="4xl" mb={5}>♠️ Big Two</Heading>

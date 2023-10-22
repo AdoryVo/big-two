@@ -14,6 +14,7 @@ import GameInfo from '@components/GameInfo'
 import GameInfoModal from '@components/GameInfoModal'
 import HomeButton from '@components/HomeButton'
 import Preferences from '@components/Preferences'
+import Version from '@components/Version'
 import WaitingLobby from '@components/WaitingLobby'
 import { Action, type ActionData } from '@utils/actions'
 import useGame from '@utils/hooks/useGame'
@@ -215,6 +216,7 @@ export default function Game() {
   if (isLoading || !game || error) {
     return <Box {...styles.bg} minH="100vh" p={5}>
       <NextSeo title="Lobby | Big Two" description="Join and play!" />
+      <Version {...styles.text} />
       <BasePage>
         <Heading textAlign="center">
           {error ? '💀 Game could not load!' : '⏳ Loading!'}
@@ -228,6 +230,7 @@ export default function Game() {
       <NextSeo
         title={`${getPageTitle()} | Big Two`}
       />
+      <Version {...styles.text} />
       <BasePage
         props={gameInProgress ? {
           width: { md: '25vw' },
