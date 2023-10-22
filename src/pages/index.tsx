@@ -226,14 +226,12 @@ export default function Home() {
         <Box textAlign="center" {...styles.text} pb={2}>
           Made with 💖 from San Diego
           <br />
-          <Link as={NextLink} href="https://forms.gle/jPd276dcsLVPswBZ7" target="_blank">
+          <Link href="https://forms.gle/jPd276dcsLVPswBZ7" target="_blank">
             📋 Feedback Form
           </Link>
           <br />
           <Link href="https://github.com/AdoryVo/big-two" target="_blank">
-            <Text as="span">
-              🔗 Source Code
-            </Text>
+            🔗 Source Code
           </Link>
         </Box>
       </Container>
