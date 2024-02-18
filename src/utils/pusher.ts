@@ -1,4 +1,4 @@
-import Pusher from 'pusher'
+import Pusher from 'pusher';
 
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID || '',
@@ -6,14 +6,14 @@ const pusher = new Pusher({
   secret: process.env.PUSHER_APP_SECRET || '',
   cluster: 'us3',
   useTLS: true,
-})
+});
 
-export const enum Event {
+export enum Event {
   Pong = 'pong',
   LobbyUpdate = 'lobby-update',
   Play = 'play',
   StartGame = 'start-game',
-  EndGame = 'end-game'
+  EndGame = 'end-game',
 }
 
-export default pusher
+export default pusher;

@@ -1,19 +1,25 @@
-import { Button, Container, Heading, Input, Text, useToast } from '@chakra-ui/react'
-import ky from 'ky'
-import React from 'react'
-import { useEffect, useState } from 'react'
+import {
+  Button,
+  Container,
+  Heading,
+  Input,
+  Text,
+  useToast,
+} from '@chakra-ui/react';
+import ky from 'ky';
+import { useEffect, useState } from 'react';
 
-import Game from '@big-two/Game'
-import Rules from '@big-two/Rules'
-import HomeButton from '@components/HomeButton'
+import Game from '@big-two/Game';
+import Rules from '@big-two/Rules';
+import HomeButton from '@components/HomeButton';
 
 export default function Sandbox() {
-  const toast = useToast()
+  const toast = useToast();
 
-  const [game, setGame] = useState<Game>()
+  const [game, setGame] = useState<Game>();
 
-  const [action, setAction] = useState('')
-  const [args, setArgs] = useState('')
+  const [action, setAction] = useState('');
+  const [args, setArgs] = useState('');
 
   useEffect(() => {
     // setGame(new Game(2, Rules.SUIT_ORDER_ALPHA | Rules.STRAIGHTS_WRAP_AROUND | Rules.MUST_PLAY_LOWEST_CARD))
@@ -21,66 +27,67 @@ export default function Sandbox() {
       new Game(
         2,
         Rules.SUIT_ORDER_BETA |
-        Rules.STRAIGHTS_WRAP_AROUND |
-        Rules.MUST_PLAY_LOWEST_CARD |
-        Rules.STRAIGHTS_ALLOW_RUNS
-      )
-    )
-  }, [])
+          Rules.STRAIGHTS_WRAP_AROUND |
+          Rules.MUST_PLAY_LOWEST_CARD |
+          Rules.STRAIGHTS_ALLOW_RUNS,
+      ),
+    );
+  }, []);
 
   /**
-	 * Tell React to re-render `game` values - needed because it cannot
-	 * sense changes from Game methods like reset()
-	 */
+   * Tell React to re-render `game` values - needed because it cannot
+   * sense changes from Game methods like reset()
+   */
   function refreshGame() {
     if (game) {
-      setGame(Object.assign(Object.create(Object.getPrototypeOf(game)), game))
+      setGame(Object.assign(Object.create(Object.getPrototypeOf(game)), game));
     }
   }
 
   function handleAction() {
-    console.group(action)
+    console.group(action);
 
     switch (action) {
-    case 'play':
-      game?.play(args ? args.split(' ') : [])
-      refreshGame()
-      break
-    case 'reset':
-      game?.reset()
-      refreshGame()
-      break
-    case 'pass':
-      game?.pass()
-      refreshGame()
-      break
-    case 'clear-lobbies':
-      // Specify minutes for expired lobbies
-      ky.delete('/api/lobbies', { json: { minutes: args } })
-        .then(() => {
-          toast({
-            title: 'Lobbies cleared!',
-            status: 'success',
-            duration: 2000,
+      case 'play':
+        game?.play(args ? args.split(' ') : []);
+        refreshGame();
+        break;
+      case 'reset':
+        game?.reset();
+        refreshGame();
+        break;
+      case 'pass':
+        game?.pass();
+        refreshGame();
+        break;
+      case 'clear-lobbies':
+        // Specify minutes for expired lobbies
+        ky.delete('/api/lobbies', { json: { minutes: args } })
+          .then(() => {
+            toast({
+              title: 'Lobbies cleared!',
+              status: 'success',
+              duration: 2000,
+            });
           })
-        })
-        .catch((err) => {
-          toast({
-            title: 'Error!',
-            description: `${err.response.statusText}`,
-            status: 'error',
-            duration: 2000,
-          })
-        })
-    default:
-      if (args) console.log('Args:', args)
-      break
+          .catch((err) => {
+            toast({
+              title: 'Error!',
+              description: `${err.response.statusText}`,
+              status: 'error',
+              duration: 2000,
+            });
+          });
+        break;
+      default:
+        if (args) console.log('Args:', args);
+        break;
     }
 
-    console.groupEnd()
+    console.groupEnd();
   }
 
-  if (!game) return <>Loading...</>
+  if (!game) return <>Loading...</>;
 
   return (
     <Container maxW="container.lg">
@@ -95,20 +102,29 @@ export default function Sandbox() {
         <br />
         Backup: {game.backup_next}
         <br />
-        Combo: {game.combo && game.util.cards_to_strings(game.combo.cards).join(' ')}
+        Combo:{' '}
+        {game.combo && game.util.cards_to_strings(game.combo.cards).join(' ')}
       </Text>
       Hands:
       {game.players.map((player, index) => (
-        <Text key={index} mb={3}>
+        <Text key={player.finished_rank} mb={3}>
           Player #{index}
           <br />
           {game.util.cards_to_strings(player.hand).join(' ')}
         </Text>
       ))}
       <hr />
-      <Input placeholder="Action" onChange={(e) => setAction(e.target.value)} mt={5} />
-      <Input placeholder="Args" onChange={(e) => setArgs(e.target.value)} my={5} />
+      <Input
+        placeholder="Action"
+        onChange={(e) => setAction(e.target.value)}
+        mt={5}
+      />
+      <Input
+        placeholder="Args"
+        onChange={(e) => setArgs(e.target.value)}
+        my={5}
+      />
       <Button onClick={handleAction}>Perform action</Button>
     </Container>
-  )
+  );
 }

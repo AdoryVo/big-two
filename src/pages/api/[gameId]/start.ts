@@ -1,31 +1,31 @@
-import _ from 'lodash'
-import type { NextApiRequest, NextApiResponse } from 'next'
+import _ from 'lodash';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-import Game from '@big-two/Game'
-import prisma from '@utils/prisma'
-import { Event } from '@utils/pusher'
-import pusher from '@utils/pusher'
+import Game from '@big-two/Game';
+import prisma from '@utils/prisma';
+import { Event } from '@utils/pusher';
+import pusher from '@utils/pusher';
 
 // PATCH /api/[gameId]/start
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
-  const id = String(req.query.gameId)
+  const id = String(req.query.gameId);
 
   const game = await prisma.game.findUnique({
     where: { id },
     include: { players: true, currentPlayer: true, settings: true },
-  })
+  });
 
   if (!game) {
-    res.status(404).end()
-    return
+    res.status(404).end();
+    return;
   }
 
-  const gameInstance = new Game(game.players.length, game.settings.rules)
-  const lowestCard = gameInstance.util.card_to_string(gameInstance.lowest_card)
-  const currentPlayer = game.players[gameInstance.current_player]
+  const gameInstance = new Game(game.players.length, game.settings.rules);
+  const lowestCard = gameInstance.util.card_to_string(gameInstance.lowest_card);
+  const currentPlayer = game.players[gameInstance.current_player];
 
   // Store lowest card & current player
   await prisma.game.update({
@@ -38,13 +38,13 @@ export default async function handler(
       players: true,
       currentPlayer: true,
     },
-  })
+  });
 
   // Add hands to each player
-  const rng = _.random(game.players.length - 1)
+  const rng = _.random(game.players.length - 1);
   for (let i = 0; i < game.players.length; i++) {
-    const storedPlayer = game.players[i]
-    const instancePlayer = gameInstance.players[i]
+    const storedPlayer = game.players[i];
+    const instancePlayer = gameInstance.players[i];
 
     await prisma.player.update({
       where: { id: storedPlayer.id },
@@ -54,13 +54,12 @@ export default async function handler(
         finishedRank: 0,
         games: { increment: 1 },
       },
-    })
+    });
   }
 
-  await pusher.trigger(id, Event.LobbyUpdate, null)
-    .catch((err) => {
-      console.error(err)
-    })
+  await pusher.trigger(id, Event.LobbyUpdate, null).catch((err) => {
+    console.error(err);
+  });
 
-  res.status(200).end()
+  res.status(200).end();
 }

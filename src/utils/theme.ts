@@ -1,19 +1,19 @@
-import type { BoxProps } from '@chakra-ui/react'
+import type { BoxProps } from '@chakra-ui/react';
 
 // Types
 /** Values correspond to the card assets in `/public/assets/cards`. */
-export const enum CardTheme {
+export enum CardTheme {
   Classic = 'classic',
-  Paul = 'paul'
+  Paul = 'paul',
 }
 
-export const enum ColorScheme {
+export enum ColorScheme {
   Classic = 'classic',
   Night = 'night',
   Seafoam = 'seafoam',
   Casino = 'casino',
   Frosting = 'frosting',
-  Topaz = 'topaz'
+  Topaz = 'topaz',
 }
 
 export interface Theme {
@@ -25,8 +25,8 @@ export interface Theme {
 // Constants
 /// Chakra Colors: https://chakra-ui.com/docs/styled-system/theme#colors
 interface Styles {
-  bg: BoxProps,
-  text: BoxProps,
+  bg: BoxProps;
+  text: BoxProps;
 }
 
 export const COLOR_SCHEME_STYLES: { [scheme: string]: Styles } = {
@@ -48,13 +48,19 @@ export const COLOR_SCHEME_STYLES: { [scheme: string]: Styles } = {
   },
   [ColorScheme.Frosting]: {
     bg: { bgGradient: 'repeating-linear(45deg, purple.100, purple.200 1em)' },
-    text: { color: 'red.400', textShadow: '0 1px purple', fontFamily: `'Comic Sans MS', sans-serif` },
+    text: {
+      color: 'red.400',
+      textShadow: '0 1px purple',
+      fontFamily: `'Comic Sans MS', sans-serif`,
+    },
   },
   [ColorScheme.Topaz]: {
-    bg: { bgGradient: 'repeating-conic(orange.500 0 9deg, orange.400 9deg 18deg)' },
+    bg: {
+      bgGradient: 'repeating-conic(orange.500 0 9deg, orange.400 9deg 18deg)',
+    },
     text: { color: 'yellow.200', textShadow: '1px 2px black' },
   },
-}
+};
 
 export const THEME_OPTIONS = {
   cardTheme: [CardTheme.Classic, CardTheme.Paul],
@@ -66,21 +72,21 @@ export const THEME_OPTIONS = {
     ColorScheme.Frosting,
     ColorScheme.Topaz,
   ],
-}
+};
 
 export const DEFAULT_THEME: Theme = {
   cardTheme: CardTheme.Classic,
   colorScheme: ColorScheme.Classic,
-}
+};
 
 // Functions
 export function getStyles(theme: Theme) {
-  const scheme = theme.colorScheme
+  const scheme = theme.colorScheme;
 
   // Return default styles if scheme does not match
-  if (!COLOR_SCHEME_STYLES.hasOwnProperty(scheme)) {
-    return COLOR_SCHEME_STYLES[DEFAULT_THEME.colorScheme]
+  if (!Object.hasOwn(COLOR_SCHEME_STYLES, scheme)) {
+    return COLOR_SCHEME_STYLES[DEFAULT_THEME.colorScheme];
   }
 
-  return COLOR_SCHEME_STYLES[scheme]
+  return COLOR_SCHEME_STYLES[scheme];
 }

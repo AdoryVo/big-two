@@ -12,15 +12,15 @@ import {
   Tooltip,
   Tr,
   UnorderedList,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 
-import EditLobby from './EditLobby'
+import EditLobby from './EditLobby';
 
-import { describe, rulesToArray } from '@big-two/Rules'
-import { type GameWithPlayers } from '@utils/prisma'
+import { describe, rulesToArray } from '@big-two/Rules';
+import { type GameWithPlayers } from '@utils/prisma';
 
 interface Props {
-  game: GameWithPlayers
+  game: GameWithPlayers;
 }
 
 export default function GameInfo({ game }: Props) {
@@ -34,40 +34,49 @@ export default function GameInfo({ game }: Props) {
               <Th>Rank</Th>
               <Th>Name</Th>
               <Th isNumeric>
-                <Tooltip label="* Including current game">
-                  Games *
-                </Tooltip>
+                <Tooltip label="* Including current game">Games *</Tooltip>
               </Th>
               <Th isNumeric>Score</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {game.players.sort((a, b) => b.points - a.points).map((player, index) =>
-              <Tr key={index}>
-                <Td>{game.players.findIndex((p) => player.points === p.points) + 1}</Td>
-                <Td>{player.name}</Td>
-                <Td isNumeric>{player.games}</Td>
-                <Td isNumeric>{player.points}</Td>
-              </Tr>
-            )}
+            {game.players
+              .sort((a, b) => b.points - a.points)
+              .map((player) => (
+                <Tr key={player.id}>
+                  <Td>
+                    {game.players.findIndex((p) => player.points === p.points) +
+                      1}
+                  </Td>
+                  <Td>{player.name}</Td>
+                  <Td isNumeric>{player.games}</Td>
+                  <Td isNumeric>{player.points}</Td>
+                </Tr>
+              ))}
           </Tbody>
         </Table>
       </TableContainer>
-
       <Divider my={5} />
-
-      <Heading size="lg" mb={3}>📜 Lobby Rules</Heading>
+      <Heading size="lg" mb={3}>
+        📜 Lobby Rules
+      </Heading>
       Rules:
       <br />
       <UnorderedList mb={2}>
-        {rulesToArray(game.settings.rules).map((rule) =>
+        {rulesToArray(game.settings.rules).map((rule) => (
           <ListItem key={rule}>{describe(rule)}</ListItem>
-        )}
+        ))}
       </UnorderedList>
-      <Tag colorScheme="cyan" me={2}>{game.settings.playerMax} Player Lobby</Tag>
-      {game.settings.spectating ? <Tag colorScheme="green">Spectating Enabled</Tag> : <Tag colorScheme="red">Spectating Disabled</Tag>}
+      <Tag colorScheme="cyan" me={2}>
+        {game.settings.playerMax} Player Lobby
+      </Tag>
+      {game.settings.spectating ? (
+        <Tag colorScheme="green">Spectating Enabled</Tag>
+      ) : (
+        <Tag colorScheme="red">Spectating Disabled</Tag>
+      )}
       <br />
       <EditLobby game={game} />
     </>
-  )
+  );
 }

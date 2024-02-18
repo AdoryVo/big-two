@@ -1,18 +1,18 @@
-import { ChakraProvider, extendTheme } from '@chakra-ui/react'
-import { Analytics } from '@vercel/analytics/react'
-import type { AppProps } from 'next/app'
-import { Alegreya, Montserrat } from 'next/font/google'
-import { DefaultSeo } from 'next-seo'
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { Analytics } from '@vercel/analytics/react';
+import { DefaultSeo } from 'next-seo';
+import type { AppProps } from 'next/app';
+import { Alegreya, Montserrat } from 'next/font/google';
 
-const alegreya = Alegreya({ subsets: ['latin'] })
-const montserrat = Montserrat({ subsets: ['latin'] })
+const alegreya = Alegreya({ subsets: ['latin'] });
+const montserrat = Montserrat({ subsets: ['latin'] });
 
 const theme = extendTheme({
   fonts: {
     heading: alegreya.style.fontFamily,
     body: montserrat.style.fontFamily,
   },
-})
+});
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -34,5 +34,5 @@ export default function App({ Component, pageProps }: AppProps) {
       <Component {...pageProps} />
       <Analytics />
     </ChakraProvider>
-  )
+  );
 }

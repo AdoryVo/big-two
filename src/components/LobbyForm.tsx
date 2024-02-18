@@ -1,22 +1,28 @@
 import {
-  Checkbox, CheckboxGroup,
+  Checkbox,
+  CheckboxGroup,
   Divider,
-  FormControl, FormLabel,
-  NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper,
+  FormControl,
+  FormLabel,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Radio,
   RadioGroup,
   VStack,
-} from '@chakra-ui/react'
-import { useFormik } from 'formik'
-import { sum } from 'lodash'
-import { useState } from 'react'
+} from '@chakra-ui/react';
+import { useFormik } from 'formik';
+import { sum } from 'lodash';
+import { useState } from 'react';
 
-import Rules, { ALL_RULES, describe, rulesToArray } from '@big-two/Rules'
-import type { GameWithPlayers } from '@utils/prisma'
+import Rules, { ALL_RULES, describe, rulesToArray } from '@big-two/Rules';
+import type { GameWithPlayers } from '@utils/prisma';
 
 interface Props {
-  game?: GameWithPlayers
-  submitForm: (body: object) => void
+  game?: GameWithPlayers;
+  submitForm: (body: object) => void;
 }
 
 export default function LobbyForm({ game, submitForm }: Props) {
@@ -25,10 +31,14 @@ export default function LobbyForm({ game, submitForm }: Props) {
     public: false,
     spectating: true,
     playerMax: 4,
-  }
+  };
 
-  const [suitOrder, setSuitOrder] = useState(`${defaults.rules & Rules.SUIT_ORDER_ALPHA}`)
-  const [rules, setRules] = useState<number[]>(rulesToArray(defaults.rules & ~Rules.SUIT_ORDER_ALPHA))
+  const [suitOrder, setSuitOrder] = useState(
+    `${defaults.rules & Rules.SUIT_ORDER_ALPHA}`,
+  );
+  const [rules, setRules] = useState<number[]>(
+    rulesToArray(defaults.rules & ~Rules.SUIT_ORDER_ALPHA),
+  );
 
   const formik = useFormik({
     initialValues: {
@@ -40,22 +50,26 @@ export default function LobbyForm({ game, submitForm }: Props) {
       const body = {
         ...values,
         rules: sum(rules) + parseInt(suitOrder),
-      }
-      submitForm(body)
+      };
+      submitForm(body);
     },
-  })
+  });
 
   return (
     <form id="lobbyForm" onSubmit={formik.handleSubmit}>
       <FormControl mb={3}>
         <FormLabel fontWeight="bold">Rules</FormLabel>
-        <RadioGroup onChange={setSuitOrder} value={suitOrder} colorScheme="purple">
+        <RadioGroup
+          onChange={setSuitOrder}
+          value={suitOrder}
+          colorScheme="purple"
+        >
           <VStack alignItems="start">
-            {ALL_RULES.slice(0, 2).map((suit_order) =>
+            {ALL_RULES.slice(0, 2).map((suit_order) => (
               <Radio key={suit_order} value={`${suit_order}`}>
                 {describe(suit_order)}
               </Radio>
-            )}
+            ))}
           </VStack>
         </RadioGroup>
 
@@ -67,11 +81,11 @@ export default function LobbyForm({ game, submitForm }: Props) {
           colorScheme="green"
         >
           <VStack alignItems="start">
-            {ALL_RULES.slice(2).map((rule) =>
+            {ALL_RULES.slice(2).map((rule) => (
               <Checkbox key={rule} value={rule}>
                 {describe(rule)}
               </Checkbox>
-            )}
+            ))}
           </VStack>
         </CheckboxGroup>
       </FormControl>
@@ -81,7 +95,7 @@ export default function LobbyForm({ game, submitForm }: Props) {
         <NumberInput
           name="playerMax"
           defaultValue={formik.values.playerMax}
-          onChange={(v) => formik.values.playerMax = parseInt(v)}
+          onChange={(v) => formik.setFieldValue('playerMax', parseInt(v))}
           min={2}
           maxW={20}
         >
@@ -116,5 +130,5 @@ export default function LobbyForm({ game, submitForm }: Props) {
         </Checkbox>
       </FormControl>
     </form>
-  )
+  );
 }

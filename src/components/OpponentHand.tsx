@@ -1,11 +1,9 @@
-import { Box, Stack } from '@chakra-ui/react'
-import type { Player } from '@prisma/client'
+import { Box, Stack } from '@chakra-ui/react';
+import type { Player } from '@prisma/client';
 
-import CardImage from './CardImage'
+import CardImage from './CardImage';
 
-const HAND_ROTATIONS = [
-  '0', '90', '180', '270',
-]
+const HAND_ROTATIONS = ['0', '90', '180', '270'];
 
 const HAND_STYLES = [
   {
@@ -28,32 +26,28 @@ const HAND_STYLES = [
     right: '1em',
     transform: 'translate(0, -50%)',
   },
-]
+];
 
 interface Props {
-  position: number,
-  player: Player,
-  roundLeaderIndex: number | null
+  position: number;
+  player: Player;
+  roundLeaderIndex: number | null;
 }
 
 export default function OpponentHand({ position, player }: Props) {
   const spacing = {
     marginInlineStart: position % 2 ? '0' : '-3.4em',
     marginTop: position % 2 ? '-6.7em' : '0',
-  }
+  };
 
   return (
     <Box>
-      <Box
-        position="fixed"
-        {...HAND_STYLES[position]}
-      >
-        <Stack
-          direction={position % 2 ? 'column' : 'row'}
-        >
-          {player.hand.map((card, cardIndex) =>
-            <Box key={cardIndex} {...(cardIndex == 0 ? {} : spacing)}>
-              <CardImage card={card}
+      <Box position="fixed" {...HAND_STYLES[position]}>
+        <Stack direction={position % 2 ? 'column' : 'row'}>
+          {player.hand.map((card, cardIndex) => (
+            <Box key={card} {...(cardIndex === 0 ? {} : spacing)}>
+              <CardImage
+                card={card}
                 style={{
                   width: '5em',
                   height: '7em',
@@ -61,9 +55,9 @@ export default function OpponentHand({ position, player }: Props) {
                 }}
               />
             </Box>
-          )}
+          ))}
         </Stack>
       </Box>
     </Box>
-  )
+  );
 }

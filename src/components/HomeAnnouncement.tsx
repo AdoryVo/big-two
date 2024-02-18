@@ -1,13 +1,16 @@
 import {
-  Alert, AlertDescription, AlertIcon, AlertTitle,
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Box,
   CloseButton,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 
 interface Props {
-  title: string
-  children?: React.ReactNode,
-  onClose: () => void
+  title: string;
+  children?: React.ReactNode;
+  onClose: () => void;
 }
 
 export default function HomeAnnouncement({ title, children, onClose }: Props) {
@@ -16,9 +19,7 @@ export default function HomeAnnouncement({ title, children, onClose }: Props) {
       <AlertIcon />
       <Box>
         <AlertTitle>{title}</AlertTitle>
-        <AlertDescription>
-          {children}
-        </AlertDescription>
+        <AlertDescription>{children}</AlertDescription>
       </Box>
       <CloseButton
         alignSelf="flex-start"
@@ -28,5 +29,5 @@ export default function HomeAnnouncement({ title, children, onClose }: Props) {
         onClick={onClose}
       />
     </Alert>
-  )
+  );
 }

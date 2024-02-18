@@ -1,40 +1,57 @@
 import {
   Button,
-  Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   useDisclosure,
-} from '@chakra-ui/react'
-import type { Game } from '@prisma/client'
-import ky from 'ky'
-import { useRouter } from 'next/router'
+} from '@chakra-ui/react';
+import type { Game } from '@prisma/client';
+import ky from 'ky';
+import { useRouter } from 'next/router';
 
-import LobbyForm from './LobbyForm'
+import LobbyForm from './LobbyForm';
 
 interface Props {
-  closeToast?: () => void
+  closeToast?: () => void;
 }
 
 export default function CreateLobby({ closeToast }: Props) {
-  const router = useRouter()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   function onClick() {
     // Close toasts from home page if they are open
     if (closeToast) {
-      closeToast()
+      closeToast();
     }
 
-    onOpen()
+    onOpen();
   }
 
   function submitForm(body: object) {
-    ky.post('/api/lobby', { json: body }).json<Game>().then((lobby) => {
-      router.push({ pathname: '/game/[gameId]', query: { gameId: lobby.id } })
-    })
+    ky.post('/api/lobby', { json: body })
+      .json<Game>()
+      .then((lobby) => {
+        router.push({
+          pathname: '/game/[gameId]',
+          query: { gameId: lobby.id },
+        });
+      });
   }
 
   return (
     <>
-      <Button colorScheme="green" shadow="1px 1px black" mb={4} me={2} onClick={onClick}>
+      <Button
+        colorScheme="green"
+        shadow="1px 1px black"
+        mb={4}
+        me={2}
+        onClick={onClick}
+      >
         Create lobby
       </Button>
 
@@ -48,11 +65,7 @@ export default function CreateLobby({ closeToast }: Props) {
           </ModalBody>
 
           <ModalFooter>
-            <Button
-              colorScheme="blue"
-              type="submit"
-              form="lobbyForm"
-              me={2}>
+            <Button colorScheme="blue" type="submit" form="lobbyForm" me={2}>
               Submit
             </Button>
             <Button colorScheme="gray" onClick={onClose}>
@@ -62,5 +75,5 @@ export default function CreateLobby({ closeToast }: Props) {
         </ModalContent>
       </Modal>
     </>
-  )
+  );
 }

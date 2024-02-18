@@ -1,23 +1,28 @@
 import {
   Button,
-  Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   useDisclosure,
-} from '@chakra-ui/react'
-import ky from 'ky'
+} from '@chakra-ui/react';
+import ky from 'ky';
 
-import LobbyForm from './LobbyForm'
+import LobbyForm from './LobbyForm';
 
-import type { GameWithPlayers } from '@utils/prisma'
-
+import type { GameWithPlayers } from '@utils/prisma';
 
 export default function EditLobby({ game }: { game: GameWithPlayers }) {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const gameInProgress = Boolean(game.currentPlayer)
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const gameInProgress = Boolean(game.currentPlayer);
 
   function submitForm(body: object) {
     ky.put(`/api/${game.id}/settings`, { json: body }).then(() => {
-      onClose()
-    })
+      onClose();
+    });
   }
 
   return (
@@ -41,11 +46,7 @@ export default function EditLobby({ game }: { game: GameWithPlayers }) {
           </ModalBody>
 
           <ModalFooter>
-            <Button
-              colorScheme="blue"
-              type="submit"
-              form="lobbyForm"
-              me={2}>
+            <Button colorScheme="blue" type="submit" form="lobbyForm" me={2}>
               Submit
             </Button>
             <Button colorScheme="gray" onClick={onClose}>
@@ -55,5 +56,5 @@ export default function EditLobby({ game }: { game: GameWithPlayers }) {
         </ModalContent>
       </Modal>
     </>
-  )
+  );
 }

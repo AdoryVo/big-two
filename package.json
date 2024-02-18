@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --fix",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build"
+    "vercel-build": "prisma generate && prisma migrate deploy && next build",
+    "format-lint": "pnpm dlx @biomejs/biome check --apply ./",
+    "postinstall": "lefthook install"
   },
   "dependencies": {
     "@babel/core": "^7.23.2",
@@ -33,15 +35,12 @@
     "zustand": "^4.4.4"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.5.3",
     "@types/lodash": "^4.14.200",
     "@types/node": "^20.8.7",
     "@types/react": "^18.2.31",
     "@types/react-dom": "^18.2.14",
-    "@typescript-eslint/eslint-plugin": "^6.8.0",
-    "@typescript-eslint/parser": "^6.8.0",
-    "eslint": "8.52.0",
-    "eslint-config-next": "13.5.6",
-    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "lefthook": "^1.6.1",
     "prisma": "^5.4.2",
     "typescript": "5.2.2"
   }

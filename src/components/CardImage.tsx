@@ -1,35 +1,41 @@
-import Image from 'next/image'
-import type { CSSProperties } from 'react'
+import Image from 'next/image';
+import type { CSSProperties } from 'react';
 
-import { useStore } from '@utils/hooks/useStore'
+import { useStore } from '@utils/hooks/useStore';
 
 const RANK_NAMES: { [abbrn: string]: string } = {
-  'J': 'jack',
-  'Q': 'queen',
-  'K': 'king',
-  'A': 'ace',
-}
+  J: 'jack',
+  Q: 'queen',
+  K: 'king',
+  A: 'ace',
+};
 
 interface Props {
-  card: string,
-  selected?: boolean,
-  theme?: string,
-  style?: CSSProperties
+  card: string;
+  selected?: boolean;
+  theme?: string;
+  style?: CSSProperties;
 }
 
 export default function CardImage({
-  card, selected, theme: prefTheme, style,
+  card,
+  selected,
+  theme: prefTheme,
+  style,
 }: Props) {
-  const theme = useStore((state) => state.theme)
+  const theme = useStore((state) => state.theme);
 
   function cardToUrl(card: string) {
-    const [rank, suit] = card.split(';')
+    const [rank, suit] = card.split(';');
 
     if (!rank) {
-      return `/assets/cards/${prefTheme || theme.cardTheme}/back.png`
+      return `/assets/cards/${prefTheme || theme.cardTheme}/back.png`;
     }
 
-    return `/assets/cards/${prefTheme || theme.cardTheme}/${[RANK_NAMES[rank] || rank, suit].join('_of_')}.png`
+    return `/assets/cards/${prefTheme || theme.cardTheme}/${[
+      RANK_NAMES[rank] || rank,
+      suit,
+    ].join('_of_')}.png`;
   }
 
   return (
@@ -52,5 +58,5 @@ export default function CardImage({
       height={100}
       draggable={false}
     />
-  )
+  );
 }

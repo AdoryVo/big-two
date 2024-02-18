@@ -1,13 +1,13 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-import prisma from '@utils/prisma'
+import prisma from '@utils/prisma';
 
 // GET /api/[gameId]/game
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
-  const id = String(req.query.gameId)
+  const id = String(req.query.gameId);
 
   const game = await prisma.game.findUnique({
     where: { id },
@@ -16,46 +16,46 @@ export default async function handler(
       currentPlayer: true,
       settings: true,
     },
-  })
+  });
 
   if (!game) {
-    res.status(404).end()
-    return
+    res.status(404).end();
+    return;
   }
 
   // Authorization - obscuring player data
   if (game.currentPlayer) {
-    game.currentPlayer.id = ''
+    game.currentPlayer.id = '';
   }
 
-  const playerId = req.cookies[game.id]
-  const player = game.players.find((player) => player.id === playerId)
+  const playerId = req.cookies[game.id];
+  const player = game.players.find((player) => player.id === playerId);
   if (playerId && player && player.finishedRank === 0) {
     // If a remaining player is requesting game data, obscure other players' id's & cards
-    game.players.forEach((player) => {
+    for (const player of game.players) {
       if (player.id !== playerId) {
-        player.id = ''
-        player.hand = player.hand.map(() => '')
+        player.id = '';
+        player.hand = player.hand.map(() => '');
       }
-    })
+    }
   } else {
     // Obscure ID's from spectating players
-    game.players.forEach((player) => {
+    for (const player of game.players) {
       // Do not obscure id if this player is the spectator
       if (playerId && player.id === playerId) {
-        return
+        return;
       }
 
-      player.id = ''
-    })
+      player.id = '';
+    }
 
     if (!game.settings.spectating) {
       // Hide all cards if spectating is not allowed
-      game.players.forEach((player) => {
-        player.hand = player.hand.map(() => '')
-      })
+      for (const player of game.players) {
+        player.hand = player.hand.map(() => '');
+      }
     }
   }
 
-  res.status(200).json(game)
+  res.status(200).json(game);
 }
