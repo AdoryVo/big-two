@@ -1,5 +1,4 @@
-# Allow all crawlers
+# Allow crawling only on the home page.
 User-agent: *
-Allow: /
 Disallow: /game/
 Disallow: /sandbox
