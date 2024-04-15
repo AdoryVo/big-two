@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - More to come soon!
 
+## [1.0.2] - 2024-04-15
+
+### Change
+
+- Updated lobby list to have fixed height for CLS concerns
+
 ## [1.0.1] - 2023-10-22
 
 ### Added
