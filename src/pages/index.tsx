@@ -113,68 +113,87 @@ export default function Home() {
         <Heading {...styles.text} size="lg" my={5}>
           🏠 Public Lobbies
         </Heading>
-        {error && (
-          <Text as="b" color="red.500">
-            An error occurred loading the lobbies...
-          </Text>
-        )}
-        {isLoading && (
-          <Text {...styles.text} as="b">
-            ⏳ Loading...
-          </Text>
-        )}
-        {!isLoading &&
-          lobbies &&
-          lobbies
-            .sort((l1, l2) => compareByNewest(l1.createdAt, l2.createdAt))
-            .map((lobby) => (
-              <Card key={lobby.id} textAlign="start" maxW="lg" mx="auto" mb={5}>
-                <CardHeader>
-                  <Flex>
-                    <Text fontWeight="bold">
-                      Lobby:{' '}
-                      <Text as="span" color="crimson">
-                        {lobby.id}
+        <Box
+          bg="rgba(0, 0, 0, 0.25)"
+          h="2xl"
+          overflowY="auto"
+          border="1px solid lightgrey"
+          rounded="md"
+          p={4}
+        >
+          {error && (
+            <Text as="b" color="red.500">
+              An error occurred loading the lobbies...
+            </Text>
+          )}
+          {isLoading && (
+            <Text {...styles.text} as="b">
+              ⏳ Loading...
+            </Text>
+          )}
+          {!isLoading &&
+            lobbies &&
+            lobbies
+              .sort((l1, l2) => compareByNewest(l1.createdAt, l2.createdAt))
+              .map((lobby) => (
+                <Card
+                  key={lobby.id}
+                  textAlign="start"
+                  maxW="lg"
+                  mx="auto"
+                  mb={5}
+                >
+                  <CardHeader>
+                    <Flex>
+                      <Text fontWeight="bold">
+                        Lobby:{' '}
+                        <Text as="span" color="crimson">
+                          {lobby.id}
+                        </Text>
                       </Text>
-                    </Text>
-                    <Spacer />
-                    <Text fontSize="sm" color="gray.600">
-                      {new Date(lobby.createdAt).toLocaleString()}
-                    </Text>
-                  </Flex>
-                  <Badge>
-                    {lobby.currentPlayer
-                      ? '⚔️ Game in progress'
-                      : '🚶 Waiting for more players'}
-                    &nbsp;({lobby.players.length}/{lobby.settings.playerMax})
-                  </Badge>
-                  <br />
-                </CardHeader>
-                <CardBody py={0}>
-                  Rules:
-                  <UnorderedList mb={2}>
-                    {rulesToArray(lobby.settings.rules).map((rule) => (
-                      <ListItem key={rule}>{describe(rule)}</ListItem>
-                    ))}
-                  </UnorderedList>
-                  <Tag colorScheme="cyan" me={2}>
-                    {lobby.settings.playerMax} Player Lobby
-                  </Tag>
-                  {lobby.settings.spectating ? (
-                    <Tag colorScheme="green">Spectating Enabled</Tag>
-                  ) : (
-                    <Tag colorScheme="red">Spectating Disabled</Tag>
-                  )}
-                </CardBody>
-                <CardFooter>
-                  <NextLink href={`/game/${lobby.id}`} passHref>
-                    <Button colorScheme="blue" onClick={() => toast.closeAll()}>
-                      Join lobby
-                    </Button>
-                  </NextLink>
-                </CardFooter>
-              </Card>
-            ))}
+                      <Spacer />
+                      <Text fontSize="sm" color="gray.600">
+                        {new Date(lobby.createdAt).toLocaleString()}
+                      </Text>
+                    </Flex>
+                    <Badge>
+                      {lobby.currentPlayer
+                        ? '⚔️ Game in progress'
+                        : '🚶 Waiting for more players'}
+                      &nbsp;({lobby.players.length}/{lobby.settings.playerMax})
+                    </Badge>
+                    <br />
+                  </CardHeader>
+                  <CardBody py={0}>
+                    Rules:
+                    <UnorderedList mb={2}>
+                      {rulesToArray(lobby.settings.rules).map((rule) => (
+                        <ListItem key={rule}>{describe(rule)}</ListItem>
+                      ))}
+                    </UnorderedList>
+                    <Tag colorScheme="cyan" me={2}>
+                      {lobby.settings.playerMax} Player Lobby
+                    </Tag>
+                    {lobby.settings.spectating ? (
+                      <Tag colorScheme="green">Spectating Enabled</Tag>
+                    ) : (
+                      <Tag colorScheme="red">Spectating Disabled</Tag>
+                    )}
+                  </CardBody>
+                  <CardFooter>
+                    <NextLink href={`/game/${lobby.id}`} passHref>
+                      <Button
+                        colorScheme="blue"
+                        onClick={() => toast.closeAll()}
+                      >
+                        Join lobby
+                      </Button>
+                    </NextLink>
+                  </CardFooter>
+                </Card>
+              ))}
+        </Box>
+
         {!isLoading && !lobbies?.length && (
           <Text {...styles.text} as="b">
             No current public lobbies, create one!
