@@ -1,3 +1,5 @@
 # Allow all crawlers
 User-agent: *
 Allow: /
+Disallow: /game/
+Disallow: /sandbox
