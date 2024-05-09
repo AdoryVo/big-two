@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - More to come soon!
 
+## [1.1.0] - Unreleased
+
+### Added
+
+- [WIP] Allow playing with multiple decks - thanks to anonymous feedback request!
+
 ## [1.0.2] - 2024-04-15
 
 ### Change
