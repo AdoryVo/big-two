@@ -75,7 +75,7 @@ export default function Home() {
     <Box {...styles.bg} minH="100vh">
       <NextSeo
         title="Big Two"
-        description="Play Big Two online with your friends or in public lobbies! Tiến lên is also supported!"
+        description="Play multiplayer Big Two online with your friends in real-time with no account needed! Tiến lên and custom rules are also supported. 🎉 1000+ monthly players!"
         canonical="https://bigtwo.vercel.app/"
         openGraph={{
           images: [
