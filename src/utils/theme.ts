@@ -5,6 +5,7 @@ import type { BoxProps } from '@chakra-ui/react';
 export enum CardTheme {
   Classic = 'classic',
   Paul = 'paul',
+  Hanhaechi = 'hanhaechi',
 }
 
 export enum ColorScheme {
@@ -63,7 +64,7 @@ export const COLOR_SCHEME_STYLES: { [scheme: string]: Styles } = {
 };
 
 export const THEME_OPTIONS = {
-  cardTheme: [CardTheme.Classic, CardTheme.Paul],
+  cardTheme: [CardTheme.Classic, CardTheme.Paul, CardTheme.Hanhaechi],
   colorScheme: [
     ColorScheme.Classic,
     ColorScheme.Night,

@@ -56,6 +56,7 @@ export default function CardImage({
       }}
       width={50}
       height={100}
+      unoptimized
       draggable={false}
     />
   );

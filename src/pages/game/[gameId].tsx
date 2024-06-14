@@ -96,7 +96,7 @@ export default function Game() {
         description: play,
         status: 'info',
         position: 'top',
-        duration: 2500,
+        duration: 1500,
         isClosable: true,
       });
     });
@@ -253,7 +253,7 @@ export default function Game() {
         }
       >
         <Heading>Game Lobby</Heading>
-        <Text mb={{ base: 5, md: 0 }}>
+        <Text mb={{ base: 5, md: 2 }}>
           <ChakraLink
             onClick={copyGameLink}
             tabIndex={0}
