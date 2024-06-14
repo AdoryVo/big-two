@@ -81,6 +81,10 @@ export function overlapStyles(index: number, spacing: string) {
   };
 }
 
+function sanitizeCardLabel(cardLabel: string) {
+  return cardLabel.replace(/(?<=(.*;[a-z]*))\d*/gi, '');
+}
+
 export default function ActiveGame({ game, playerId, handleAction }: Props) {
   const isTabletAndAbove = useIsTabletAndAbove();
 
@@ -126,7 +130,9 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
   }
 
   function handlePlay() {
-    handleAction(Action.Play, { comboToPlay: Array.from(comboToPlay) });
+    handleAction(Action.Play, {
+      comboToPlay: Array.from(comboToPlay).map(sanitizeCardLabel),
+    });
     comboToPlay.clear();
     setComboToPlay(comboToPlay);
   }
@@ -165,7 +171,8 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
               <Stack direction="row">
                 {game.combo.map((card, index) => (
                   <CardImage
-                    key={card}
+                    // biome-ignore lint/suspicious/noArrayIndexKey: Cards have no unique ID's
+                    key={card + index}
                     card={card}
                     style={overlapStyles(index, cardSpacing)}
                   />
@@ -279,7 +286,9 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                             onClick={handlePlay}
                             colorScheme="green"
                             isDisabled={
-                              !gameInstance.can_play(Array.from(comboToPlay))
+                              !gameInstance.can_play(
+                                Array.from(comboToPlay).map(sanitizeCardLabel),
+                              )
                             }
                             me={2}
                           >
@@ -306,7 +315,8 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           <Stack direction="row">
             {game.combo.map((card, index) => (
               <CardImage
-                key={card}
+                // biome-ignore lint/suspicious/noArrayIndexKey: Cards have no unique ID's
+                key={card + index}
                 card={card}
                 style={overlapStyles(index, cardSpacing)}
               />
@@ -338,7 +348,8 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                     <Stack direction="row">
                       {player.hand.map((card, cardIndex) => (
                         <Box
-                          key={card}
+                          // biome-ignore lint/suspicious/noArrayIndexKey: Cards have no unique ID's
+                          key={card + cardIndex}
                           style={overlapStyles(cardIndex, cardSpacing)}
                         >
                           <CardImage card={card} />
@@ -390,7 +401,9 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                             onClick={handlePlay}
                             colorScheme="green"
                             isDisabled={
-                              !gameInstance.can_play(Array.from(comboToPlay))
+                              !gameInstance.can_play(
+                                Array.from(comboToPlay).map(sanitizeCardLabel),
+                              )
                             }
                             me={2}
                           >

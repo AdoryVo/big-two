@@ -85,7 +85,7 @@ export default function Home() {
         additionalLinkTags={[
           {
             rel: 'manifest',
-            href: '/.webmanifest',
+            href: '/app.webmanifest',
           },
         ]}
       />
@@ -175,10 +175,17 @@ export default function Home() {
                       {lobby.settings.playerMax} Player Lobby
                     </Tag>
                     {lobby.settings.spectating ? (
-                      <Tag colorScheme="green">Spectating Enabled</Tag>
+                      <Tag colorScheme="green" me={2}>
+                        Spectating Enabled
+                      </Tag>
                     ) : (
-                      <Tag colorScheme="red">Spectating Disabled</Tag>
+                      <Tag colorScheme="red" me={2}>
+                        Spectating Disabled
+                      </Tag>
                     )}
+                    <Tag colorScheme="yellow" me={2}>
+                      {lobby.settings.deckCount} Deck(s)
+                    </Tag>
                   </CardBody>
                   <CardFooter>
                     <NextLink href={`/game/${lobby.id}`} passHref>

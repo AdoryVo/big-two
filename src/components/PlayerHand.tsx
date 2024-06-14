@@ -39,11 +39,15 @@ export default function PlayerHand({
             <Stack direction="row">
               {hand.map((card, index) => (
                 <Box
-                  key={card}
-                  onMouseDown={() => handleClick(card)}
+                  // biome-ignore lint/suspicious/noArrayIndexKey: Cards have no unique ID's
+                  key={card + index}
+                  onMouseDown={() => handleClick(card + index)}
                   {...overlapStyles(index, cardSpacing)}
                 >
-                  <CardImage card={card} selected={comboToPlay.has(card)} />
+                  <CardImage
+                    card={card}
+                    selected={comboToPlay.has(card + index)}
+                  />
                 </Box>
               ))}
             </Stack>
@@ -54,11 +58,15 @@ export default function PlayerHand({
           <Stack direction="row">
             {hand.map((card, index) => (
               <Box
-                key={card}
-                onMouseDown={() => handleClick(card)}
+                // biome-ignore lint/suspicious/noArrayIndexKey: Cards have no unique ID's
+                key={card + index}
+                onMouseDown={() => handleClick(card + index)}
                 {...overlapStyles(index, cardSpacing)}
               >
-                <CardImage card={card} selected={comboToPlay.has(card)} />
+                <CardImage
+                  card={card}
+                  selected={comboToPlay.has(card + index)}
+                />
               </Box>
             ))}
           </Stack>
@@ -73,12 +81,13 @@ export default function PlayerHand({
 
           {toggleGrid && (
             <Grid templateColumns="repeat(7, 1fr)" gap={0.5}>
-              {hand.map((card) => (
-                <GridItem key={card}>
-                  <Box onMouseDown={() => handleClick(card)}>
+              {hand.map((card, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: Cards have no unique ID's
+                <GridItem key={card + index}>
+                  <Box onMouseDown={() => handleClick(card + index)}>
                     <CardImage
                       card={card}
-                      selected={comboToPlay.has(card)}
+                      selected={comboToPlay.has(card + index)}
                       style={{ transform: '' }}
                     />
                   </Box>

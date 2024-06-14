@@ -45,7 +45,8 @@ export default function OpponentHand({ position, player }: Props) {
       <Box position="fixed" {...HAND_STYLES[position]}>
         <Stack direction={position % 2 ? 'column' : 'row'}>
           {player.hand.map((card, cardIndex) => (
-            <Box key={card} {...(cardIndex === 0 ? {} : spacing)}>
+            // biome-ignore lint/suspicious/noArrayIndexKey: Cards have no unique ID's
+            <Box key={card + cardIndex} {...(cardIndex === 0 ? {} : spacing)}>
               <CardImage
                 card={card}
                 style={{

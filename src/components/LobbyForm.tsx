@@ -1,7 +1,9 @@
 import {
+  Box,
   Checkbox,
   CheckboxGroup,
   Divider,
+  Flex,
   FormControl,
   FormLabel,
   NumberDecrementStepper,
@@ -31,6 +33,7 @@ export default function LobbyForm({ game, submitForm }: Props) {
     public: false,
     spectating: true,
     playerMax: 4,
+    deckCount: 1,
   };
 
   const [suitOrder, setSuitOrder] = useState(
@@ -45,6 +48,7 @@ export default function LobbyForm({ game, submitForm }: Props) {
       public: defaults.public,
       spectating: defaults.spectating,
       playerMax: defaults.playerMax,
+      deckCount: 1,
     },
     onSubmit: (values) => {
       const body = {
@@ -90,22 +94,49 @@ export default function LobbyForm({ game, submitForm }: Props) {
         </CheckboxGroup>
       </FormControl>
 
-      <FormControl mb={4}>
-        <FormLabel fontWeight="bold">Max players</FormLabel>
-        <NumberInput
-          name="playerMax"
-          defaultValue={formik.values.playerMax}
-          onChange={(v) => formik.setFieldValue('playerMax', parseInt(v))}
-          min={2}
-          maxW={20}
-        >
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-      </FormControl>
+      <Flex gap={8}>
+        <FormControl width="auto" mb={4}>
+          <FormLabel fontWeight="bold" whiteSpace="nowrap">
+            Max players
+          </FormLabel>
+          <NumberInput
+            name="playerMax"
+            defaultValue={formik.values.playerMax}
+            onChange={(v) => formik.setFieldValue('playerMax', parseInt(v))}
+            min={2}
+            maxW={20}
+          >
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        </FormControl>
+
+        <FormControl flexGrow={1} mb={4}>
+          <FormLabel fontWeight="bold">Number of decks</FormLabel>
+          <NumberInput
+            name="deckCount"
+            defaultValue={formik.values.deckCount}
+            onChange={(v) => formik.setFieldValue('deckCount', parseInt(v))}
+            min={1}
+            maxW={20}
+          >
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          <Box fontSize="sm">
+            <b>
+              Note: For multiple decks, with the "Must play lowest card" rule,
+            </b>{' '}
+            all lowest cards must be played in the round's first combos.
+          </Box>
+        </FormControl>
+      </Flex>
 
       <b>Permissions</b>
       <FormControl mb={2}>

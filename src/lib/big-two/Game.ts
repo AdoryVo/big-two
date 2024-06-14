@@ -20,7 +20,12 @@ class Game {
   util: Util;
   lowest_card!: Card;
 
-  constructor(playerCount: number, rules: Rules, game?: GameWithPlayers) {
+  constructor(
+    playerCount: number,
+    rules: Rules,
+    game?: GameWithPlayers,
+    deckCount = 1,
+  ) {
     this.util = new Util(rules);
 
     // Initialize game from existing game (+ ensure game fields exist)
@@ -46,7 +51,12 @@ class Game {
         if (player.hand.length) this.remaining_players.push(index);
       });
     } else {
+      // Add the desired amount of decks to distribute hands from
       this.deck = new decks.StandardDeck();
+      for (let i = 1; i < deckCount; ++i) {
+        this.deck.merge(new decks.StandardDeck());
+      }
+
       this.players = [];
       for (let i = 0; i < playerCount; ++i) {
         this.players.push(new Player());
@@ -181,8 +191,6 @@ class Game {
       )
     )
       return -2;
-
-    console.log(`played ${cards} successfully`);
 
     // In the case that you can play after passing, just clear the passed players set, as it is used ONLY to keep track of
     // the case where the last playmaker has won (and is therefore no longer eligible to have turns) and everyone else has

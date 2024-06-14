@@ -71,10 +71,17 @@ export default function GameInfo({ game }: Props) {
         {game.settings.playerMax} Player Lobby
       </Tag>
       {game.settings.spectating ? (
-        <Tag colorScheme="green">Spectating Enabled</Tag>
+        <Tag colorScheme="green" me={2}>
+          Spectating Enabled
+        </Tag>
       ) : (
-        <Tag colorScheme="red">Spectating Disabled</Tag>
+        <Tag colorScheme="red" me={2}>
+          Spectating Disabled
+        </Tag>
       )}
+      <Tag colorScheme="yellow" me={2}>
+        {game.settings.deckCount} Deck(s)
+      </Tag>
       <br />
       <EditLobby game={game} />
     </>

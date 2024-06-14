@@ -43,7 +43,7 @@ export default async function handler(
     for (const player of game.players) {
       // Do not obscure id if this player is the spectator
       if (playerId && player.id === playerId) {
-        return;
+        continue
       }
 
       player.id = '';

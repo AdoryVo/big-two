@@ -23,7 +23,7 @@ export default async function handler(
     return;
   }
 
-  const gameInstance = new Game(game.players.length, game.settings.rules);
+  const gameInstance = new Game(game.players.length, game.settings.rules, undefined, game.settings.deckCount);
   const lowestCard = gameInstance.util.card_to_string(gameInstance.lowest_card);
   const currentPlayer = game.players[gameInstance.current_player];
 

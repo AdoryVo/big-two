@@ -29,6 +29,7 @@ model Settings {
   id   String @id @default(uuid())
   game Game?
 
+  deckCount  Int     @default(1)
   rules      Int
   public     Boolean @default(false)
   spectating Boolean @default(true)
