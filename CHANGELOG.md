@@ -11,15 +11,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - More to come soon!
 
-## [1.1.0] - Unreleased
+## [1.1.0] - 2024-06-13
 
 ### Added
 
-- [WIP] Allow playing with multiple decks - thanks to anonymous feedback request!
+- Allow playing with multiple decks - thanks to anonymous feedback request!
+- New card theme "Hanhaechi" (Credit to https://github.com/hanhaechi/playing-cards)
+
+### Changed
+
+- Changed card back for the "Classic" theme
+- Improved card image quality by turning off Next Image optimization
+- Reduced "Play Action" toast duration from 2500 to 1500
+- Updated to Next 14
 
 ## [1.0.2] - 2024-04-15
 
-### Change
+### Changed
 
 - Updated lobby list to have fixed height for CLS concerns
 
