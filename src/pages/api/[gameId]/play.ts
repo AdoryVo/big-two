@@ -54,6 +54,23 @@ export default async function handler(
       },
     });
 
+    await prisma.game.update({
+      where: { id },
+      data: {
+        combo: gameInstance.util.cards_to_strings(
+          gameInstance.combo?.cards || [],
+        ),
+        lowestCard: gameInstance.util.card_to_string(gameInstance.lowest_card),
+        currentPlayer: {
+          connect: { id: game.players[gameInstance.current_player].id },
+        },
+        passedPlayers: Array.from(gameInstance.passed_players),
+        lastPlaymaker: gameInstance.last_playmaker,
+        backupNext: gameInstance.backup_next,
+      },
+      include: { players: true, currentPlayer: true },
+    });
+
     channel.subscribe((status) => {
       if (status !== 'SUBSCRIBED') {
         return null;
@@ -68,6 +85,13 @@ export default async function handler(
           },
         })
         .catch((err) => void console.error(err));
+
+      channel
+        .send({
+          type: 'broadcast',
+          event: Event.LobbyUpdate,
+        })
+        .catch((err) => void console.error(err));
     });
   } else {
     // Player finished - mark them as finished!
@@ -80,6 +104,23 @@ export default async function handler(
         finishedRank: finishedPlayer.finished_rank ?? 0,
         points: { increment: finishedPlayer.score },
       },
+    });
+
+    await prisma.game.update({
+      where: { id },
+      data: {
+        combo: gameInstance.util.cards_to_strings(
+          gameInstance.combo?.cards || [],
+        ),
+        lowestCard: gameInstance.util.card_to_string(gameInstance.lowest_card),
+        currentPlayer: {
+          connect: { id: game.players[gameInstance.current_player].id },
+        },
+        passedPlayers: Array.from(gameInstance.passed_players),
+        lastPlaymaker: gameInstance.last_playmaker,
+        backupNext: gameInstance.backup_next,
+      },
+      include: { players: true, currentPlayer: true },
     });
 
     channel.subscribe((status) => {
@@ -97,39 +138,15 @@ export default async function handler(
           },
         })
         .catch((err) => void console.error(err));
+
+      channel
+        .send({
+          type: 'broadcast',
+          event: Event.LobbyUpdate,
+        })
+        .catch((err) => void console.error(err));
     });
   }
-
-  await prisma.game.update({
-    where: { id },
-    data: {
-      combo: gameInstance.util.cards_to_strings(
-        gameInstance.combo?.cards || [],
-      ),
-      lowestCard: gameInstance.util.card_to_string(gameInstance.lowest_card),
-      currentPlayer: {
-        connect: { id: game.players[gameInstance.current_player].id },
-      },
-      passedPlayers: Array.from(gameInstance.passed_players),
-      lastPlaymaker: gameInstance.last_playmaker,
-      backupNext: gameInstance.backup_next,
-    },
-    include: { players: true, currentPlayer: true },
-  });
-
-  // Create second instance to subscribe again
-  const channel2 = supabase.channel(id);
-  channel2.subscribe((status) => {
-    if (status !== 'SUBSCRIBED') {
-      return null;
-    }
-    channel2
-      .send({
-        type: 'broadcast',
-        event: Event.LobbyUpdate,
-      })
-      .catch((err) => void console.error(err));
-  });
 
   res.status(200).end();
 }
