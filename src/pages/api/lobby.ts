@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { generateSlug } from 'random-word-slugs';
 
 import prisma from '@utils/prisma';
+import pusher, { ChannelName, Event } from '@utils/pusher';
 
 // POST /api/lobby
 export default async function handler(
@@ -16,6 +17,12 @@ export default async function handler(
       settings: { create: data },
     },
   });
+
+  await pusher
+    .trigger(ChannelName.Lobbies, Event.LobbyUpdate, null)
+    .catch((err) => {
+      console.error(err);
+    });
 
   res.status(201).json(lobby);
 }

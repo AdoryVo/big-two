@@ -16,4 +16,8 @@ export enum Event {
   EndGame = 'end-game',
 }
 
+export enum ChannelName {
+  Lobbies = 'lobbies',
+}
+
 export default pusher;

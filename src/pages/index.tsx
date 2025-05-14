@@ -29,7 +29,9 @@ import Preferences from '@components/Preferences';
 import Version from '@components/Version';
 import gamePreview from '@public/assets/site-preview.png';
 import useLobbies from '@utils/hooks/useLobbies';
+import { usePusher } from '@utils/hooks/usePusher';
 import { useStore } from '@utils/hooks/useStore';
+import { ChannelName, Event } from '@utils/pusher';
 import { getStyles } from '@utils/theme';
 
 function compareByNewest(lobby1: Date, lobby2: Date) {
@@ -37,7 +39,8 @@ function compareByNewest(lobby1: Date, lobby2: Date) {
 }
 
 export default function Home() {
-  const { lobbies, isLoading, error } = useLobbies();
+  const { lobbies, isLoading, error, mutate } = useLobbies();
+  const pusher = usePusher();
   const theme = useStore((state) => state.theme);
   const styles = getStyles(theme);
   const toast = useToast();
@@ -70,6 +73,15 @@ export default function Home() {
     })
     */
   }, []);
+
+  useEffect(() => {
+    const channel = pusher.subscribe(ChannelName.Lobbies);
+    channel.bind(Event.LobbyUpdate, mutate);
+
+    return () => {
+      pusher.unsubscribe(ChannelName.Lobbies);
+    };
+  }, [pusher, mutate]);
 
   return (
     <Box {...styles.bg} minH="100vh">
