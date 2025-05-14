@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Type Variations
-const gameWithPlayers = Prisma.validator<Prisma.GameArgs>()({
+const gameWithPlayers = Prisma.validator<Prisma.GameDefaultArgs>()({
   include: { players: true, currentPlayer: true, settings: true },
 });
 export type GameWithPlayers = Prisma.GameGetPayload<typeof gameWithPlayers>;
