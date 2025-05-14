@@ -38,6 +38,7 @@ export default async function handler(
       where: { createdAt: { lt: new Date(maxAgeTime) } },
     });
     const expiredGameIds = expiredGames.map((game) => game.id);
+    const expiredSettings = expiredGames.map((game) => game.settingsId);
 
     // Delete players in expired games
     await prisma.player.deleteMany({
@@ -46,6 +47,11 @@ export default async function handler(
 
     // Delete expired games
     await prisma.game.deleteMany({ where: { id: { in: expiredGameIds } } });
+
+    // Delete expired settings
+    await prisma.settings.deleteMany({
+      where: { id: { in: expiredSettings } },
+    });
 
     res.status(204).end();
   }
