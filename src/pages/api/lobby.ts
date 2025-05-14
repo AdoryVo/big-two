@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { generateSlug } from 'random-word-slugs';
 
 import prisma from '@utils/prisma';
-import pusher, { ChannelName, Event } from '@utils/pusher';
+import supabase, { ChannelName, Event } from '@utils/supabase';
 
 // POST /api/lobby
 export default async function handler(
@@ -18,11 +18,19 @@ export default async function handler(
     },
   });
 
-  await pusher
-    .trigger(ChannelName.Lobbies, Event.LobbyUpdate, null)
-    .catch((err) => {
-      console.error(err);
-    });
+  const channel = supabase.channel(ChannelName.Lobbies);
+  channel.subscribe((status) => {
+    if (status !== 'SUBSCRIBED') {
+      return null;
+    }
+
+    channel
+      .send({
+        type: 'broadcast',
+        event: Event.LobbyUpdate,
+      })
+      .catch((err) => void console.error(err));
+  });
 
   res.status(201).json(lobby);
 }

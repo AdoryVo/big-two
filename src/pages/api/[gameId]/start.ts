@@ -3,8 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import Game from '@big-two/Game';
 import prisma from '@utils/prisma';
-import { Event } from '@utils/pusher';
-import pusher from '@utils/pusher';
+import supabase, { Event } from '@utils/supabase';
 
 // PATCH /api/[gameId]/start
 export default async function handler(
@@ -23,7 +22,12 @@ export default async function handler(
     return;
   }
 
-  const gameInstance = new Game(game.players.length, game.settings.rules, undefined, game.settings.deckCount);
+  const gameInstance = new Game(
+    game.players.length,
+    game.settings.rules,
+    undefined,
+    game.settings.deckCount,
+  );
   const lowestCard = gameInstance.util.card_to_string(gameInstance.lowest_card);
   const currentPlayer = game.players[gameInstance.current_player];
 
@@ -57,8 +61,18 @@ export default async function handler(
     });
   }
 
-  await pusher.trigger(id, Event.LobbyUpdate, null).catch((err) => {
-    console.error(err);
+  const channel = supabase.channel(id);
+  channel.subscribe((status) => {
+    if (status !== 'SUBSCRIBED') {
+      return null;
+    }
+
+    channel
+      .send({
+        type: 'broadcast',
+        event: Event.LobbyUpdate,
+      })
+      .catch((err) => void console.error(err));
   });
 
   res.status(200).end();

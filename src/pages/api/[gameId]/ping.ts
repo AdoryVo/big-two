@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import pusher from '@utils/pusher';
-import { Event } from '@utils/pusher';
+import supabase, { Event } from '@utils/supabase';
 
 // GET /api/[gameId]/ping
 export default async function handler(
@@ -10,8 +9,18 @@ export default async function handler(
 ) {
   const id = String(req.query.gameId);
 
-  await pusher.trigger(id, Event.Pong, null).catch((err) => {
-    console.error(err);
+  const channel = supabase.channel(id)
+  channel.subscribe((status) => {
+    if (status !== 'SUBSCRIBED') {
+      return null;
+    }
+
+    channel
+      .send({
+        type: 'broadcast',
+        event: Event.Pong,
+      })
+      .catch((err) => void console.error(err));
   });
 
   res.status(200).end();

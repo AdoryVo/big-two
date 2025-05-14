@@ -22,9 +22,8 @@ import WaitingLobby from '@components/WaitingLobby';
 import { Action, type ActionData } from '@utils/actions';
 import useGame from '@utils/hooks/useGame';
 import useIsTabletAndAbove from '@utils/hooks/useIsTabletAndAbove';
-import { usePusher } from '@utils/hooks/usePusher';
 import { useStore } from '@utils/hooks/useStore';
-import { Event } from '@utils/pusher';
+import supabase, { Event } from '@utils/supabase';
 import { getStyles } from '@utils/theme';
 
 interface BaseProps {
@@ -61,7 +60,6 @@ function BasePage({ children, props }: BaseProps) {
 
 export default function Game() {
   const isTabletAndAbove = useIsTabletAndAbove();
-  const pusher = usePusher();
   const toast = useToast();
 
   // calling mutate tells the server to refetch the game state
@@ -85,21 +83,19 @@ export default function Game() {
       setPlayerId(storedPlayerId);
     }
 
-    const channel = pusher.subscribe(game.id);
-    channel.bind(Event.LobbyUpdate, mutate);
-
-    channel.bind(Event.Play, (play: string) => {
+    const channel = supabase.channel(game.id);
+    channel.on('broadcast', { event: Event.LobbyUpdate }, () => void mutate());
+    channel.on('broadcast', { event: Event.Play }, (payload) => {
       toast({
         title: 'Next turn!',
-        description: play,
+        description: payload.message,
         status: 'info',
         position: 'top',
         duration: 1500,
         isClosable: true,
       });
     });
-
-    channel.bind(Event.Pong, () => {
+    channel.on('broadcast', { event: Event.Pong }, () => {
       toast({
         title: 'Pong!',
         status: 'success',
@@ -107,11 +103,12 @@ export default function Game() {
         isClosable: true,
       });
     });
+    channel.subscribe();
 
     return () => {
-      channel.unbind();
+      channel.unsubscribe();
     };
-  }, [game, isLoading, pusher, mutate, toast]);
+  }, [game, isLoading, mutate, toast]);
 
   // Remove old game id cookies
   useEffect(() => {

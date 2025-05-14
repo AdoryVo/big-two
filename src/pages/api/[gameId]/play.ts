@@ -2,8 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import Game from '@big-two/Game';
 import prisma from '@utils/prisma';
-import pusher from '@utils/pusher';
-import { Event } from '@utils/pusher';
+import supabase, { Event } from '@utils/supabase';
 
 // PUT /api/[gameId]/play
 export default async function handler(
@@ -37,6 +36,7 @@ export default async function handler(
   const gameInstance = new Game(game.players.length, game.settings.rules, game);
   const currentPlayerIndex = gameInstance.current_player;
   const result = gameInstance.play(combo);
+  const channel = supabase.channel(id);
 
   if (result === -2) {
     res.status(422).end('Invalid combination');
@@ -54,15 +54,21 @@ export default async function handler(
       },
     });
 
-    await pusher
-      .trigger(
-        id,
-        Event.Play,
-        `${game.currentPlayer.name} played ${combo.join(', ')}!`,
-      )
-      .catch((err) => {
-        console.error(err);
-      });
+    channel.subscribe((status) => {
+      if (status !== 'SUBSCRIBED') {
+        return null;
+      }
+
+      channel
+        .send({
+          type: 'broadcast',
+          event: Event.Play,
+          payload: {
+            message: `${game.currentPlayer?.name} played ${combo.join(', ')}!`,
+          },
+        })
+        .catch((err) => void console.error(err));
+    });
   } else {
     // Player finished - mark them as finished!
     const finishedPlayer = gameInstance.players[result];
@@ -76,17 +82,22 @@ export default async function handler(
       },
     });
 
-    await pusher
-      .trigger(
-        id,
-        Event.Play,
-        `🏅 ${game.currentPlayer.name} finished their hand with ${combo.join(
-          ', ',
-        )}!`,
-      )
-      .catch((err) => {
-        console.error(err);
-      });
+    channel.subscribe((status) => {
+      if (status !== 'SUBSCRIBED') {
+        return null;
+      }
+      channel
+        .send({
+          type: 'broadcast',
+          event: Event.Play,
+          payload: {
+            message: `🏅 ${
+              game.currentPlayer?.name
+            } finished their hand with ${combo.join(', ')}!`,
+          },
+        })
+        .catch((err) => void console.error(err));
+    });
   }
 
   await prisma.game.update({
@@ -106,8 +117,18 @@ export default async function handler(
     include: { players: true, currentPlayer: true },
   });
 
-  await pusher.trigger(id, Event.LobbyUpdate, null).catch((err) => {
-    console.error(err);
+  // Create second instance to subscribe again
+  const channel2 = supabase.channel(id);
+  channel2.subscribe((status) => {
+    if (status !== 'SUBSCRIBED') {
+      return null;
+    }
+    channel2
+      .send({
+        type: 'broadcast',
+        event: Event.LobbyUpdate,
+      })
+      .catch((err) => void console.error(err));
   });
 
   res.status(200).end();
