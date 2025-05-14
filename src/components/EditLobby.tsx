@@ -20,9 +20,7 @@ export default function EditLobby({ game }: { game: GameWithPlayers }) {
   const gameInProgress = Boolean(game.currentPlayer);
 
   function submitForm(body: object) {
-    ky.put(`/api/${game.id}/settings`, { json: body }).then(() => {
-      onClose();
-    });
+    ky.put(`/api/${game.id}/settings`, { json: body }).then(onClose);
   }
 
   return (

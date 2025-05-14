@@ -86,9 +86,7 @@ export default function Game() {
     }
 
     const channel = pusher.subscribe(game.id);
-    channel.bind(Event.LobbyUpdate, () => {
-      mutate();
-    });
+    channel.bind(Event.LobbyUpdate, mutate);
 
     channel.bind(Event.Play, (play: string) => {
       toast({
