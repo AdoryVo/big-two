@@ -106,7 +106,7 @@ export default function Game() {
     channel.subscribe();
 
     return () => {
-      channel.unsubscribe();
+      channel && supabase.removeChannel(channel)
     };
   }, [game, isLoading, mutate, toast]);
 

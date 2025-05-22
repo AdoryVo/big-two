@@ -78,7 +78,7 @@ export default function Home() {
     channel.subscribe();
 
     return () => {
-      channel.unsubscribe();
+      channel && supabase.removeChannel(channel);
     };
   }, [mutate]);
 

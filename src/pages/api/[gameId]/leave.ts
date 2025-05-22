@@ -22,7 +22,13 @@ export default async function handler(
 
   await prisma.player.delete({ where: { id: playerId } });
 
-  const channel = supabase.channel(id);
+  const channel = supabase.channel(id, {
+    config: {
+      broadcast: {
+        self: true,
+      },
+    },
+  });
   channel.subscribe((status) => {
     if (status !== 'SUBSCRIBED') {
       return null;

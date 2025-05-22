@@ -30,7 +30,13 @@ export default async function handler(
     res.setHeader('Set-Cookie', `${game.id}=${playerId}; Path=/`);
 
     // Update lobby player list
-    const channel = supabase.channel(id);
+    const channel = supabase.channel(id, {
+      config: {
+        broadcast: {
+          self: true,
+        },
+      },
+    });
     channel.subscribe((status) => {
       if (status !== 'SUBSCRIBED') {
         return null;
