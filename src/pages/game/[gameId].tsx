@@ -8,7 +8,7 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import ky from 'ky';
+import ky, { HTTPError } from 'ky';
 import { NextSeo } from 'next-seo';
 import { useEffect, useState } from 'react';
 
@@ -22,8 +22,9 @@ import WaitingLobby from '@components/WaitingLobby';
 import { Action, type ActionData } from '@utils/actions';
 import useGame from '@utils/hooks/useGame';
 import useIsTabletAndAbove from '@utils/hooks/useIsTabletAndAbove';
+import { usePusher } from '@utils/hooks/usePusher';
 import { useStore } from '@utils/hooks/useStore';
-import supabase, { Event } from '@utils/supabase';
+import { Event } from '@utils/pusher';
 import { getStyles } from '@utils/theme';
 
 interface BaseProps {
@@ -60,6 +61,7 @@ function BasePage({ children, props }: BaseProps) {
 
 export default function Game() {
   const isTabletAndAbove = useIsTabletAndAbove();
+  const pusher = usePusher();
   const toast = useToast();
 
   // calling mutate tells the server to refetch the game state
@@ -83,19 +85,21 @@ export default function Game() {
       setPlayerId(storedPlayerId);
     }
 
-    const channel = supabase.channel(game.id);
-    channel.on('broadcast', { event: Event.LobbyUpdate }, () => void mutate());
-    channel.on('broadcast', { event: Event.Play }, (payload) => {
+    const channel = pusher.subscribe(game.id);
+    channel.bind(Event.LobbyUpdate, () => void mutate());
+
+    channel.bind(Event.Play, (play: string) => {
       toast({
         title: 'Next turn!',
-        description: payload.message,
+        description: play,
         status: 'info',
         position: 'top',
         duration: 1500,
         isClosable: true,
       });
     });
-    channel.on('broadcast', { event: Event.Pong }, () => {
+
+    channel.bind(Event.Pong, () => {
       toast({
         title: 'Pong!',
         status: 'success',
@@ -103,12 +107,11 @@ export default function Game() {
         isClosable: true,
       });
     });
-    channel.subscribe();
 
     return () => {
-      channel.unsubscribe();
+      channel.unbind();
     };
-  }, [game, isLoading, mutate, toast]);
+  }, [game, isLoading, pusher, mutate, toast]);
 
   // Remove old game id cookies
   useEffect(() => {
@@ -160,7 +163,6 @@ export default function Game() {
           .then((playerId) => {
             localStorage.setItem(game.id, playerId);
             setPlayerId(playerId);
-            mutate();
           });
         break;
       }
@@ -171,13 +173,15 @@ export default function Game() {
         break;
       case Action.Play: {
         const playBody = { json: { combo: data.comboToPlay } };
-        ky.put(url, playBody).catch(() => {
-          toast({
-            title: 'Invalid combination',
-            description: 'Invalid with the current combo - try another combo!',
-            status: 'error',
-            position: 'top',
-            duration: 2000,
+        ky.put(url, playBody).catch((err: HTTPError) => {
+          err.response.text().then((errorMessage) => {
+            toast({
+              title: 'Invalid combination',
+              description: errorMessage,
+              status: 'error',
+              position: 'top',
+              duration: 2000,
+            });
           });
         });
         break;

@@ -9,22 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add feature for majority vote to end game and return to lobby
+- Offline singleplayer mode against bot players
 - More to come soon!
 
-### Changed
-
-- Require majority vote to end game and return to lobby
-
-## [1.2.0] - 2025-05-13
+## [1.1.1] - 2025-05-31
 
 ### Added
 
 - Deleting settings records upon clearing lobbies to prevent database bloat
+- Helper warning toast when violating lowest card rule
 
 ### Changed
 
-- Changed from Pusher to Supabase Realtime
 - Changed home page lobby and game info updating from polling to websockets
+
+### Fixed
+
+- Fixed rendering lists with duplicate empty player id keys
 
 ## [1.1.0] - 2024-06-13
 

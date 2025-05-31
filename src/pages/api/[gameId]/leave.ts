@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import prisma from '@utils/prisma';
-import supabase, { Event } from '@utils/supabase';
+import pusher from '@utils/pusher';
+import { Event } from '@utils/pusher';
 
 // PATCH /api/[gameId]/leave
 export default async function handler(
@@ -22,18 +23,8 @@ export default async function handler(
 
   await prisma.player.delete({ where: { id: playerId } });
 
-  const channel = supabase.channel(id);
-  channel.subscribe((status) => {
-    if (status !== 'SUBSCRIBED') {
-      return null;
-    }
-
-    channel
-      .send({
-        type: 'broadcast',
-        event: Event.LobbyUpdate,
-      })
-      .catch((err) => void console.error(err));
+  await pusher.trigger(id, Event.LobbyUpdate, null).catch((err) => {
+    console.error(err);
   });
 
   // Remove cookie
