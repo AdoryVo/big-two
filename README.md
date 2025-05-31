@@ -81,7 +81,7 @@ package.json                # 📄 Dependencies
 ### Major functionality
 - [Next.js](https://nextjs.org/) - React framework
 - [Prisma](https://www.prisma.io/) - Typescript-first ORM for database operations dealing with active games
-- [Supabase Realtime](https://supabase.com/docs/guides/realtime) - Realtime web socket channels for multiplayer functionality
+- [Pusher](https://pusher.com/) - Realtime web socket channels for multiplayer functionality
 - [Supabase](https://supabase.com/) - Cloud Postgres database
 - [SWR](https://swr.vercel.app/) - Optimized data fetching for streamlined game updates
 

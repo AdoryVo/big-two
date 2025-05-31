@@ -2,7 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import Game from '@big-two/Game';
 import prisma from '@utils/prisma';
-import supabase, { Event } from '@utils/supabase';
+import pusher from '@utils/pusher';
+import { Event } from '@utils/pusher';
 
 // PATCH /api/[gameId]/pass
 export default async function handler(
@@ -57,27 +58,15 @@ export default async function handler(
     include: { players: true, currentPlayer: true },
   });
 
-  const channel = supabase.channel(id);
-  channel.subscribe((status) => {
-    if (status !== 'SUBSCRIBED') {
-      return null;
-    }
-
-    channel
-      .send({
-        type: 'broadcast',
-        event: Event.LobbyUpdate,
-      })
-      .catch((err) => void console.error(err));
-
-    channel
-      .send({
-        type: 'broadcast',
-        event: Event.Play,
-        payload: { message: `${game.currentPlayer?.name} passed!` },
-      })
-      .catch((err) => void console.error(err));
+  await pusher.trigger(id, Event.LobbyUpdate, null).catch((err) => {
+    console.error(err);
   });
+
+  await pusher
+    .trigger(id, Event.Play, `${game.currentPlayer.name} passed!`)
+    .catch((err) => {
+      console.error(err);
+    });
 
   res.status(200).end();
 }

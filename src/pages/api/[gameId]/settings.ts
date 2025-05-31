@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import prisma from '@utils/prisma';
-import supabase, { ChannelName, Event } from '@utils/supabase';
+import pusher from '@utils/pusher';
+import { Event } from '@utils/pusher';
 
 // PUT /api/[gameId]/settings
 export default async function handler(
@@ -21,32 +22,8 @@ export default async function handler(
     return;
   }
 
-  const gameChannel = supabase.channel(id);
-  gameChannel.subscribe((status) => {
-    if (status !== 'SUBSCRIBED') {
-      return null;
-    }
-
-    gameChannel
-      .send({
-        type: 'broadcast',
-        event: Event.LobbyUpdate,
-      })
-      .catch((err) => void console.error(err));
-  });
-
-  const lobbyChannel = supabase.channel(ChannelName.Lobbies);
-  lobbyChannel.subscribe((status) => {
-    if (status !== 'SUBSCRIBED') {
-      return null;
-    }
-
-    lobbyChannel
-      .send({
-        type: 'broadcast',
-        event: Event.LobbyUpdate,
-      })
-      .catch((err) => void console.error(err));
+  await pusher.trigger(id, Event.LobbyUpdate, null).catch((err) => {
+    console.error(err);
   });
 
   res.status(204).end();

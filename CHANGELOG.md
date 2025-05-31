@@ -11,21 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - More to come soon!
 
-### Changed
-
-- Require majority vote to end game and return to lobby
-
-## [1.2.0] - 2025-05-13
-
-### Added
-
-- Deleting settings records upon clearing lobbies to prevent database bloat
-
-### Changed
-
-- Changed from Pusher to Supabase Realtime
-- Changed home page lobby and game info updating from polling to websockets
-
 ## [1.1.0] - 2024-06-13
 
 ### Added

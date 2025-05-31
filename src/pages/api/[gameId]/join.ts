@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import prisma from '@utils/prisma';
-import supabase, { Event } from '@utils/supabase';
+import pusher from '@utils/pusher';
+import { Event } from '@utils/pusher';
 
 // POST /api/[gameId]/join
 export default async function handler(
@@ -30,24 +31,8 @@ export default async function handler(
     res.setHeader('Set-Cookie', `${game.id}=${playerId}; Path=/`);
 
     // Update lobby player list
-    const channel = supabase.channel(id, {
-      config: {
-        broadcast: {
-          self: true,
-        },
-      },
-    });
-    channel.subscribe((status) => {
-      if (status !== 'SUBSCRIBED') {
-        return null;
-      }
-
-      channel
-        .send({
-          type: 'broadcast',
-          event: Event.LobbyUpdate,
-        })
-        .catch((err) => void console.error(err));
+    await pusher.trigger(id, Event.LobbyUpdate, null).catch((err) => {
+      console.error(err);
     });
 
     res.status(201).json(playerId);
