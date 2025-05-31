@@ -70,5 +70,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - All existing functionality as of 10-22-2023
 
 [unreleased]: https://github.com/AdoryVo/big-two/compare/v1.1.0...HEAD
+[1.1.1]: https://github.com/AdoryVo/big-two/releases/tag/v1.1.1
 [1.1.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.1.0
 [1.0.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.0.0
