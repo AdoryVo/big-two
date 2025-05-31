@@ -15,7 +15,6 @@ export default function useGame() {
   const { data, isLoading, error, mutate } = useSWR<GameWithPlayers>(
     url,
     fetcher,
-    { refreshInterval: 5000 },
   );
 
   return {
