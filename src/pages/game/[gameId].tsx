@@ -86,7 +86,7 @@ export default function Game() {
     }
 
     const channel = pusher.subscribe(game.id);
-    channel.bind(Event.LobbyUpdate, mutate);
+    channel.bind(Event.LobbyUpdate, () => void mutate());
 
     channel.bind(Event.Play, (play: string) => {
       toast({
@@ -163,7 +163,6 @@ export default function Game() {
           .then((playerId) => {
             localStorage.setItem(game.id, playerId);
             setPlayerId(playerId);
-            mutate();
           });
         break;
       }
