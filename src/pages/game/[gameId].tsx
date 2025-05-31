@@ -8,7 +8,7 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import ky from 'ky';
+import ky, { HTTPError } from 'ky';
 import { NextSeo } from 'next-seo';
 import { useEffect, useState } from 'react';
 
@@ -173,13 +173,15 @@ export default function Game() {
         break;
       case Action.Play: {
         const playBody = { json: { combo: data.comboToPlay } };
-        ky.put(url, playBody).catch(() => {
-          toast({
-            title: 'Invalid combination',
-            description: 'Invalid with the current combo - try another combo!',
-            status: 'error',
-            position: 'top',
-            duration: 2000,
+        ky.put(url, playBody).catch((err: HTTPError) => {
+          err.response.text().then((errorMessage) => {
+            toast({
+              title: 'Invalid combination',
+              description: errorMessage,
+              status: 'error',
+              position: 'top',
+              duration: 2000,
+            });
           });
         });
         break;

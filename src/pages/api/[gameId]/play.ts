@@ -39,7 +39,11 @@ export default async function handler(
   const result = gameInstance.play(combo);
 
   if (result === -2) {
-    res.status(422).end('Invalid combination');
+    let errorMessage = 'Invalid with the current combo - try another combo!'
+    if (game.currentPlayer.hand.includes(game.lowestCard ?? '')) {
+      errorMessage = `You must play a combo with the lowest card (${game.lowestCard})!`
+    }
+    res.status(422).end(errorMessage);
     return;
   }
 
