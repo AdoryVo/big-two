@@ -76,7 +76,7 @@ export default function Home() {
 
   useEffect(() => {
     const channel = pusher.subscribe(ChannelName.Lobbies);
-    channel.bind(Event.LobbyUpdate, mutate);
+    channel.bind(Event.LobbyUpdate, () => void mutate());
 
     return () => {
       pusher.unsubscribe(ChannelName.Lobbies);
