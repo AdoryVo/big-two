@@ -64,7 +64,6 @@ function BasePage({ children, props }: BaseProps) {
 
 function gameToGameWithPlayers(game?: Game | undefined): GameWithPlayers {
   const initial_game = game ? game : new Game(2, Rules.DEFAULT, undefined, 1);
-  const currentPlayer = initial_game.players[initial_game.current_player];
   const result_game: GameWithPlayers = {
     id: SOLO_GAME_ID,
     settingsId: 'settings',
@@ -106,82 +105,13 @@ export default function SingleplayerGame() {
     setGame(newGame);
   }
 
-  // useEffect(() => {
-  //   if (isLoading || !game) {
-  //     return;
-  //   }
-
-  //   setGameInProgress(Boolean(game.currentPlayer));
-
-  //   // If we are entering a lobby previously joined, set player id
-  //   const storedPlayerId = localStorage.getItem(game.id);
-  //   if (storedPlayerId) {
-  //     setPlayerId(storedPlayerId);
-  //   }
-
-  //   const channel = pusher.subscribe(game.id);
-  //   channel.bind(Event.LobbyUpdate, () => void mutate());
-
-  //   channel.bind(Event.Play, (play: string) => {
-  //     toast({
-  //       title: 'Next turn!',
-  //       description: play,
-  //       status: 'info',
-  //       position: 'top',
-  //       duration: 1500,
-  //       isClosable: true,
-  //     });
-  //   });
-
-  //   channel.bind(Event.Pong, () => {
-  //     toast({
-  //       title: 'Pong!',
-  //       status: 'success',
-  //       duration: 1000,
-  //       isClosable: true,
-  //     });
-  //   });
-
-  //   return () => {
-  //     channel.unbind();
-  //   };
-  // }, [game, isLoading, pusher, mutate, toast]);
-
-  // Remove old game id cookies
   useEffect(() => {
     useStore.persist.rehydrate();
-
-    // async function clear() {
-    //   for (let i = 0; i < localStorage.length; i++) {
-    //     const cleared = await ky.patch('/api/clear').json<string | null>();
-    //     if (cleared) {
-    //       localStorage.removeItem(cleared);
-    //     }
-    //   }
-    // }
-
-    // clear();
   }, []);
 
-  // useEffect(() => {
-  //   playBots();
-  // }, [game]);
-
   function getAllSubsets(array: string[], length: number): string[][] {
-    // return array.reduce(
-    //   (subsets: string[][], value) => {
-    //     const newSubsets = subsets.map((set) => [value, ...set]);
-    //     const lengthFiltered = newSubsets.filter(
-    //       (subset) => subset.length <= length,
-    //     );
-    //     return subsets.concat(lengthFiltered);
-    //   },
-    //   [[]],
-    // );
-
     const result = new Set<string>();
     const subset: string[] = [];
-    const v = array;
     function findSubsets(idx: number) {
       // If the current subset is not empty
       // insert it into the result
@@ -193,9 +123,9 @@ export default function SingleplayerGame() {
       }
 
       // Iterate over every element in the array
-      for (let j = idx; j < v.length; j++) {
+      for (let j = idx; j < array.length; j++) {
         // Pick the element and move ahead
-        subset.push(v[j]);
+        subset.push(array[j]);
         findSubsets(j + 1);
 
         // Backtrack to drop the element
@@ -473,7 +403,6 @@ export default function SingleplayerGame() {
           players: game.players.filter((player) => player.id !== 'user'),
         };
         setGame(newGame);
-        //   ky.patch(url);
         break;
       }
       case Action.Play: {
@@ -483,14 +412,6 @@ export default function SingleplayerGame() {
         break;
       }
       case Action.Pass: {
-        // ky.patch(url).catch(() => {
-        //   toast({
-        //     title: 'Invalid action',
-        //     description: 'You cannot pass right now!',
-        //     status: 'error',
-        //     duration: 1000,
-        //   });
-        // });
         const newGame = pass(game);
         if (newGame) playBots(newGame);
         break;
@@ -541,7 +462,6 @@ export default function SingleplayerGame() {
         newGame.backupNext = null;
         setGame(newGame);
         setGameInProgress(false);
-        // ky.patch(url);
         break;
       }
     }
@@ -564,20 +484,6 @@ export default function SingleplayerGame() {
       isClosable: true,
     });
   }
-
-  // if (isLoading || !game || error) {
-  //   return (
-  //     <Box {...styles.bg} minH="100vh" p={5}>
-  //       <NextSeo title="Lobby | Big Two" description="Join and play!" />
-  //       <Version {...styles.text} />
-  //       <BasePage>
-  //         <Heading textAlign="center">
-  //           {error ? '💀 Game could not load!' : '⏳ Loading!'}
-  //         </Heading>
-  //       </BasePage>
-  //     </Box>
-  //   );
-  // }
 
   return (
     <Box {...styles.bg} minH="100vh" p={5}>
@@ -606,8 +512,8 @@ export default function SingleplayerGame() {
           >
             Lobby ID: Singleplayer mode!
           </ChakraLink>
-          <br />
-          Bots will be added to multiplayer lobbies soon once they get smarter!
+          <br />🧠 Bots will be added to multiplayer lobbies soon once they get
+          smarter!
         </Text>
 
         {gameInProgress ? (
