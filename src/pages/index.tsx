@@ -120,6 +120,16 @@ export default function Home() {
         </Heading>
         <CreateLobby closeToast={toast.closeAll} />
         <Preferences />
+        <Box>
+          <NextLink href={'/game/singleplayer'} passHref>
+            <Button colorScheme="blue" onClick={() => toast.closeAll()}>
+              <Text fontSize="sm" fontFamily="cursive" color="pink.100">
+                🎉NEW🎉
+              </Text>{' '}
+              Singleplayer mode 🤖
+            </Button>
+          </NextLink>
+        </Box>
 
         {/* Lobbies */}
         <Heading {...styles.text} size="lg" my={5}>

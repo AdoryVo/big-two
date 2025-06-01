@@ -18,12 +18,14 @@ import EditLobby from './EditLobby';
 
 import { describe, rulesToArray } from '@big-two/Rules';
 import { type GameWithPlayers } from '@utils/prisma';
+import { SOLO_GAME_ID } from 'pages/game/singleplayer';
 
 interface Props {
   game: GameWithPlayers;
+  handleSingleplayerSubmit?: (body: object) => void;
 }
 
-export default function GameInfo({ game }: Props) {
+export default function GameInfo({ game, handleSingleplayerSubmit }: Props) {
   return (
     <>
       <Heading size="lg">🏆 Scoreboard</Heading>
@@ -83,7 +85,12 @@ export default function GameInfo({ game }: Props) {
         {game.settings.deckCount} Deck(s)
       </Tag>
       <br />
-      <EditLobby game={game} />
+      <EditLobby
+        game={game}
+        handleSubmit={
+          game.id === SOLO_GAME_ID ? handleSingleplayerSubmit : undefined
+        }
+      />
     </>
   );
 }

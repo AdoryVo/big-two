@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Heading,
   Input,
@@ -9,6 +10,7 @@ import { useState } from 'react';
 
 import { Action, type ActionData } from '@utils/actions';
 import type { GameWithPlayers } from '@utils/prisma';
+import { SOLO_GAME_ID } from 'pages/game/singleplayer';
 
 interface Props {
   game: GameWithPlayers;
@@ -32,13 +34,15 @@ export default function WaitingLobby({ game, playerId, handleAction }: Props) {
       >
         Start game
       </Button>
-      <Button
-        onClick={() => handleAction(Action.Ping)}
-        colorScheme="purple"
-        mb={4}
-      >
-        Ping game channel
-      </Button>
+      {game.id !== SOLO_GAME_ID && (
+        <Button
+          onClick={() => handleAction(Action.Ping)}
+          colorScheme="purple"
+          mb={4}
+        >
+          Ping game channel
+        </Button>
+      )}
 
       {/* Current players list */}
       <Heading size="lg">Current players</Heading>
@@ -75,6 +79,25 @@ export default function WaitingLobby({ game, playerId, handleAction }: Props) {
             Join next game
           </Button>
         </>
+      )}
+
+      {/* Add singleplayer bot button */}
+      {game.id === SOLO_GAME_ID && (
+        <Box mt={2}>
+          <Button
+            onClick={() => handleAction(Action.AddBot)}
+            colorScheme="teal"
+            mr={2}
+          >
+            🤖 Add bot player
+          </Button>
+          <Button
+            onClick={() => handleAction(Action.RemoveBot)}
+            colorScheme="orange"
+          >
+            🔨 Remove bot player
+          </Button>
+        </Box>
       )}
 
       {/* Leave game button */}

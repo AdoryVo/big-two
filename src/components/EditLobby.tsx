@@ -15,12 +15,22 @@ import LobbyForm from './LobbyForm';
 
 import type { GameWithPlayers } from '@utils/prisma';
 
-export default function EditLobby({ game }: { game: GameWithPlayers }) {
+interface Props {
+  game: GameWithPlayers;
+  handleSubmit?: (body: object) => void;
+}
+
+export default function EditLobby({ game, handleSubmit }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const gameInProgress = Boolean(game.currentPlayer);
 
-  function submitForm(body: object) {
-    ky.put(`/api/${game.id}/settings`, { json: body }).then(onClose);
+  function submitThenClose(body: object) {
+    if (handleSubmit) {
+      handleSubmit(body);
+      onClose();
+    } else {
+      ky.put(`/api/${game.id}/settings`, { json: body }).then(onClose);
+    }
   }
 
   return (
@@ -40,7 +50,7 @@ export default function EditLobby({ game }: { game: GameWithPlayers }) {
           <ModalHeader>Edit Lobby</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <LobbyForm submitForm={submitForm} game={game} />
+            <LobbyForm submitForm={submitThenClose} game={game} />
           </ModalBody>
 
           <ModalFooter>
