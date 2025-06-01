@@ -25,6 +25,7 @@ import Game from '@big-two/Game';
 import { Action, type ActionData } from '@utils/actions';
 import useIsTabletAndAbove from '@utils/hooks/useIsTabletAndAbove';
 import type { GameWithPlayers } from '@utils/prisma';
+import { SOLO_GAME_ID } from 'pages/game/singleplayer';
 
 interface Props {
   game: GameWithPlayers;
@@ -158,6 +159,16 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
             <Text>Turn order goes clockwise!</Text>
           )}
 
+          {game.id === SOLO_GAME_ID && (
+            <Button
+              onClick={() => handleAction(Action.End)}
+              colorScheme="pink"
+              mt={4}
+            >
+              🏁 End game early!
+            </Button>
+          )}
+
           {/* Centered combo */}
           <Tooltip label="Current combo">
             <Box
@@ -200,8 +211,10 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                   <Tooltip
                     label={
                       <Text as="div" textAlign="center">
-                        {playerEmojis[player.index]} {player.name} |{' '}
-                        {player.hand.length} cards | {player.points} points
+                        {player.gameId !== SOLO_GAME_ID &&
+                          playerEmojis[player.index]}{' '}
+                        {player.name} | {player.hand.length} cards |{' '}
+                        {player.points} points
                         <br />
                         {game.currentPlayer?.name === player.name && (
                           <p>Current turn</p>
@@ -235,7 +248,9 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                       p={2}
                     >
                       <Text fontWeight="bold">
-                        {playerEmojis[player.index]} {player.name}
+                        {player.gameId !== SOLO_GAME_ID &&
+                          playerEmojis[player.index]}{' '}
+                        {player.name}
                         <br />
                         {player.index === roundLeaderIndex && '🎩'}
                         {game.passedPlayers.includes(player.index) && '⏭️'}
