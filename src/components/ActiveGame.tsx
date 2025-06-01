@@ -199,10 +199,15 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
               .sort((a, b) => a.index - b.index)
               .map((player) => (
                 <Box key={player.index}>
+                  {/* For solo games, manually obscure opponent hand. */}
                   {(spectating || player.index !== thisPlayer?.index) && (
                     <OpponentHand
                       position={indexToPosition(player.index)}
-                      player={player}
+                      player={
+                        game.id !== SOLO_GAME_ID
+                          ? player
+                          : { ...player, hand: player.hand.map(() => '') }
+                      }
                       roundLeaderIndex={roundLeaderIndex}
                     />
                   )}
@@ -367,7 +372,9 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                           key={card + cardIndex}
                           style={overlapStyles(cardIndex, cardSpacing)}
                         >
-                          <CardImage card={card} />
+                          <CardImage
+                            card={game.id !== SOLO_GAME_ID ? card : ''}
+                          />
                         </Box>
                       ))}
                     </Stack>
