@@ -28,6 +28,7 @@ import { GameWithPlayers } from '@utils/prisma';
 import { getStyles } from '@utils/theme';
 import { generateSlug } from 'random-word-slugs';
 
+// TODO: Add exported identifier & condition to identify bot players
 export const SOLO_GAME_ID = 'singleplayer';
 
 interface BaseProps {

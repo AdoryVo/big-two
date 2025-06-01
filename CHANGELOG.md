@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add feature for majority vote to end game and return to lobby
-- Offline singleplayer mode against bot players
+- Add bot players option for multiplayer games
+- Improved bot skill
 - More to come soon!
 
 ## [1.2.0] - 2025-05-31
