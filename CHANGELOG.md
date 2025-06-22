@@ -18,7 +18,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Idle lobbies that have not started a game in 48 hours will be deleted automatically.
+- Idle lobbies that have not started a game in 48 hours will be deleted automatically
+
+### Changed
+
+- Update `next` to 14.2.30
+- Update `@biomejs/biome` to 2.0.4
+
+### Fixed
+
+- For development, fixed HTTP status codes for /api/lobbies via early returns
 
 ## [1.2.0] - 2025-05-31
 
