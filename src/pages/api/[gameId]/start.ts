@@ -33,6 +33,7 @@ export default async function handler(
     data: {
       lowestCard: { set: lowestCard },
       currentPlayer: { connect: { id: currentPlayer?.id } },
+      startedAt: { set: new Date() }
     },
     include: {
       players: true,

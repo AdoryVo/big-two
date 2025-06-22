@@ -23,6 +23,7 @@ model Game {
   backupNext    Int?
 
   createdAt DateTime @default(now())
+  startedAt DateTime @default(now())
 }
 
 model Settings {

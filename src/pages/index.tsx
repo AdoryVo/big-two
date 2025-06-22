@@ -134,6 +134,10 @@ export default function Home() {
         {/* Lobbies */}
         <Heading {...styles.text} size="lg" my={5}>
           🏠 Public Lobbies
+          <Box fontSize="md">
+            ⚠️ Idle lobbies that have not started a game in 48 hours will be
+            deleted automatically.
+          </Box>
         </Heading>
         <Box
           bg="rgba(0, 0, 0, 0.25)"
@@ -156,7 +160,7 @@ export default function Home() {
           {!isLoading &&
             lobbies &&
             lobbies
-              .sort((l1, l2) => compareByNewest(l1.createdAt, l2.createdAt))
+              .sort((l1, l2) => compareByNewest(l1.startedAt, l2.startedAt))
               .map((lobby) => (
                 <Card
                   key={lobby.id}
@@ -167,24 +171,41 @@ export default function Home() {
                 >
                   <CardHeader>
                     <Flex>
-                      <Text fontWeight="bold">
-                        Lobby:{' '}
-                        <Text as="span" color="crimson">
-                          {lobby.id}
+                      <Box>
+                        <Text fontWeight="bold">
+                          Lobby:{' '}
+                          <Text as="span" color="crimson">
+                            {lobby.id}
+                          </Text>
                         </Text>
-                      </Text>
+                        <Badge>
+                          {lobby.currentPlayer
+                            ? '⚔️ Game in progress'
+                            : '🚶 Waiting for more players'}
+                          &nbsp;({lobby.players.length}/
+                          {lobby.settings.playerMax})
+                        </Badge>
+                      </Box>
                       <Spacer />
-                      <Text fontSize="sm" color="gray.600">
-                        {new Date(lobby.createdAt).toLocaleString()}
-                      </Text>
+                      <Box>
+                        <Text
+                          fontSize="sm"
+                          color="gray.600"
+                          title="Lobby creation"
+                          textAlign="right"
+                        >
+                          {new Date(lobby.createdAt).toLocaleString()}
+                        </Text>
+                        <Text
+                          fontSize="sm"
+                          color="blue.500"
+                          title="Latest lobby/game start"
+                          textAlign="right"
+                        >
+                          {new Date(lobby.startedAt).toLocaleString()}
+                        </Text>
+                      </Box>
                     </Flex>
-                    <Badge>
-                      {lobby.currentPlayer
-                        ? '⚔️ Game in progress'
-                        : '🚶 Waiting for more players'}
-                      &nbsp;({lobby.players.length}/{lobby.settings.playerMax})
-                    </Badge>
-                    <br />
                   </CardHeader>
                   <CardBody py={0}>
                     Rules:
