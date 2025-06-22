@@ -23,6 +23,7 @@ export default async function handler(
     });
 
     res.status(200).json(games);
+    return;
   } else if (req.method === 'DELETE' || isCronJob) {
     const isAdmin = req.cookies.secret === process.env.ADMIN_SECRET;
 
