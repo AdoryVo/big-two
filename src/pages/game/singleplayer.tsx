@@ -84,6 +84,7 @@ function gameToGameWithPlayers(game?: Game | undefined): GameWithPlayers {
     lastPlaymaker: initial_game.last_playmaker,
     backupNext: initial_game.backup_next,
     createdAt: new Date(),
+    startedAt: new Date(),
   };
 
   return result_game;
