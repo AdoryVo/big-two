@@ -1,17 +1,13 @@
 import type { ContainerProps } from '@chakra-ui/react';
 import {
   Box,
+  Link as ChakraLink,
   Container,
   Divider,
   Heading,
-  Link as ChakraLink,
   Text,
   useToast,
 } from '@chakra-ui/react';
-import ky, { HTTPError } from 'ky';
-import { NextSeo } from 'next-seo';
-import { useEffect, useState } from 'react';
-
 import ActiveGame from '@components/ActiveGame';
 import GameInfo from '@components/GameInfo';
 import GameInfoModal from '@components/GameInfoModal';
@@ -26,6 +22,9 @@ import { usePusher } from '@utils/hooks/usePusher';
 import { useStore } from '@utils/hooks/useStore';
 import { Event } from '@utils/pusher';
 import { getStyles } from '@utils/theme';
+import ky, { type HTTPError } from 'ky';
+import { NextSeo } from 'next-seo';
+import { useEffect, useState } from 'react';
 
 interface BaseProps {
   children?: React.ReactNode;
@@ -279,9 +278,7 @@ export default function Game() {
         )}
 
         {isTabletAndAbove && gameInProgress ? (
-          <>
-            <GameInfoModal game={game} />
-          </>
+          <GameInfoModal game={game} />
         ) : (
           <>
             <Divider my={5} />

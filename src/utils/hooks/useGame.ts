@@ -1,7 +1,6 @@
+import type { GameWithPlayers } from '@utils/prisma';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
-
-import type { GameWithPlayers } from '@utils/prisma';
 
 const getFetcher = (url: string) => fetch(url).then((res) => res.json());
 

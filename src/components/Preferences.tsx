@@ -18,12 +18,10 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { startCase } from 'lodash';
-
-import CardImage from './CardImage';
-
 import { useStore } from '@utils/hooks/useStore';
 import { COLOR_SCHEME_STYLES, THEME_OPTIONS } from '@utils/theme';
+import { startCase } from 'lodash';
+import CardImage from './CardImage';
 
 interface Props {
   props?: ButtonProps;

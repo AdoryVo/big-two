@@ -1,7 +1,6 @@
+import { useStore } from '@utils/hooks/useStore';
 import Image from 'next/image';
 import type { CSSProperties } from 'react';
-
-import { useStore } from '@utils/hooks/useStore';
 
 const RANK_NAMES: { [abbrn: string]: string } = {
   J: 'jack',

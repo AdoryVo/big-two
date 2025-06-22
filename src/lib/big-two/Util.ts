@@ -38,7 +38,7 @@ class Util {
 
   _rank_val(card: Card) {
     const rank = card.rank.abbrn;
-    if (parseInt(rank) > 2) return Number(rank);
+    if (Number.parseInt(rank) > 2) return Number(rank);
     else
       return (
         {

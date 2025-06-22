@@ -1,19 +1,15 @@
+import Game from '@big-two/Game';
+import Rules from '@big-two/Rules';
 import type { ContainerProps } from '@chakra-ui/react';
 import {
   Box,
+  Link as ChakraLink,
   Container,
   Divider,
   Heading,
-  Link as ChakraLink,
   Text,
   useToast,
 } from '@chakra-ui/react';
-import shuffle from 'lodash/shuffle';
-import { NextSeo } from 'next-seo';
-import { useEffect, useState } from 'react';
-
-import Game from '@big-two/Game';
-import Rules from '@big-two/Rules';
 import ActiveGame from '@components/ActiveGame';
 import GameInfo from '@components/GameInfo';
 import GameInfoModal from '@components/GameInfoModal';
@@ -24,9 +20,12 @@ import WaitingLobby from '@components/WaitingLobby';
 import { Action, type ActionData } from '@utils/actions';
 import useIsTabletAndAbove from '@utils/hooks/useIsTabletAndAbove';
 import { useStore } from '@utils/hooks/useStore';
-import { GameWithPlayers } from '@utils/prisma';
+import type { GameWithPlayers } from '@utils/prisma';
 import { getStyles } from '@utils/theme';
+import shuffle from 'lodash/shuffle';
+import { NextSeo } from 'next-seo';
 import { generateSlug } from 'random-word-slugs';
+import { useEffect, useState } from 'react';
 
 // TODO: Add exported identifier & condition to identify bot players
 export const SOLO_GAME_ID = 'singleplayer';
@@ -177,7 +176,7 @@ export default function SingleplayerGame() {
       console.log(`Bot playing ${comboToPlay}`);
 
       sleep(1000).then(() => {
-        let botPlayResult = undefined;
+        let botPlayResult: GameWithPlayers | undefined;
         if (!globalGame.combo.length) {
           botPlayResult = playCombo(globalGame, comboToPlay);
         } else {
@@ -245,7 +244,7 @@ export default function SingleplayerGame() {
   }
 
   function playCombo(game: GameWithPlayers, combo: string[]) {
-    console.debug('Attempting combo ${combo} on game:');
+    console.debug(`Attempting combo ${combo} on game:`);
     console.dir(game);
     if (!game.currentPlayer) {
       return;
@@ -533,9 +532,7 @@ export default function SingleplayerGame() {
         )}
 
         {isTabletAndAbove && gameInProgress ? (
-          <>
-            <GameInfoModal game={game} />
-          </>
+          <GameInfoModal game={game} />
         ) : (
           <>
             <Divider my={5} />

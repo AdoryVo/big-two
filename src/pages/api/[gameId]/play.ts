@@ -1,9 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-
 import Game from '@big-two/Game';
 import prisma from '@utils/prisma';
-import pusher from '@utils/pusher';
-import { Event } from '@utils/pusher';
+import pusher, { Event } from '@utils/pusher';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 // PUT /api/[gameId]/play
 export default async function handler(
@@ -39,9 +37,9 @@ export default async function handler(
   const result = gameInstance.play(combo);
 
   if (result === -2) {
-    let errorMessage = 'Invalid with the current combo - try another combo!'
+    let errorMessage = 'Invalid with the current combo - try another combo!';
     if (game.currentPlayer.hand.includes(game.lowestCard ?? '')) {
-      errorMessage = `You must play a combo with the lowest card (${game.lowestCard})!`
+      errorMessage = `You must play a combo with the lowest card (${game.lowestCard})!`;
     }
     res.status(422).end(errorMessage);
     return;

@@ -1,8 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { generateSlug } from 'random-word-slugs';
-
 import prisma from '@utils/prisma';
 import pusher, { ChannelName, Event } from '@utils/pusher';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { generateSlug } from 'random-word-slugs';
 
 // POST /api/lobby
 export default async function handler(

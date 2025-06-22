@@ -1,7 +1,6 @@
+import prisma from '@utils/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { generateSlug } from 'random-word-slugs';
-
-import prisma from '@utils/prisma';
 
 // GET /api/[gameId]/game
 export default async function handler(

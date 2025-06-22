@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint --fix",
     "vercel-build": "prisma generate && prisma migrate deploy && next build",
-    "format-lint": "pnpm dlx @biomejs/biome check --apply ./",
+    "format-lint": "pnpm dlx @biomejs/biome check --write ./",
     "postinstall": "lefthook install"
   },
   "dependencies": {
@@ -35,7 +35,7 @@
     "zustand": "^4.4.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.5.3",
+    "@biomejs/biome": "2.0.4",
     "@types/lodash": "^4.14.200",
     "@types/node": "^20.8.7",
     "@types/react": "^18.2.31",

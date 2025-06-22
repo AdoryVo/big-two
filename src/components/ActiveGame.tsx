@@ -1,3 +1,4 @@
+import Game from '@big-two/Game';
 import type { BoxProps } from '@chakra-ui/react';
 import {
   Alert,
@@ -15,17 +16,14 @@ import {
   Text,
   Tooltip,
 } from '@chakra-ui/react';
-import { useState } from 'react';
-
-import CardImage from './CardImage';
-import OpponentHand from './OpponentHand';
-import PlayerHand from './PlayerHand';
-
-import Game from '@big-two/Game';
 import { Action, type ActionData } from '@utils/actions';
 import useIsTabletAndAbove from '@utils/hooks/useIsTabletAndAbove';
 import type { GameWithPlayers } from '@utils/prisma';
 import { SOLO_GAME_ID } from 'pages/game/singleplayer';
+import { useState } from 'react';
+import CardImage from './CardImage';
+import OpponentHand from './OpponentHand';
+import PlayerHand from './PlayerHand';
 
 interface Props {
   game: GameWithPlayers;

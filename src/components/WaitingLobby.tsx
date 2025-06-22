@@ -6,11 +6,10 @@ import {
   ListItem,
   OrderedList,
 } from '@chakra-ui/react';
-import { useState } from 'react';
-
 import { Action, type ActionData } from '@utils/actions';
 import type { GameWithPlayers } from '@utils/prisma';
 import { SOLO_GAME_ID } from 'pages/game/singleplayer';
+import { useState } from 'react';
 
 interface Props {
   game: GameWithPlayers;
@@ -49,7 +48,7 @@ export default function WaitingLobby({ game, playerId, handleAction }: Props) {
       {!game.players.length && 'No players currently, join in!'}
 
       <OrderedList mb={5}>
-        {game.players.map((player, index) => (
+        {game.players.map((player) => (
           <ListItem
             key={player.id}
             fontWeight={playerId && player.id === playerId ? 'bold' : ''}
@@ -102,15 +101,13 @@ export default function WaitingLobby({ game, playerId, handleAction }: Props) {
 
       {/* Leave game button */}
       {playerId && (
-        <>
-          <Button
-            onClick={() => handleAction(Action.Leave)}
-            colorScheme="pink"
-            mt={2}
-          >
-            Sit out next game
-          </Button>
-        </>
+        <Button
+          onClick={() => handleAction(Action.Leave)}
+          colorScheme="pink"
+          mt={2}
+        >
+          Sit out next game
+        </Button>
       )}
     </>
   );

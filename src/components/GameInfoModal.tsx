@@ -9,10 +9,8 @@ import {
   ModalOverlay,
   useDisclosure,
 } from '@chakra-ui/react';
-
-import GameInfo from './GameInfo';
-
 import type { GameWithPlayers } from '@utils/prisma';
+import GameInfo from './GameInfo';
 
 interface Props {
   game: GameWithPlayers;

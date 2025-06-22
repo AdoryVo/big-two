@@ -1,7 +1,6 @@
+import { DEFAULT_THEME, type Theme } from '@utils/theme';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-import { DEFAULT_THEME, type Theme } from '@utils/theme';
 
 interface StoreState {
   theme: Theme;

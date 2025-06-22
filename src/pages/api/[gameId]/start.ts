@@ -1,10 +1,8 @@
-import _ from 'lodash';
-import type { NextApiRequest, NextApiResponse } from 'next';
-
 import Game from '@big-two/Game';
 import prisma from '@utils/prisma';
-import { Event } from '@utils/pusher';
-import pusher from '@utils/pusher';
+import pusher, { Event } from '@utils/pusher';
+import _ from 'lodash';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 // PATCH /api/[gameId]/start
 export default async function handler(
@@ -23,7 +21,12 @@ export default async function handler(
     return;
   }
 
-  const gameInstance = new Game(game.players.length, game.settings.rules, undefined, game.settings.deckCount);
+  const gameInstance = new Game(
+    game.players.length,
+    game.settings.rules,
+    undefined,
+    game.settings.deckCount,
+  );
   const lowestCard = gameInstance.util.card_to_string(gameInstance.lowest_card);
   const currentPlayer = game.players[gameInstance.current_player];
 
@@ -33,7 +36,7 @@ export default async function handler(
     data: {
       lowestCard: { set: lowestCard },
       currentPlayer: { connect: { id: currentPlayer?.id } },
-      startedAt: { set: new Date() }
+      startedAt: { set: new Date() },
     },
     include: {
       players: true,

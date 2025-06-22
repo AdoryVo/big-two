@@ -1,6 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-
 import prisma from '@utils/prisma';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 // PATCH /api/clear
 export default async function handler(

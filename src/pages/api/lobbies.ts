@@ -1,6 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-
 import prisma from '@utils/prisma';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const TWO_DAYS_MINUTES = 60 * 24 * 2;
 
@@ -40,7 +39,7 @@ export default async function handler(
     }
 
     const maxAge = minutes * 60 * 1000;
-    const maxAgeTime = new Date().getTime() - maxAge;
+    const maxAgeTime = Date.now() - maxAge;
 
     const expiredGames = await prisma.game.findMany({
       where: { startedAt: { lt: new Date(maxAgeTime) } },

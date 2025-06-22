@@ -1,3 +1,4 @@
+import { describe, rulesToArray } from '@big-two/Rules';
 import {
   Badge,
   Box,
@@ -18,12 +19,6 @@ import {
   UnorderedList,
   useToast,
 } from '@chakra-ui/react';
-import { NextSeo, VideoGameJsonLd } from 'next-seo';
-import Image from 'next/image';
-import NextLink from 'next/link';
-import { useEffect } from 'react';
-
-import { describe, rulesToArray } from '@big-two/Rules';
 import CreateLobby from '@components/CreateLobby';
 import Preferences from '@components/Preferences';
 import Version from '@components/Version';
@@ -33,6 +28,10 @@ import { usePusher } from '@utils/hooks/usePusher';
 import { useStore } from '@utils/hooks/useStore';
 import { ChannelName, Event } from '@utils/pusher';
 import { getStyles } from '@utils/theme';
+import Image from 'next/image';
+import NextLink from 'next/link';
+import { NextSeo, VideoGameJsonLd } from 'next-seo';
+import { useEffect } from 'react';
 
 function compareByNewest(lobby1: Date, lobby2: Date) {
   return new Date(lobby2).getTime() - new Date(lobby1).getTime();

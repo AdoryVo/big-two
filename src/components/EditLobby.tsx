@@ -9,11 +9,9 @@ import {
   ModalOverlay,
   useDisclosure,
 } from '@chakra-ui/react';
-import ky from 'ky';
-
-import LobbyForm from './LobbyForm';
-
 import type { GameWithPlayers } from '@utils/prisma';
+import ky from 'ky';
+import LobbyForm from './LobbyForm';
 
 interface Props {
   game: GameWithPlayers;

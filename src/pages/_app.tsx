@@ -1,8 +1,8 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { Analytics } from '@vercel/analytics/react';
-import { DefaultSeo } from 'next-seo';
 import type { AppProps } from 'next/app';
 import { Alegreya, Montserrat } from 'next/font/google';
+import { DefaultSeo } from 'next-seo';
 
 const alegreya = Alegreya({ subsets: ['latin'] });
 const montserrat = Montserrat({ subsets: ['latin'] });

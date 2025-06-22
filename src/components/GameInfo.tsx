@@ -1,3 +1,4 @@
+import { describe, rulesToArray } from '@big-two/Rules';
 import {
   Divider,
   Heading,
@@ -13,12 +14,9 @@ import {
   Tr,
   UnorderedList,
 } from '@chakra-ui/react';
-
-import EditLobby from './EditLobby';
-
-import { describe, rulesToArray } from '@big-two/Rules';
-import { type GameWithPlayers } from '@utils/prisma';
+import type { GameWithPlayers } from '@utils/prisma';
 import { SOLO_GAME_ID } from 'pages/game/singleplayer';
+import EditLobby from './EditLobby';
 
 interface Props {
   game: GameWithPlayers;

@@ -1,3 +1,4 @@
+import Rules, { ALL_RULES, describe, rulesToArray } from '@big-two/Rules';
 import {
   Box,
   Checkbox,
@@ -15,12 +16,10 @@ import {
   RadioGroup,
   VStack,
 } from '@chakra-ui/react';
+import type { GameWithPlayers } from '@utils/prisma';
 import { useFormik } from 'formik';
 import { sum } from 'lodash';
 import { useState } from 'react';
-
-import Rules, { ALL_RULES, describe, rulesToArray } from '@big-two/Rules';
-import type { GameWithPlayers } from '@utils/prisma';
 
 interface Props {
   game?: GameWithPlayers;
@@ -53,13 +52,14 @@ export default function LobbyForm({ game, submitForm }: Props) {
     onSubmit: (values) => {
       const body = {
         ...values,
-        rules: sum(rules) + parseInt(suitOrder),
+        rules: sum(rules) + Number.parseInt(suitOrder),
       };
       submitForm(body);
     },
   });
 
   return (
+    // biome-ignore lint/nursery/useUniqueElementIds: exact id needed for submit button in parent element
     <form id="lobbyForm" onSubmit={formik.handleSubmit}>
       <FormControl mb={3}>
         <FormLabel fontWeight="bold">Rules</FormLabel>
@@ -102,7 +102,9 @@ export default function LobbyForm({ game, submitForm }: Props) {
           <NumberInput
             name="playerMax"
             defaultValue={formik.values.playerMax}
-            onChange={(v) => formik.setFieldValue('playerMax', parseInt(v))}
+            onChange={(v) =>
+              formik.setFieldValue('playerMax', Number.parseInt(v))
+            }
             min={2}
             maxW={20}
           >
@@ -119,7 +121,9 @@ export default function LobbyForm({ game, submitForm }: Props) {
           <NumberInput
             name="deckCount"
             defaultValue={formik.values.deckCount}
-            onChange={(v) => formik.setFieldValue('deckCount', parseInt(v))}
+            onChange={(v) =>
+              formik.setFieldValue('deckCount', Number.parseInt(v))
+            }
             min={1}
             maxW={20}
           >

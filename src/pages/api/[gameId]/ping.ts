@@ -1,7 +1,5 @@
+import pusher, { Event } from '@utils/pusher';
 import type { NextApiRequest, NextApiResponse } from 'next';
-
-import pusher from '@utils/pusher';
-import { Event } from '@utils/pusher';
 
 // GET /api/[gameId]/ping
 export default async function handler(

@@ -1,8 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-
 import prisma from '@utils/prisma';
-import pusher from '@utils/pusher';
-import { Event } from '@utils/pusher';
+import pusher, { Event } from '@utils/pusher';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 // PATCH /api/[gameId]/end
 export default async function handler(

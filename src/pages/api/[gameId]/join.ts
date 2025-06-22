@@ -1,8 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-
 import prisma from '@utils/prisma';
-import pusher from '@utils/pusher';
-import { Event } from '@utils/pusher';
+import pusher, { Event } from '@utils/pusher';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 // POST /api/[gameId]/join
 export default async function handler(
@@ -36,7 +34,7 @@ export default async function handler(
     });
 
     res.status(201).json(playerId);
-  } catch (e) {
+  } catch {
     res.status(422).end();
   }
 }

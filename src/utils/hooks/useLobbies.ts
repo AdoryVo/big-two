@@ -1,6 +1,5 @@
-import useSWR from 'swr';
-
 import type { GameWithPlayers } from '@utils/prisma';
+import useSWR from 'swr';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
