@@ -134,6 +134,10 @@ export default function Home() {
         {/* Lobbies */}
         <Heading {...styles.text} size="lg" my={5}>
           🏠 Public Lobbies
+          <Box fontSize="md">
+            ⚠️ Idle lobbies that have not started a game in 48 hours will be
+            deleted automatically.
+          </Box>
         </Heading>
         <Box
           bg="rgba(0, 0, 0, 0.25)"
