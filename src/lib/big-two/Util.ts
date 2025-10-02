@@ -8,9 +8,10 @@ import Rules from './Rules';
 
 export const CARD_STRING_SEPARATOR = ';'; // "2;clubs"
 
-const SUIT_RANKING_ORDERS = {
+export const SUIT_RANKING_ORDERS = {
   [Rules.SUIT_ORDER_ALPHA]: ['clubs', 'diamonds', 'hearts', 'spades'],
   [Rules.SUIT_ORDER_BETA]: ['spades', 'clubs', 'diamonds', 'hearts'],
+  [Rules.SUIT_ORDER_GAMMA]: ['diamonds', 'clubs', 'hearts', 'spades'],
 };
 
 const RANK_ABBR_TO_NAME: { [key: string]: string } = {
@@ -55,7 +56,9 @@ class Util {
     const suit = card.suit.name;
     if (this.rules & Rules.SUIT_ORDER_ALPHA)
       return SUIT_RANKING_ORDERS[Rules.SUIT_ORDER_ALPHA].indexOf(suit);
-    else return SUIT_RANKING_ORDERS[Rules.SUIT_ORDER_BETA].indexOf(suit);
+    else if (this.rules & Rules.SUIT_ORDER_BETA)
+      return SUIT_RANKING_ORDERS[Rules.SUIT_ORDER_BETA].indexOf(suit);
+    else return SUIT_RANKING_ORDERS[Rules.SUIT_ORDER_GAMMA].indexOf(suit);
   }
 
   compare_cards(c1: Card, c2: Card) {

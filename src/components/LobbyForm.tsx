@@ -1,5 +1,7 @@
 import Rules, { ALL_RULES, describe, rulesToArray } from '@big-two/Rules';
+import { SUIT_RANKING_ORDERS } from '@big-two/Util';
 import {
+  Badge,
   Box,
   Checkbox,
   CheckboxGroup,
@@ -69,11 +71,23 @@ export default function LobbyForm({ game, submitForm }: Props) {
           colorScheme="purple"
         >
           <VStack alignItems="start">
-            {ALL_RULES.slice(0, 2).map((suit_order) => (
-              <Radio key={suit_order} value={`${suit_order}`}>
-                {describe(suit_order)}
-              </Radio>
-            ))}
+            {ALL_RULES.slice(0, Object.keys(SUIT_RANKING_ORDERS).length).map(
+              (suit_order) => (
+                <Radio key={suit_order} value={`${suit_order}`}>
+                  {describe(suit_order)}
+                  {suit_order === Rules.SUIT_ORDER_GAMMA && (
+                    <Badge
+                      variant="solid"
+                      bgColor="blue.300"
+                      ms={2}
+                      rounded="md"
+                    >
+                      🎉 New 🎉
+                    </Badge>
+                  )}
+                </Radio>
+              ),
+            )}
           </VStack>
         </RadioGroup>
 
@@ -85,11 +99,13 @@ export default function LobbyForm({ game, submitForm }: Props) {
           colorScheme="green"
         >
           <VStack alignItems="start">
-            {ALL_RULES.slice(2).map((rule) => (
-              <Checkbox key={rule} value={rule}>
-                {describe(rule)}
-              </Checkbox>
-            ))}
+            {ALL_RULES.slice(Object.keys(SUIT_RANKING_ORDERS).length).map(
+              (rule) => (
+                <Checkbox key={rule} value={rule}>
+                  {describe(rule)}
+                </Checkbox>
+              ),
+            )}
           </VStack>
         </CheckboxGroup>
       </FormControl>

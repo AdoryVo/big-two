@@ -1,4 +1,5 @@
 import {
+  Badge,
   Button,
   Modal,
   ModalBody,
@@ -52,7 +53,10 @@ export default function CreateLobby({ closeToast }: Props) {
         me={2}
         onClick={onClick}
       >
-        Create lobby
+        Create lobby{' '}
+        <Badge variant="solid" bgColor="blue.300" ms={1} py={1} rounded="md">
+          🎉 New 🎉
+        </Badge>
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">

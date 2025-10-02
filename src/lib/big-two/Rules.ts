@@ -2,6 +2,7 @@ enum Rules {
   // Suit ordering
   SUIT_ORDER_ALPHA = 1,
   SUIT_ORDER_BETA = 0,
+  SUIT_ORDER_GAMMA = 1 << 6,
 
   // Straights
   STRAIGHTS_WRAP_AROUND = 1 << 1,
@@ -25,6 +26,7 @@ enum Rules {
 export const ALL_RULES = [
   Rules.SUIT_ORDER_ALPHA,
   Rules.SUIT_ORDER_BETA,
+  Rules.SUIT_ORDER_GAMMA,
   Rules.STRAIGHTS_WRAP_AROUND,
   Rules.STRAIGHTS_ALLOW_RUNS,
   Rules.CAN_PLAY_AFTER_PASS,
@@ -37,7 +39,9 @@ export function describe(rule: Rules) {
     case Rules.SUIT_ORDER_ALPHA:
       return 'Suit order alpha (clubs < diamonds < hearts < spades)';
     case Rules.SUIT_ORDER_BETA:
-      return 'Suit order Tiến (spades < clubs < diamonds < hearts)';
+      return 'Suit order beta [Tiến] (spades < clubs < diamonds < hearts)';
+    case Rules.SUIT_ORDER_GAMMA:
+      return 'Suit order gamma [Hong Kong] (diamonds < clubs < hearts < spades)';
     case Rules.STRAIGHTS_WRAP_AROUND:
       return 'Straights wrap around';
     case Rules.STRAIGHTS_ALLOW_RUNS:

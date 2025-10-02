@@ -122,9 +122,6 @@ export default function Home() {
         <Box>
           <NextLink href={'/game/singleplayer'} passHref>
             <Button colorScheme="blue" onClick={() => toast.closeAll()}>
-              <Text fontSize="sm" fontFamily="cursive" color="pink.100">
-                🎉NEW🎉
-              </Text>{' '}
               Singleplayer mode 🤖
             </Button>
           </NextLink>
