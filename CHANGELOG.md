@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved bot skill
 - More to come soon!
 
+## [1.3.0] - 2025-10-02
+
+### Added
+
+- Per [Feedback Form](https://forms.gle/jPd276dcsLVPswBZ7) feature request, added new suit order (gamma) for diamonds < clubs < hearts < spades
+
 ## [1.2.1] - 2025-06-22
 
 ### Added
@@ -92,6 +98,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - All existing functionality as of 10-22-2023
 
 [unreleased]: https://github.com/AdoryVo/big-two/compare/v1.1.0...HEAD
+[1.3.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.3.0
 [1.2.1]: https://github.com/AdoryVo/big-two/releases/tag/v1.2.1
 [1.2.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.2.0
 [1.1.1]: https://github.com/AdoryVo/big-two/releases/tag/v1.1.1
