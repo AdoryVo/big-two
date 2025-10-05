@@ -1,7 +1,7 @@
 enum Rules {
   // Suit ordering
   SUIT_ORDER_ALPHA = 1,
-  SUIT_ORDER_BETA = 0,
+  SUIT_ORDER_BETA = 1 << 7,
   SUIT_ORDER_GAMMA = 1 << 6,
 
   // Straights
@@ -58,11 +58,7 @@ export function describe(rule: Rules) {
 }
 
 export function rulesToArray(rules: number) {
-  const array = ALL_RULES.filter((rule) => rules & rule);
-  if (!(rules & Rules.SUIT_ORDER_ALPHA)) {
-    array.unshift(0);
-  }
-  return array;
+  return ALL_RULES.filter((rule) => rules & rule);
 }
 
 export default Rules;

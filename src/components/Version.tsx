@@ -16,7 +16,7 @@ export default function Version(props: TextProps) {
           href="https://github.com/AdoryVo/big-two/blob/main/CHANGELOG.md"
           isExternal
         >
-          v1.3.0
+          v1.3.1
         </Link>
       </Text>
     </Tooltip>

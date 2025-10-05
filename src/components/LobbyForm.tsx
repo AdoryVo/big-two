@@ -28,20 +28,29 @@ interface Props {
   submitForm: (body: object) => void;
 }
 
+const SUIT_ORDER_BITS = sum(
+  // Note: Don't directly pass in parseInt as the map() function
+  // to prevent passing in `index` to the `radix` argument.
+  Object.keys(SUIT_RANKING_ORDERS).map((bitAsStr) => Number.parseInt(bitAsStr)),
+);
+
 export default function LobbyForm({ game, submitForm }: Props) {
   const defaults = game?.settings ?? {
-    rules: Rules.DEFAULT,
+    // In this form, suit order is tracked separately than other rules.
+    rules: Rules.DEFAULT & ~SUIT_ORDER_BITS,
     public: false,
     spectating: true,
     playerMax: 4,
     deckCount: 1,
   };
 
+  // Capture existing suit order or default to alpha.
   const [suitOrder, setSuitOrder] = useState(
-    `${defaults.rules & Rules.SUIT_ORDER_ALPHA}`,
+    `${defaults.rules & SUIT_ORDER_BITS || Rules.SUIT_ORDER_ALPHA}`,
   );
+  // In this form, suit order is tracked separately than other rules.
   const [rules, setRules] = useState<number[]>(
-    rulesToArray(defaults.rules & ~Rules.SUIT_ORDER_ALPHA),
+    rulesToArray(defaults.rules & ~SUIT_ORDER_BITS),
   );
 
   const formik = useFormik({

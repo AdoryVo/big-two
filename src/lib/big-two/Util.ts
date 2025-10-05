@@ -54,11 +54,12 @@ class Util {
 
   _suit_val(card: Card) {
     const suit = card.suit.name;
-    if (this.rules & Rules.SUIT_ORDER_ALPHA)
-      return SUIT_RANKING_ORDERS[Rules.SUIT_ORDER_ALPHA].indexOf(suit);
-    else if (this.rules & Rules.SUIT_ORDER_BETA)
+    if (this.rules & Rules.SUIT_ORDER_BETA)
       return SUIT_RANKING_ORDERS[Rules.SUIT_ORDER_BETA].indexOf(suit);
-    else return SUIT_RANKING_ORDERS[Rules.SUIT_ORDER_GAMMA].indexOf(suit);
+    else if (this.rules & Rules.SUIT_ORDER_GAMMA)
+      return SUIT_RANKING_ORDERS[Rules.SUIT_ORDER_GAMMA].indexOf(suit);
+    // Default to suit order alpha.
+    else return SUIT_RANKING_ORDERS[Rules.SUIT_ORDER_ALPHA].indexOf(suit);
   }
 
   compare_cards(c1: Card, c2: Card) {
