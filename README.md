@@ -1,5 +1,9 @@
 # ♠️ big-two
 
+Help fund database/server costs to keep the site ad-free and supporting thousands of users!
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/X8X31NFVB9)
+
 ## 🚀 Getting Started
 
 ### Installation

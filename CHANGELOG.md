@@ -9,10 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- 🌏 Localization - language features for diverse player bases (Indonesian, Chinese, etc.)
 - Add feature for majority vote to end game and return to lobby
 - Add bot players option for multiplayer games
 - Improved bot skill
 - More to come soon!
+
+## [1.4.0] - 2025-10-27
+
+### Added
+
+- Ko-fi support link/text!
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/X8X31NFVB9)
 
 ## [1.3.1] - 2025-10-05
 
@@ -104,6 +113,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - All existing functionality as of 10-22-2023
 
 [unreleased]: https://github.com/AdoryVo/big-two/compare/v1.1.0...HEAD
+[1.4.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.4.0
 [1.3.1]: https://github.com/AdoryVo/big-two/releases/tag/v1.3.1
 [1.3.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.3.0
 [1.2.1]: https://github.com/AdoryVo/big-two/releases/tag/v1.2.1

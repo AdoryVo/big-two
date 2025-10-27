@@ -28,10 +28,16 @@ import { usePusher } from '@utils/hooks/usePusher';
 import { useStore } from '@utils/hooks/useStore';
 import { ChannelName, Event } from '@utils/pusher';
 import { getStyles } from '@utils/theme';
+import Head from 'next/head';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { NextSeo, VideoGameJsonLd } from 'next-seo';
 import { useEffect } from 'react';
+
+const KOFI_WIDGET = `<script type='text/javascript'>
+kofiwidget2.init('Support Big Two on Ko-fi', '#72a4f2', 'X8X31NFVB9');
+kofiwidget2.draw();
+</script>`;
 
 function compareByNewest(lobby1: Date, lobby2: Date) {
   return new Date(lobby2).getTime() - new Date(lobby1).getTime();
@@ -111,6 +117,9 @@ export default function Home() {
         keywords="cards, game, multiplayer"
         image="https://bigtwo.vercel.app/assets/site-preview.png"
       />
+      <Head>
+        <script src="https://storage.ko-fi.com/cdn/widget/Widget_2.js" />
+      </Head>
       <Version {...styles.text} />
 
       <Container maxW="5xl" textAlign="center" p={5}>
@@ -119,12 +128,37 @@ export default function Home() {
         </Heading>
         <CreateLobby closeToast={toast.closeAll} />
         <Preferences />
-        <Box>
+        <Box mb={4}>
           <NextLink href={'/game/singleplayer'} passHref>
-            <Button colorScheme="blue" onClick={() => toast.closeAll()}>
+            <Button
+              colorScheme="blue"
+              shadow="1px 1px black"
+              onClick={() => toast.closeAll()}
+            >
               Singleplayer mode 🤖
             </Button>
           </NextLink>
+        </Box>
+        <Box>
+          <Text {...styles.text} mb={1}>
+            👋 If you've been enjoying <b>Big Two</b>, donations towards
+            database/server costs
+            <br />
+            to keep the site ad-free and supporting thousands of users are
+            greatly appreciated!
+            <br />
+            Feedback & suggestions via{' '}
+            <Link
+              href="https://forms.gle/jPd276dcsLVPswBZ7"
+              target="_blank"
+              textDecoration="underline"
+            >
+              this form
+            </Link>{' '}
+            are also appreciated!
+          </Text>
+          {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Ko-fi button widget */}
+          <div dangerouslySetInnerHTML={{ __html: KOFI_WIDGET }} />
         </Box>
 
         {/* Lobbies */}
