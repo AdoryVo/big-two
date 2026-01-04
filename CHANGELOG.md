@@ -24,6 +24,7 @@ Apologies if updates have been slow, work has been busy lately. 😅
 ### Added
 
 - Gameplay mechanic option for poker hands to be interrupted/stacked upon by other higher value combinations (i.e. Flush > Straight, etc.)
+  - May include additional familiar combo interaction behaviors.
   - Thank you players for your detailed feedback requests about this! 🫡
   - Will plan to add this during Jan 2026, hoping I do not get too busy with work.
 - 13 card hands option for two player games (per feedback request)
