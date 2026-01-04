@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Future Backlog]
 
 ### Added
 
@@ -14,6 +14,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add bot players option for multiplayer games
 - Improved bot skill
 - More to come soon!
+
+## [1.5.0] - Unreleased, WIP
+
+Happy new years everyone, thanks for playing Big Two in 2025 and providing feedback through our [Feedback Form]! 🥳
+
+Apologies if updates have been slow, work has been busy lately. 😅
+
+### Added
+
+- Gameplay mechanic option for poker hands to be interrupted/stacked upon by other higher value combinations (i.e. Flush > Straight, etc.)
+  - Thank you players for your detailed feedback requests about this! 🫡
+  - Will plan to add this during Jan 2026, hoping I do not get too busy with work.
+- 13 card hands option for two player games (per feedback request)
 
 ## [1.4.0] - 2025-10-27
 
@@ -33,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Per [Feedback Form](https://forms.gle/jPd276dcsLVPswBZ7) feature request, added new suit order (gamma) for diamonds < clubs < hearts < spades
+- Per [Feedback Form] feature request, added new suit order (gamma) for diamonds < clubs < hearts < spades
 
 ## [1.2.1] - 2025-06-22
 
@@ -121,3 +134,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.1.1]: https://github.com/AdoryVo/big-two/releases/tag/v1.1.1
 [1.1.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.1.0
 [1.0.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.0.0
+[Feedback Form]: https://forms.gle/jPd276dcsLVPswBZ7
