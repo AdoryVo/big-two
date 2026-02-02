@@ -42,7 +42,13 @@ export default function EditLobby({ game, handleSubmit }: Props) {
         Edit rules
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        scrollBehavior="inside"
+        isCentered
+        size="lg"
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Edit Lobby</ModalHeader>

@@ -9,6 +9,8 @@ enum Combo_Types {
   BOMB = 5,
   FLUSH = 6,
   INVALID = 7,
+  FOUR_OF_A_KIND = 8,
+  STRAIGHT_FLUSH = 9,
 }
 
 class Combo {
