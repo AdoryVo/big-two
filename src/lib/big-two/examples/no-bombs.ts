@@ -17,7 +17,7 @@ game.play(['3;clubs']);
 game.play(['4;clubs', '4;diamonds', '4;hearts', '4;spades']);
 
 console.log('With no bombs:');
-console.log(game.util.cards_to_strings(game.combo.cards));
+console.log(game.util.cards_to_strings(game.combo?.cards ?? []));
 
 // Disable no bombs
 game.util.rules &= ~Rules.NO_BOMBS;
@@ -25,4 +25,4 @@ game.util.rules &= ~Rules.NO_BOMBS;
 game.play(['4;clubs', '4;diamonds', '4;hearts', '4;spades']);
 
 console.log('With bombs:');
-console.log(game.util.cards_to_strings(game.combo.cards));
+console.log(game.util.cards_to_strings(game.combo?.cards ?? []));
