@@ -59,7 +59,13 @@ export default function CreateLobby({ closeToast }: Props) {
         </Badge>
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        scrollBehavior="inside"
+        isCentered
+        size="lg"
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Create Lobby</ModalHeader>
