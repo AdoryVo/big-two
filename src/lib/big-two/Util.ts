@@ -245,7 +245,6 @@ class Util {
   }
 
   // Whether it is legal to play the specified set of cards on top of the combo.
-  // TODO: add 5-combo compatability logic + appopriate flag in Rules (e.g. can play full house on flush/straight)
   can_play_on(cards: Card[], combo: Combo | null) {
     const new_combo = this._construct_combo(cards);
     if (!combo) return new_combo.type !== Combo_Types.INVALID;
@@ -289,7 +288,8 @@ class Util {
     if (new_combo.value_card && combo.value_card) {
       if (
         new_combo.type === Combo_Types.FLUSH &&
-        combo.type === Combo_Types.FLUSH
+        combo.type === Combo_Types.FLUSH &&
+        this.rules & Rules.FLUSH_RANK_BY_SUIT
       )
         return (
           this.compare_cards_by_suit(new_combo.value_card, combo.value_card) > 0

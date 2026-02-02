@@ -10,6 +10,7 @@ enum Rules {
 
   // Flushes
   FLUSH_ALLOW = 1 << 2,
+  FLUSH_RANK_BY_SUIT = 1 << 10, // rank flushes by suit instead of rank
 
   // Other
 
@@ -35,6 +36,11 @@ enum Rules {
     MUST_PLAY_LOWEST_CARD,
 }
 
+interface RuleSet {
+  name: string;
+  rules: Rules;
+}
+
 export const ALL_RULES = [
   Rules.SUIT_ORDER_ALPHA,
   Rules.SUIT_ORDER_BETA,
@@ -46,7 +52,19 @@ export const ALL_RULES = [
   Rules.CAN_PLAY_AFTER_PASS,
   Rules.MUST_PLAY_LOWEST_CARD,
   Rules.FLUSH_ALLOW,
+  Rules.FLUSH_RANK_BY_SUIT,
 ];
+
+export const ALL_RULE_SETS: { [key: string]: RuleSet } = {
+  DEFAULT: {
+    name: 'Default Variation',
+    rules: Rules.DEFAULT,
+  },
+  CANTONESE: {
+    name: 'Cantonese (鋤大弟)',
+    rules: Rules.CANTONESE,
+  },
+};
 
 export function describe(rule: Rules) {
   switch (rule) {
@@ -70,6 +88,8 @@ export function describe(rule: Rules) {
       return 'Must play lowest card on game start (ex: 3 of clubs)';
     case Rules.FLUSH_ALLOW:
       return 'Allow flushes';
+    case Rules.FLUSH_RANK_BY_SUIT:
+      return 'Rank flushes by suit instead of highest rank card';
     default:
       return '';
   }

@@ -1,4 +1,9 @@
-import Rules, { ALL_RULES, describe, rulesToArray } from '@big-two/Rules';
+import Rules, {
+  ALL_RULE_SETS,
+  ALL_RULES,
+  describe,
+  rulesToArray,
+} from '@big-two/Rules';
 import { SUIT_RANKING_ORDERS } from '@big-two/Util';
 import {
   Badge,
@@ -44,6 +49,7 @@ export default function LobbyForm({ game, submitForm }: Props) {
     deckCount: 1,
   };
 
+  const [ruleSetKey, setRuleSetKey] = useState(Object.keys(ALL_RULE_SETS)[0]);
   // Capture existing suit order or default to alpha.
   const [suitOrder, setSuitOrder] = useState(
     `${defaults.rules & SUIT_ORDER_BITS || Rules.SUIT_ORDER_ALPHA}`,
@@ -69,11 +75,48 @@ export default function LobbyForm({ game, submitForm }: Props) {
     },
   });
 
+  function handleRuleSetKeyChange(ruleSetKey: string) {
+    const ruleSet = ALL_RULE_SETS[ruleSetKey];
+
+    setSuitOrder(`${ruleSet.rules & SUIT_ORDER_BITS}`);
+    // The rules variable should not have suit order bits, as suitOrder tracks this.
+    setRules(rulesToArray(ruleSet.rules & ~SUIT_ORDER_BITS));
+    setRuleSetKey(ruleSetKey);
+  }
+
   return (
     // biome-ignore lint/nursery/useUniqueElementIds: exact id needed for submit button in parent element
     <form id="lobbyForm" onSubmit={formik.handleSubmit}>
       <FormControl mb={3}>
-        <FormLabel fontWeight="bold">Rules</FormLabel>
+        <FormLabel fontWeight="bold" fontSize="lg">
+          Rules
+        </FormLabel>
+
+        <FormLabel>
+          Rule sets
+          <Badge variant="solid" bgColor="blue.300" ms={2} rounded="md">
+            🎉 New 🎉
+          </Badge>
+        </FormLabel>
+
+        <RadioGroup
+          onChange={handleRuleSetKeyChange}
+          value={ruleSetKey}
+          colorScheme="blue"
+        >
+          <VStack alignItems="start">
+            {Object.keys(ALL_RULE_SETS).map((ruleSetKey) => (
+              <Radio key={ruleSetKey} value={ruleSetKey}>
+                {ALL_RULE_SETS[ruleSetKey].name}
+              </Radio>
+            ))}
+          </VStack>
+        </RadioGroup>
+
+        <Divider my={2} />
+
+        <FormLabel>Suit orders</FormLabel>
+
         <RadioGroup
           onChange={setSuitOrder}
           value={suitOrder}
@@ -84,16 +127,6 @@ export default function LobbyForm({ game, submitForm }: Props) {
               (suit_order) => (
                 <Radio key={suit_order} value={`${suit_order}`}>
                   {describe(suit_order)}
-                  {suit_order === Rules.SUIT_ORDER_GAMMA && (
-                    <Badge
-                      variant="solid"
-                      bgColor="blue.300"
-                      ms={2}
-                      rounded="md"
-                    >
-                      🎉 New 🎉
-                    </Badge>
-                  )}
                 </Radio>
               ),
             )}
@@ -101,6 +134,8 @@ export default function LobbyForm({ game, submitForm }: Props) {
         </RadioGroup>
 
         <Divider my={2} />
+
+        <FormLabel>Custom rules</FormLabel>
 
         <CheckboxGroup
           onChange={(values) => setRules(values.map(Number))}
@@ -112,6 +147,20 @@ export default function LobbyForm({ game, submitForm }: Props) {
               (rule) => (
                 <Checkbox key={rule} value={rule}>
                   {describe(rule)}
+                  {[
+                    Rules.POKER_HAND_COMBOS,
+                    Rules.NO_BOMBS,
+                    Rules.FLUSH_RANK_BY_SUIT,
+                  ].includes(rule) && (
+                    <Badge
+                      variant="solid"
+                      bgColor="blue.300"
+                      ms={2}
+                      rounded="md"
+                    >
+                      🎉 New 🎉
+                    </Badge>
+                  )}
                 </Checkbox>
               ),
             )}
