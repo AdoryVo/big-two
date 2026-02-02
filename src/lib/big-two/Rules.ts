@@ -13,6 +13,12 @@ enum Rules {
 
   // Other
 
+  // allow five-card combo poker hands to be played on other poker hands
+  POKER_HAND_COMBOS = 1 << 8,
+
+  // disallow bombs (four of a kind) as a special combo
+  NO_BOMBS = 1 << 9,
+
   // if you have the lowest card and start the game, you must play it in the first combo you play
   MUST_PLAY_LOWEST_CARD = 1 << 3,
 

@@ -197,6 +197,9 @@ class Util {
 
         return this._construct_loose_straight(cards);
       case 4:
+        if (this.rules & Rules.NO_BOMBS)
+          return new Combo(cards, Combo_Types.INVALID, cards[3]);
+
         if (this._count_cons_eq(cards) === 4)
           return new Combo(cards, Combo_Types.BOMB, cards[3]);
 
