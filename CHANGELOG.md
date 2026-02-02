@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - 13/26-card hands option for two player games (per feedback request)
+- More themes - Lunar new year theme!
 - 🌏 Localization - language features for diverse player bases (Indonesian, Chinese, etc.)
 - Add feature for majority vote to end game and return to lobby
 - Add bot players option for multiplayer games
@@ -38,6 +39,10 @@ Apologies if updates have been slow, work has been busy lately. 😅
 - Rule to disable Four-of-a-Kind bombs that override all combos
 - Rule to allow flushes to be ranked by suit instead of highest rank card
 - Rule sets to easily switch to preset rule variations
+
+### Changed
+
+- Lobby form modal to shrink via scroll region inside of modal body
 
 ## [1.4.0] - 2025-10-27
 
