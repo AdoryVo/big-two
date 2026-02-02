@@ -142,15 +142,15 @@ export default function Home() {
         <Box>
           <Text {...styles.text} mb={1}>
             <b>
-              🎆 Happy New Years players,{' '}
+              🧧 Happy Lunar New Year players, enjoy the newly released{' '}
               <Link
                 href="https://github.com/AdoryVo/big-two/blob/main/CHANGELOG.md"
                 target="_blank"
                 textDecoration="underline"
               >
                 v1.5.0
-              </Link>{' '}
-              is on the way! 🥳
+              </Link>
+              ! 🥳
             </b>
             <br />👋 If you've been enjoying <b>Big Two</b>, donations towards
             database/server costs

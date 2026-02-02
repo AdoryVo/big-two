@@ -31,7 +31,10 @@ Apologies if updates have been slow, work has been busy lately. 😅
     - If bombs are disabled, Four-of-a-Kind bombs will not be usable
     - Four-of-a-Kind falls in between Full House and Straight Flush, requiring one extra card to play as a 5-card combo
   - Thank you players for your detailed feedback requests about this! 🫡
-  - Additional source used for rules: https://en.wikipedia.org/wiki/Big_two#Combinations
+  - Additional sources used for rules:
+    - https://en.wikipedia.org/wiki/Big_two#Combinations
+    - https://evenbetgaming.com/knowledge-base/glossary/big-2-variations
+    - https://www.pagat.com/climbing/bigtwo.html
 - Rule to disable Four-of-a-Kind bombs that override all combos
 - Rule to allow flushes to be ranked by suit instead of highest rank card
 - Rule sets to easily switch to preset rule variations
