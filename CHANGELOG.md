@@ -9,13 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- 13/26-card hands option for two player games (per feedback request)
 - 🌏 Localization - language features for diverse player bases (Indonesian, Chinese, etc.)
 - Add feature for majority vote to end game and return to lobby
 - Add bot players option for multiplayer games
 - Improved bot skill
 - More to come soon!
 
-## [1.5.0] - Unreleased, WIP
+## [1.5.0] - 2026-02-02
 
 Happy new years everyone, thanks for playing Big Two in 2025 and providing feedback through our [Feedback Form]! 🥳
 
@@ -23,11 +24,16 @@ Apologies if updates have been slow, work has been busy lately. 😅
 
 ### Added
 
-- Gameplay mechanic option for poker hands to be interrupted/stacked upon by other higher value combinations (i.e. Flush > Straight, etc.)
-  - May include additional familiar combo interaction behaviors.
+- Rule for 5-card poker hands to be interrupted/stacked upon by other higher value combinations (i.e. Flush > Straight, etc.)
+  - Includes additional familiar combo interaction behaviors.
+    - Straight Flush > Four-of-a-Kind (AKA bomb) > Full House > Flush > Straight
+    - Straight Flush should be able to beat any 5-card combo
+    - If bombs are disabled, Four-of-a-Kind bombs will not be usable
+    - Four-of-a-Kind falls in between Full House and Straight Flush, requiring one extra card to play as a 5-card combo
   - Thank you players for your detailed feedback requests about this! 🫡
-  - Will plan to add this during Jan 2026, hoping I do not get too busy with work.
-- 13 card hands option for two player games (per feedback request)
+- Rule to disable Four-of-a-Kind bombs that override all combos
+- Rule to allow flushes to be ranked by suit instead of highest rank card
+- Rule sets to easily switch to preset rule variations
 
 ## [1.4.0] - 2025-10-27
 
@@ -127,6 +133,7 @@ Apologies if updates have been slow, work has been busy lately. 😅
 - All existing functionality as of 10-22-2023
 
 [unreleased]: https://github.com/AdoryVo/big-two/compare/v1.1.0...HEAD
+[1.5.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.5.0
 [1.4.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.4.0
 [1.3.1]: https://github.com/AdoryVo/big-two/releases/tag/v1.3.1
 [1.3.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.3.0
