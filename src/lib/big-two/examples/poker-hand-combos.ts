@@ -2,6 +2,8 @@ import Game from '@big-two/Game';
 import Rules from '@big-two/Rules';
 import { decks } from 'cards';
 
+// TODO: Write unit tests for more thorough overall testing
+
 const game = new Game(2, Rules.CANTONESE & ~Rules.MUST_PLAY_LOWEST_CARD);
 
 game.players.forEach((player) => {
@@ -15,7 +17,7 @@ game.play(['3;clubs', '4;clubs', '5;diamonds', '6;hearts', '7;spades']);
 // P2: Flush
 game.play(['3;clubs', '5;clubs', '8;clubs', '9;clubs', '10;clubs']);
 
-// P1: Should fail - cannot play flush with worse seuit
+// P1: Flush, should fail - cannot play flush with worse suit
 game.play([
   '3;diamonds',
   '4;diamonds',

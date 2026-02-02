@@ -12,16 +12,19 @@ game.players.forEach((player) => {
   player.hand.sort((c1, c2) => game.util.compare_cards(c1, c2));
 });
 
+// P1: Start
 game.play(['3;clubs']);
 
+// P2: Bomb, should fail - cannot play with bombs disabled
 game.play(['4;clubs', '4;diamonds', '4;hearts', '4;spades']);
 
 console.log('With no bombs:');
 console.log(game.util.cards_to_strings(game.combo?.cards ?? []));
 
-// Disable no bombs
+// Disable "no bombs"
 game.util.rules &= ~Rules.NO_BOMBS;
 
+// P2: Bomb, should succeed with bombs enabled
 game.play(['4;clubs', '4;diamonds', '4;hearts', '4;spades']);
 
 console.log('With bombs:');
