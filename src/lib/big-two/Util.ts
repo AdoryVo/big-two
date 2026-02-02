@@ -14,6 +14,14 @@ export const SUIT_RANKING_ORDERS = {
   [Rules.SUIT_ORDER_GAMMA]: ['diamonds', 'clubs', 'hearts', 'spades'],
 };
 
+const POKER_HAND_COMBO_RANKING = [
+  Combo_Types.STRAIGHT,
+  Combo_Types.FLUSH,
+  Combo_Types.FULL_HOUSE,
+  Combo_Types.FOUR_OF_A_KIND,
+  Combo_Types.STRAIGHT_FLUSH,
+];
+
 const RANK_ABBR_TO_NAME: { [key: string]: string } = {
   '2': 'Two',
   '3': 'Three',
@@ -72,6 +80,24 @@ class Util {
     const s2 = this._suit_val(c2);
 
     if (s1 !== s2) return s1 < s2 ? -1 : 1;
+
+    return 0;
+  }
+
+  /**
+   * Compare function that ranks cards by suit before rank.
+   * Used for breaking ties between flushes.
+   */
+  compare_cards_by_suit(c1: Card, c2: Card) {
+    const s1 = this._suit_val(c1);
+    const s2 = this._suit_val(c2);
+
+    if (s1 !== s2) return s1 < s2 ? -1 : 1;
+
+    const r1 = this._rank_val(c1);
+    const r2 = this._rank_val(c2);
+
+    if (r1 !== r2) return r1 < r2 ? -1 : 1;
 
     return 0;
   }
@@ -149,14 +175,21 @@ class Util {
   _construct_5_combo(cards: Card[]) {
     let value_card = null;
 
-    if ((value_card = this._straight(cards)))
+    if ((value_card = this._straight(cards))) {
+      if (this.rules & Rules.POKER_HAND_COMBOS && this._flush(cards))
+        return new Combo(cards, Combo_Types.STRAIGHT_FLUSH, value_card);
+
       return new Combo(cards, Combo_Types.STRAIGHT, value_card);
-    else if ((value_card = this._full_house(cards)))
+    } else if ((value_card = this._full_house(cards)))
       return new Combo(cards, Combo_Types.FULL_HOUSE, value_card);
-    else if ((value_card = this._bomb(cards)))
+    else if ((value_card = this._bomb(cards))) {
+      if (this.rules & Rules.POKER_HAND_COMBOS)
+        return new Combo(cards, Combo_Types.FOUR_OF_A_KIND, value_card);
+
       return new Combo(cards, Combo_Types.BOMB, value_card);
-    else if (
-      this.rules & Rules.FLUSH_ALLOW &&
+    } else if (
+      (this.rules & Rules.POKER_HAND_COMBOS ||
+        this.rules & Rules.FLUSH_ALLOW) &&
       (value_card = this._flush(cards))
     )
       return new Combo(cards, Combo_Types.FLUSH, value_card);
@@ -223,8 +256,8 @@ class Util {
     )
       return false;
     else if (
-      !combo ||
-      (new_combo.type === Combo_Types.BOMB && combo.type !== Combo_Types.BOMB)
+      new_combo.type === Combo_Types.BOMB &&
+      combo.type !== Combo_Types.BOMB
     )
       return true;
     else if (
@@ -235,11 +268,38 @@ class Util {
       return false;
     }
 
-    if (new_combo.value_card && combo.value_card)
+    if (
+      new_combo.cards.length === 5 &&
+      combo.cards.length === 5 &&
+      this.rules & Rules.POKER_HAND_COMBOS
+    ) {
+      if (
+        POKER_HAND_COMBO_RANKING.indexOf(new_combo.type) >
+        POKER_HAND_COMBO_RANKING.indexOf(combo.type)
+      )
+        return true;
+
+      if (
+        POKER_HAND_COMBO_RANKING.indexOf(new_combo.type) <
+        POKER_HAND_COMBO_RANKING.indexOf(combo.type)
+      )
+        return false;
+    }
+
+    if (new_combo.value_card && combo.value_card) {
+      if (
+        new_combo.type === Combo_Types.FLUSH &&
+        combo.type === Combo_Types.FLUSH
+      )
+        return (
+          this.compare_cards_by_suit(new_combo.value_card, combo.value_card) > 0
+        );
+
       return (
         new_combo.type === combo.type &&
         this.compare_cards(new_combo.value_card, combo.value_card) > 0
       );
+    }
   }
 
   /** Ex: 2 of clubs -> "2;clubs" */

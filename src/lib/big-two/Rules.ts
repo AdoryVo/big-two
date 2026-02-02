@@ -25,14 +25,22 @@ enum Rules {
   // if you pass, you can still play if your turn comes again
   CAN_PLAY_AFTER_PASS = 1 << 4,
 
-  // default
+  // rule sets
   DEFAULT = SUIT_ORDER_ALPHA | STRAIGHTS_WRAP_AROUND | MUST_PLAY_LOWEST_CARD,
+  CANTONESE = SUIT_ORDER_GAMMA |
+    STRAIGHTS_WRAP_AROUND |
+    FLUSH_ALLOW |
+    POKER_HAND_COMBOS |
+    NO_BOMBS |
+    MUST_PLAY_LOWEST_CARD,
 }
 
 export const ALL_RULES = [
   Rules.SUIT_ORDER_ALPHA,
   Rules.SUIT_ORDER_BETA,
   Rules.SUIT_ORDER_GAMMA,
+  Rules.POKER_HAND_COMBOS,
+  Rules.NO_BOMBS,
   Rules.STRAIGHTS_WRAP_AROUND,
   Rules.STRAIGHTS_ALLOW_RUNS,
   Rules.CAN_PLAY_AFTER_PASS,
@@ -48,6 +56,10 @@ export function describe(rule: Rules) {
       return 'Suit order beta [Tiến] (spades < clubs < diamonds < hearts)';
     case Rules.SUIT_ORDER_GAMMA:
       return 'Suit order gamma [Hong Kong] (diamonds < clubs < hearts < spades)';
+    case Rules.POKER_HAND_COMBOS:
+      return 'Allow higher 5-card combinations (poker hands) on the current 5-card combo';
+    case Rules.NO_BOMBS:
+      return 'Disable four-of-a-kind bombs that override all combos';
     case Rules.STRAIGHTS_WRAP_AROUND:
       return 'Straights wrap around';
     case Rules.STRAIGHTS_ALLOW_RUNS:
