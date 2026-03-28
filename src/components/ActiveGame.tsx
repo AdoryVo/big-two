@@ -476,11 +476,21 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           <Text mb={2}>
             Points have been awarded to players in the scoreboard!
             <br />
-            Click the button below to finalize the game & return to the lobby.
+            Start another round with the same players, or return to the lobby.
           </Text>
-          <Button onClick={() => handleAction(Action.End)} colorScheme="blue">
-            Return to the lobby
-          </Button>
+          <Stack direction={{ base: 'column', sm: 'row' }} spacing={3}>
+            {game.players.length >= 2 && (
+              <Button
+                onClick={() => handleAction(Action.PlayAgain)}
+                colorScheme="green"
+              >
+                Play again
+              </Button>
+            )}
+            <Button onClick={() => handleAction(Action.End)} colorScheme="blue">
+              Return to the lobby
+            </Button>
+          </Stack>
         </Box>
       )}
 

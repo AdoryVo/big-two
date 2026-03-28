@@ -465,6 +465,55 @@ export default function SingleplayerGame() {
         setGameInProgress(false);
         break;
       }
+      case Action.PlayAgain: {
+        if (game.players.length < 2) {
+          break;
+        }
+        const cleared: GameWithPlayers = {
+          ...game,
+          combo: [],
+          lowestCard: null,
+          currentPlayer: null,
+          passedPlayers: [],
+          lastPlaymaker: null,
+          backupNext: null,
+        };
+
+        const newGameInstance = new Game(
+          cleared.players.length,
+          cleared.settings.rules,
+          undefined,
+          cleared.settings.deckCount,
+        );
+
+        const newPlayers = [...cleared.players];
+        const rng = Math.floor(Math.random() * cleared.players.length - 1);
+        for (let i = 0; i < cleared.players.length; i++) {
+          const storedPlayer = newPlayers[i];
+          const instancePlayer = newGameInstance.players[i];
+
+          storedPlayer.index = (i + rng) % cleared.players.length;
+          storedPlayer.hand = newGameInstance.util.cards_to_strings(
+            instancePlayer.hand,
+          );
+          storedPlayer.finishedRank = 0;
+          storedPlayer.games += 1;
+        }
+
+        const newGame: GameWithPlayers = {
+          ...cleared,
+          lowestCard: newGameInstance.util.card_to_string(
+            newGameInstance.lowest_card,
+          ),
+          currentPlayer: newPlayers[newGameInstance.current_player],
+          players: newPlayers,
+        };
+        if (newGame.currentPlayer?.id.includes('bot')) playBots(newGame);
+        else setGame(newGame);
+
+        setGameInProgress(true);
+        break;
+      }
     }
   }
 
