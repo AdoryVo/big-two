@@ -446,9 +446,10 @@ export default function SingleplayerGame() {
           ),
           currentPlayer: game.players[newGameInstance.current_player],
           players: newPlayers,
+          startedAt: new Date(),
         };
+        setGame(newGame);
         if (newGame.currentPlayer?.id.includes('bot')) playBots(newGame);
-        else setGame(newGame);
 
         setGameInProgress(true);
         break;

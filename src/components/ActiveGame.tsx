@@ -17,10 +17,13 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import { Action, type ActionData } from '@utils/actions';
+import { comboPlayVariants, opponentDealVariants } from '@utils/cardMotion';
+import { useHandDealIntro } from '@utils/hooks/useHandDealIntro';
 import useIsTabletAndAbove from '@utils/hooks/useIsTabletAndAbove';
 import type { GameWithPlayers } from '@utils/prisma';
+import { AnimatePresence, motion } from 'framer-motion';
 import { SOLO_GAME_ID } from 'pages/game/singleplayer';
-import { useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import CardImage from './CardImage';
 import OpponentHand from './OpponentHand';
 import PlayerHand from './PlayerHand';
@@ -84,6 +87,51 @@ function sanitizeCardLabel(cardLabel: string) {
   return cardLabel.replace(/(?<=(.*;[a-z]*))\d*/gi, '');
 }
 
+function MobileOpponentCards({
+  dealStamp,
+  hand,
+  gameId,
+  playerIndex,
+  cardSpacing,
+  skipDealIntro,
+}: {
+  dealStamp: string;
+  hand: string[];
+  gameId: string;
+  playerIndex: number;
+  cardSpacing: string;
+  skipDealIntro: boolean;
+}) {
+  const playDealIntro = useHandDealIntro(skipDealIntro, dealStamp, hand.length);
+  return (
+    <Stack direction="row">
+      {hand.map((card, cardIndex) => (
+        <motion.div
+          // biome-ignore lint/suspicious/noArrayIndexKey: slot index disambiguates identical card strings (multi-deck)
+          key={`${dealStamp}::${playerIndex}::${cardIndex}`}
+          custom={cardIndex}
+          variants={opponentDealVariants}
+          initial={playDealIntro ? 'hidden' : false}
+          animate="show"
+          style={{
+            display: 'inline-block',
+            ...overlapStyles(cardIndex, cardSpacing),
+          }}
+        >
+          <CardImage card={gameId !== SOLO_GAME_ID ? card : ''} />
+        </motion.div>
+      ))}
+    </Stack>
+  );
+}
+
+function dealStampFromStartedAt(
+  startedAt: GameWithPlayers['startedAt'],
+): string {
+  if (!startedAt) return '';
+  return typeof startedAt === 'string' ? startedAt : startedAt.toISOString();
+}
+
 export default function ActiveGame({ game, playerId, handleAction }: Props) {
   const isTabletAndAbove = useIsTabletAndAbove();
 
@@ -110,6 +158,49 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
   const gameInstance = new Game(game.players.length, game.settings.rules, game);
   /** Set of emojis to be randomly chosen from for player icons. */
   const playerEmojis = PLAYER_EMOJIS[game.id.length % PLAYER_EMOJIS.length];
+
+  const dealStamp = dealStampFromStartedAt(game.startedAt);
+  /** Disambiguates duplicate card strings (multi-deck) and stabilizes AnimatePresence keys per trick. */
+  const comboRowKey = game.combo.join('|');
+
+  const [skipDealIntro, setSkipDealIntro] = useState(() => {
+    if (typeof window === 'undefined' || !game.id || !dealStamp) return false;
+    try {
+      return (
+        sessionStorage.getItem(`bt-deal-intro-done:${game.id}:${dealStamp}`) ===
+        '1'
+      );
+    } catch {
+      return false;
+    }
+  });
+
+  useLayoutEffect(() => {
+    if (!game.id || !dealStamp) {
+      setSkipDealIntro(false);
+      return;
+    }
+    try {
+      const skip =
+        sessionStorage.getItem(`bt-deal-intro-done:${game.id}:${dealStamp}`) ===
+        '1';
+      setSkipDealIntro(skip);
+    } catch {
+      setSkipDealIntro(false);
+    }
+  }, [game.id, dealStamp]);
+
+  useEffect(() => {
+    if (!game.id || !dealStamp) return;
+    const key = `bt-deal-intro-done:${game.id}:${dealStamp}`;
+    try {
+      if (sessionStorage.getItem(key) === '1') return;
+
+      sessionStorage.setItem(key, '1');
+    } catch {
+      return undefined;
+    }
+  }, [game.id, dealStamp]);
 
   // use dummy flag to force rerenders, so we don't have to copy the comboToPlay set every time to trigger rerender
   const [dummy, setDummy] = useState(false);
@@ -177,15 +268,26 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
               borderRadius="lg"
               p={4}
             >
-              <Stack direction="row">
-                {game.combo.map((card, index) => (
-                  <CardImage
-                    // biome-ignore lint/suspicious/noArrayIndexKey: Cards have no unique ID's
-                    key={card + index}
-                    card={card}
-                    style={overlapStyles(index, cardSpacing)}
-                  />
-                ))}
+              <Stack direction="row" alignItems="center" minH="8.2em">
+                <AnimatePresence mode="popLayout">
+                  {game.combo.map((card, index) => (
+                    <motion.div
+                      // biome-ignore lint/suspicious/noArrayIndexKey: slot index disambiguates identical card strings (multi-deck)
+                      key={`${comboRowKey}::${card}::${index}`}
+                      custom={index}
+                      variants={comboPlayVariants}
+                      initial="hidden"
+                      animate="show"
+                      exit="exit"
+                      style={{
+                        display: 'inline-block',
+                        ...overlapStyles(index, cardSpacing),
+                      }}
+                    >
+                      <CardImage card={card} />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
                 {!game.combo.length && <Box width={'6em'} height={'8.2em'} />}
               </Stack>
             </Box>
@@ -200,6 +302,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                   {/* For solo games, manually obscure opponent hand. */}
                   {(spectating || player.index !== thisPlayer?.index) && (
                     <OpponentHand
+                      key={`${dealStamp}-opp-${player.index}`}
                       position={indexToPosition(player.index)}
                       player={
                         game.id !== SOLO_GAME_ID
@@ -207,6 +310,8 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                           : { ...player, hand: player.hand.map(() => '') }
                       }
                       roundLeaderIndex={roundLeaderIndex}
+                      dealStamp={dealStamp}
+                      skipDealIntro={skipDealIntro}
                     />
                   )}
 
@@ -267,11 +372,14 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
             {thisPlayer && (
               <Box>
                 <PlayerHand
+                  key={`${dealStamp}-you`}
                   hand={thisPlayer.hand}
                   comboToPlay={comboToPlay}
                   cardSpacing={cardSpacing}
                   isTabletAndAbove={isTabletAndAbove}
                   handleClick={handleClick}
+                  dealStamp={dealStamp}
+                  skipDealIntro={skipDealIntro}
                 >
                   {/* Current turn: Display actions */}
                   {game.currentPlayer &&
@@ -330,15 +438,26 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
       ) : (
         <Box>
           Current combo:
-          <Stack direction="row">
-            {game.combo.map((card, index) => (
-              <CardImage
-                // biome-ignore lint/suspicious/noArrayIndexKey: Cards have no unique ID's
-                key={card + index}
-                card={card}
-                style={overlapStyles(index, cardSpacing)}
-              />
-            ))}
+          <Stack direction="row" alignItems="center" minH="8.2em">
+            <AnimatePresence mode="popLayout">
+              {game.combo.map((card, index) => (
+                <motion.div
+                  // biome-ignore lint/suspicious/noArrayIndexKey: slot index disambiguates identical card strings (multi-deck)
+                  key={`${comboRowKey}::${card}::${index}`}
+                  custom={index}
+                  variants={comboPlayVariants}
+                  initial="hidden"
+                  animate="show"
+                  exit="exit"
+                  style={{
+                    display: 'inline-block',
+                    ...overlapStyles(index, cardSpacing),
+                  }}
+                >
+                  <CardImage card={card} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
             {!game.combo.length && <CardImage card="" />}
           </Stack>
           {/* game */}
@@ -363,19 +482,15 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                     {game.passedPlayers.includes(player.index) && '⏭️'}
                   </Text>
                   {player.name !== thisPlayer?.name && (
-                    <Stack direction="row">
-                      {player.hand.map((card, cardIndex) => (
-                        <Box
-                          // biome-ignore lint/suspicious/noArrayIndexKey: Cards have no unique ID's
-                          key={card + cardIndex}
-                          style={overlapStyles(cardIndex, cardSpacing)}
-                        >
-                          <CardImage
-                            card={game.id !== SOLO_GAME_ID ? card : ''}
-                          />
-                        </Box>
-                      ))}
-                    </Stack>
+                    <MobileOpponentCards
+                      key={`${dealStamp}-m-${player.index}`}
+                      dealStamp={dealStamp}
+                      hand={player.hand}
+                      gameId={game.id}
+                      playerIndex={player.index}
+                      cardSpacing={cardSpacing}
+                      skipDealIntro={skipDealIntro}
+                    />
                   )}
                 </Box>
               ))}
@@ -384,11 +499,14 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                 Your hand ({thisPlayer.hand.length} cards):
                 <br />
                 <PlayerHand
+                  key={`${dealStamp}-you`}
                   hand={thisPlayer.hand}
                   comboToPlay={comboToPlay}
                   cardSpacing={cardSpacing}
                   isTabletAndAbove={isTabletAndAbove}
                   handleClick={handleClick}
+                  dealStamp={dealStamp}
+                  skipDealIntro={skipDealIntro}
                 >
                   {/* Current turn: Display actions */}
                   {game.currentPlayer &&
