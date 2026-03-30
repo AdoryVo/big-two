@@ -17,7 +17,11 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import { Action, type ActionData } from '@utils/actions';
-import { comboPlayVariants, opponentDealVariants } from '@utils/cardMotion';
+import {
+  comboFlyOriginForSeat,
+  comboPlayVariants,
+  opponentDealVariants,
+} from '@utils/cardMotion';
 import { useHandDealIntro } from '@utils/hooks/useHandDealIntro';
 import useIsTabletAndAbove from '@utils/hooks/useIsTabletAndAbove';
 import type { GameWithPlayers } from '@utils/prisma';
@@ -190,13 +194,18 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
     }
   }, [game.id, dealStamp]);
 
+  // Defer marking the deal "seen" so (1) the deal stagger can finish and (2) React 18
+  // Strict Mode’s mount → unmount → remount cycle does not read this key on the second
+  // mount while it is already set — immediate setItem breaks the intro in dev.
   useEffect(() => {
     if (!game.id || !dealStamp) return;
     const key = `bt-deal-intro-done:${game.id}:${dealStamp}`;
     try {
       if (sessionStorage.getItem(key) === '1') return;
-
-      sessionStorage.setItem(key, '1');
+      const t = window.setTimeout(() => {
+        sessionStorage.setItem(key, '1');
+      }, 1800);
+      return () => window.clearTimeout(t);
     } catch {
       return undefined;
     }
@@ -239,6 +248,13 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
     else return index + game.players.length - thisPlayer.index;
   }
 
+  const comboPlayFly =
+    game.lastPlaymaker != null
+      ? comboFlyOriginForSeat(indexToPosition(game.lastPlaymaker), {
+          compact: !isTabletAndAbove,
+        })
+      : { x: 0, y: 44 };
+
   return (
     <>
       {isTabletAndAbove ? (
@@ -274,7 +290,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                     <motion.div
                       // biome-ignore lint/suspicious/noArrayIndexKey: slot index disambiguates identical card strings (multi-deck)
                       key={`${comboRowKey}::${card}::${index}`}
-                      custom={index}
+                      custom={{ index, fly: comboPlayFly }}
                       variants={comboPlayVariants}
                       initial="hidden"
                       animate="show"
@@ -444,7 +460,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                 <motion.div
                   // biome-ignore lint/suspicious/noArrayIndexKey: slot index disambiguates identical card strings (multi-deck)
                   key={`${comboRowKey}::${card}::${index}`}
-                  custom={index}
+                  custom={{ index, fly: comboPlayFly }}
                   variants={comboPlayVariants}
                   initial="hidden"
                   animate="show"
