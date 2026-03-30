@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved bot skill
 - More to come soon!
 
+## [1.6.0] - 2026-03-29
+
+### Added
+
+- **Play again** after a game ends: start a new hand without leaving the room (singleplayer keeps the same local lobby; multiplayer chains end + start via the API).
+
 ## [1.5.0] - 2026-02-02
 
 Happy new years everyone, thanks for playing Big Two in 2025 and providing feedback through our [Feedback Form]! 🥳
