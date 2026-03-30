@@ -417,21 +417,38 @@ export default function SingleplayerGame() {
         if (newGame) playBots(newGame);
         break;
       }
+      case Action.PlayAgain:
       case Action.Start: {
+        // PlayAgain resumes with the same players/settings but must drop in-round
+        // fields from the finished hand to avoid state spillover; Start uses the lobby snapshot
+        // which is already clean, so we avoid an extra shallow copy.
+        const sourceGame: GameWithPlayers =
+          action === Action.PlayAgain
+            ? {
+                ...game,
+                combo: [],
+                lowestCard: null,
+                currentPlayer: null,
+                passedPlayers: [],
+                lastPlaymaker: null,
+                backupNext: null,
+              }
+            : game;
+
         const newGameInstance = new Game(
-          game.players.length,
-          game.settings.rules,
+          sourceGame.players.length,
+          sourceGame.settings.rules,
           undefined,
-          game.settings.deckCount,
+          sourceGame.settings.deckCount,
         );
 
-        const newPlayers = [...game.players];
-        const rng = Math.floor(Math.random() * game.players.length - 1);
-        for (let i = 0; i < game.players.length; i++) {
+        const newPlayers = [...sourceGame.players];
+        const rng = Math.floor(Math.random() * sourceGame.players.length - 1);
+        for (let i = 0; i < sourceGame.players.length; i++) {
           const storedPlayer = newPlayers[i];
           const instancePlayer = newGameInstance.players[i];
 
-          storedPlayer.index = (i + rng) % game.players.length;
+          storedPlayer.index = (i + rng) % sourceGame.players.length;
           storedPlayer.hand = newGameInstance.util.cards_to_strings(
             instancePlayer.hand,
           );
@@ -440,11 +457,11 @@ export default function SingleplayerGame() {
         }
 
         const newGame: GameWithPlayers = {
-          ...game,
+          ...sourceGame,
           lowestCard: newGameInstance.util.card_to_string(
             newGameInstance.lowest_card,
           ),
-          currentPlayer: game.players[newGameInstance.current_player],
+          currentPlayer: newPlayers[newGameInstance.current_player],
           players: newPlayers,
         };
         if (newGame.currentPlayer?.id.includes('bot')) playBots(newGame);
@@ -463,55 +480,6 @@ export default function SingleplayerGame() {
         newGame.backupNext = null;
         setGame(newGame);
         setGameInProgress(false);
-        break;
-      }
-      case Action.PlayAgain: {
-        if (game.players.length < 2) {
-          break;
-        }
-        const cleared: GameWithPlayers = {
-          ...game,
-          combo: [],
-          lowestCard: null,
-          currentPlayer: null,
-          passedPlayers: [],
-          lastPlaymaker: null,
-          backupNext: null,
-        };
-
-        const newGameInstance = new Game(
-          cleared.players.length,
-          cleared.settings.rules,
-          undefined,
-          cleared.settings.deckCount,
-        );
-
-        const newPlayers = [...cleared.players];
-        const rng = Math.floor(Math.random() * cleared.players.length - 1);
-        for (let i = 0; i < cleared.players.length; i++) {
-          const storedPlayer = newPlayers[i];
-          const instancePlayer = newGameInstance.players[i];
-
-          storedPlayer.index = (i + rng) % cleared.players.length;
-          storedPlayer.hand = newGameInstance.util.cards_to_strings(
-            instancePlayer.hand,
-          );
-          storedPlayer.finishedRank = 0;
-          storedPlayer.games += 1;
-        }
-
-        const newGame: GameWithPlayers = {
-          ...cleared,
-          lowestCard: newGameInstance.util.card_to_string(
-            newGameInstance.lowest_card,
-          ),
-          currentPlayer: newPlayers[newGameInstance.current_player],
-          players: newPlayers,
-        };
-        if (newGame.currentPlayer?.id.includes('bot')) playBots(newGame);
-        else setGame(newGame);
-
-        setGameInProgress(true);
         break;
       }
     }
