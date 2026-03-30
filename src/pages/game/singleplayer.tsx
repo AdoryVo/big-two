@@ -491,7 +491,7 @@ export default function SingleplayerGame() {
   }
 
   return (
-    <Box {...styles.bg} minH="100vh" p={5}>
+    <Box {...styles.bg} minH="100vh" p={5} sx={{ userSelect: 'none' }}>
       <NextSeo title={`${getPageTitle()} | Big Two`} />
       <Version {...styles.text} />
       <BasePage

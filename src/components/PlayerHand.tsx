@@ -5,7 +5,13 @@ import { MdClose } from 'react-icons/md';
 import { overlapStyles } from './ActiveGame';
 import CardImage from './CardImage';
 
-function DeselectAllButton({ onDeselectAll }: { onDeselectAll: () => void }) {
+function DeselectAllButton({
+  onDeselectAll,
+  isDisabled,
+}: {
+  onDeselectAll: () => void;
+  isDisabled: boolean;
+}) {
   return (
     <Button
       size="sm"
@@ -15,8 +21,10 @@ function DeselectAllButton({ onDeselectAll }: { onDeselectAll: () => void }) {
       boxShadow="lg"
       borderRadius="full"
       leftIcon={<MdClose size={18} aria-hidden />}
+      isDisabled={isDisabled}
       _hover={{ transform: 'translateY(-1px)', boxShadow: 'xl' }}
       _active={{ transform: 'translateY(0)' }}
+      _disabled={{ opacity: 0.5, cursor: 'not-allowed', boxShadow: 'sm' }}
       transition="box-shadow 0.15s ease, transform 0.15s ease"
       onClick={(e) => {
         e.preventDefault();
@@ -62,7 +70,7 @@ export default function PlayerHand({
             zIndex={2}
             width={{ base: '95%', md: 'auto' }}
           >
-            {onDeselectAll && comboToPlay.size > 0 && (
+            {onDeselectAll && (
               <HStack
                 justify="flex-end"
                 px={1}
@@ -70,7 +78,10 @@ export default function PlayerHand({
                 position="relative"
                 zIndex={3}
               >
-                <DeselectAllButton onDeselectAll={onDeselectAll} />
+                <DeselectAllButton
+                  onDeselectAll={onDeselectAll}
+                  isDisabled={comboToPlay.size === 0}
+                />
               </HStack>
             )}
             <Stack direction="row" position="relative" zIndex={1}>
@@ -92,9 +103,12 @@ export default function PlayerHand({
         </Box>
       ) : (
         <Box>
-          {onDeselectAll && comboToPlay.size > 0 && (
+          {onDeselectAll && (
             <Box mb="1.75em" position="relative" zIndex={3}>
-              <DeselectAllButton onDeselectAll={onDeselectAll} />
+              <DeselectAllButton
+                onDeselectAll={onDeselectAll}
+                isDisabled={comboToPlay.size === 0}
+              />
             </Box>
           )}
           <Stack direction="row" position="relative" zIndex={1}>
