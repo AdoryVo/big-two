@@ -102,6 +102,12 @@ export default async function handler(
         connect: { id: game.players[gameInstance.current_player].id },
       },
       passedPlayers: Array.from(gameInstance.passed_players),
+      earlyEndVotes: {
+        set:
+          result !== -1
+            ? game.earlyEndVotes.filter((idx) => idx !== result)
+            : game.earlyEndVotes,
+      },
       lastPlaymaker: gameInstance.last_playmaker,
       backupNext: gameInstance.backup_next,
     },

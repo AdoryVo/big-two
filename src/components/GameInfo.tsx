@@ -1,5 +1,7 @@
 import { describe, rulesToArray } from '@big-two/Rules';
 import {
+  Box,
+  Button,
   Divider,
   Heading,
   ListItem,
@@ -8,12 +10,14 @@ import {
   Tag,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tooltip,
   Tr,
   UnorderedList,
 } from '@chakra-ui/react';
+import { Action, type ActionData } from '@utils/actions';
 import type { GameWithPlayers } from '@utils/prisma';
 import { SOLO_GAME_ID } from 'pages/game/singleplayer';
 import EditLobby from './EditLobby';
@@ -21,9 +25,21 @@ import EditLobby from './EditLobby';
 interface Props {
   game: GameWithPlayers;
   handleSingleplayerSubmit?: (body: object) => void;
+  handleAction?: (action: Action, data?: ActionData) => void;
+  playerId?: string;
 }
 
-export default function GameInfo({ game, handleSingleplayerSubmit }: Props) {
+export default function GameInfo({
+  game,
+  handleSingleplayerSubmit,
+  handleAction,
+  playerId,
+}: Props) {
+  const thisPlayer = game.players.find((p) => playerId && p.id === playerId);
+  const isUnfinished = thisPlayer && thisPlayer.finishedRank === 0;
+  const hasVoted = thisPlayer && game.earlyEndVotes.includes(thisPlayer.index);
+  const remainingPlayers = game.players.filter((p) => p.finishedRank === 0);
+  const votesNeeded = Math.floor(remainingPlayers.length / 2) + 1;
   return (
     <>
       <Heading size="lg">🏆 Scoreboard</Heading>
@@ -56,6 +72,32 @@ export default function GameInfo({ game, handleSingleplayerSubmit }: Props) {
           </Tbody>
         </Table>
       </TableContainer>
+      {handleAction && game.id !== SOLO_GAME_ID && game.currentPlayer && (
+        <Box mt={4}>
+          <Divider mb={4} />
+          <Text fontSize="sm" mb={2}>
+            Vote to end the current game early. Unfinished players will be
+            ranked by remaining cards.
+          </Text>
+          <Button
+            colorScheme="pink"
+            size="sm"
+            isDisabled={!isUnfinished || hasVoted}
+            onClick={() => handleAction(Action.VoteEnd)}
+          >
+            {hasVoted
+              ? 'Already voted'
+              : !isUnfinished
+                ? 'Only active players can vote'
+                : '🏳️ Vote to end early'}
+          </Button>
+          {game.earlyEndVotes.length > 0 && (
+            <Text fontSize="sm" mt={2} color="gray.600">
+              {game.earlyEndVotes.length}/{votesNeeded} votes to end early
+            </Text>
+          )}
+        </Box>
+      )}
       <Divider my={5} />
       <Heading size="lg" mb={3}>
         📜 Lobby Rules

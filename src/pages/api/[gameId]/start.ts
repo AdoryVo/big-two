@@ -36,6 +36,7 @@ export default async function handler(
     data: {
       lowestCard: { set: lowestCard },
       currentPlayer: { connect: { id: currentPlayer?.id } },
+      earlyEndVotes: { set: [] },
       startedAt: { set: new Date() },
     },
     include: {
