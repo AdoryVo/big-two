@@ -136,6 +136,10 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
     setComboToPlay(comboToPlay);
   }
 
+  function handleDeselectAll() {
+    setComboToPlay(new Set());
+  }
+
   /* Given index of a player, return the position it should be displayed in relative to the
    * user's player index - the user's player should always be displayed at the bottom, then the
    * rest of the players should be displayed in order, clockwise.
@@ -253,7 +257,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                       <Text fontWeight="bold">
                         {player.gameId !== SOLO_GAME_ID &&
                           playerEmojis[player.index]}{' '}
-                        {player.name}
+                        {player.name} ({player.hand.length})
                         <br />
                         {player.index === roundLeaderIndex && '🎩'}
                         {game.passedPlayers.includes(player.index) && '⏭️'}
@@ -272,6 +276,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                   cardSpacing={cardSpacing}
                   isTabletAndAbove={isTabletAndAbove}
                   handleClick={handleClick}
+                  onDeselectAll={handleDeselectAll}
                 >
                   {/* Current turn: Display actions */}
                   {game.currentPlayer &&
@@ -389,6 +394,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                   cardSpacing={cardSpacing}
                   isTabletAndAbove={isTabletAndAbove}
                   handleClick={handleClick}
+                  onDeselectAll={handleDeselectAll}
                 >
                   {/* Current turn: Display actions */}
                   {game.currentPlayer &&

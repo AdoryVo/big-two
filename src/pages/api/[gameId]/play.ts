@@ -1,4 +1,8 @@
 import Game from '@big-two/Game';
+import {
+  formatCardForDisplay,
+  formatComboForDisplay,
+} from '@utils/formatCardDisplay';
 import prisma from '@utils/prisma';
 import pusher, { Event } from '@utils/pusher';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -39,7 +43,9 @@ export default async function handler(
   if (result === -2) {
     let errorMessage = 'Invalid with the current combo - try another combo!';
     if (game.currentPlayer.hand.includes(game.lowestCard ?? '')) {
-      errorMessage = `You must play a combo with the lowest card (${game.lowestCard})!`;
+      const shown =
+        game.lowestCard != null ? formatCardForDisplay(game.lowestCard) : '';
+      errorMessage = `You must play a combo with the lowest card (${shown})!`;
     }
     res.status(422).end(errorMessage);
     return;
@@ -60,7 +66,7 @@ export default async function handler(
       .trigger(
         id,
         Event.Play,
-        `${game.currentPlayer.name} played ${combo.join(', ')}!`,
+        `${game.currentPlayer.name} played ${formatComboForDisplay(combo)}!`,
       )
       .catch((err) => {
         console.error(err);
@@ -82,9 +88,7 @@ export default async function handler(
       .trigger(
         id,
         Event.Play,
-        `🏅 ${game.currentPlayer.name} finished their hand with ${combo.join(
-          ', ',
-        )}!`,
+        `🏅 ${game.currentPlayer.name} finished their hand with ${formatComboForDisplay(combo)}!`,
       )
       .catch((err) => {
         console.error(err);

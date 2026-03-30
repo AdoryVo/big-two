@@ -1,8 +1,32 @@
-import { Box, Button, Grid, GridItem, Stack } from '@chakra-ui/react';
+import { Box, Button, Grid, GridItem, HStack, Stack } from '@chakra-ui/react';
 import { useState } from 'react';
+import { MdClose } from 'react-icons/md';
 
 import { overlapStyles } from './ActiveGame';
 import CardImage from './CardImage';
+
+function DeselectAllButton({ onDeselectAll }: { onDeselectAll: () => void }) {
+  return (
+    <Button
+      size="sm"
+      colorScheme="orange"
+      variant="solid"
+      fontWeight="bold"
+      boxShadow="lg"
+      borderRadius="full"
+      leftIcon={<MdClose size={18} aria-hidden />}
+      _hover={{ transform: 'translateY(-1px)', boxShadow: 'xl' }}
+      _active={{ transform: 'translateY(0)' }}
+      transition="box-shadow 0.15s ease, transform 0.15s ease"
+      onClick={(e) => {
+        e.preventDefault();
+        onDeselectAll();
+      }}
+    >
+      Deselect all
+    </Button>
+  );
+}
 
 interface Props {
   hand: string[];
@@ -11,6 +35,7 @@ interface Props {
   cardSpacing: string;
   isTabletAndAbove: boolean;
   handleClick: (card: string) => void;
+  onDeselectAll?: () => void;
 }
 
 export default function PlayerHand({
@@ -20,6 +45,7 @@ export default function PlayerHand({
   cardSpacing,
   isTabletAndAbove,
   handleClick,
+  onDeselectAll,
 }: Props) {
   const [toggleGrid, setToggleGrid] = useState(false);
 
@@ -36,7 +62,18 @@ export default function PlayerHand({
             zIndex={2}
             width={{ base: '95%', md: 'auto' }}
           >
-            <Stack direction="row">
+            {onDeselectAll && comboToPlay.size > 0 && (
+              <HStack
+                justify="flex-end"
+                px={1}
+                mb="1.75em"
+                position="relative"
+                zIndex={3}
+              >
+                <DeselectAllButton onDeselectAll={onDeselectAll} />
+              </HStack>
+            )}
+            <Stack direction="row" position="relative" zIndex={1}>
               {hand.map((card, index) => (
                 <Box
                   // biome-ignore lint/suspicious/noArrayIndexKey: Cards have no unique ID's
@@ -55,7 +92,12 @@ export default function PlayerHand({
         </Box>
       ) : (
         <Box>
-          <Stack direction="row">
+          {onDeselectAll && comboToPlay.size > 0 && (
+            <Box mb="1.75em" position="relative" zIndex={3}>
+              <DeselectAllButton onDeselectAll={onDeselectAll} />
+            </Box>
+          )}
+          <Stack direction="row" position="relative" zIndex={1}>
             {hand.map((card, index) => (
               <Box
                 // biome-ignore lint/suspicious/noArrayIndexKey: Cards have no unique ID's
