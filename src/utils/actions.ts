@@ -4,6 +4,7 @@ export enum Action {
   Leave = 'leave',
   Start = 'start',
   End = 'end',
+  PlayAgain = 'playAgain',
   Pass = 'pass',
   Play = 'play',
   AddBot = 'addBot',

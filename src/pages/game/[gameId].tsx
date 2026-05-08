@@ -199,6 +199,21 @@ export default function Game() {
       case Action.End:
         ky.patch(url);
         break;
+      case Action.PlayAgain: {
+        const base = `/api/${game.id}`;
+        ky.patch(`${base}/end`)
+          .then(() => ky.patch(`${base}/start`))
+          .then(() => mutate())
+          .catch(() => {
+            toast({
+              title: 'Could not start a new game',
+              description: 'Try returning to the lobby and starting manually.',
+              status: 'error',
+              duration: 3000,
+            });
+          });
+        break;
+      }
     }
   }
 
