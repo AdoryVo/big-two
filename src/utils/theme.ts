@@ -3,7 +3,7 @@ import type { BoxProps } from '@chakra-ui/react';
 // Types
 /** Values correspond to the card assets in `/public/assets/cards`. */
 export enum CardTheme {
-  XCards = 'xcards',
+  Classic = 'classic',
   Paul = 'paul',
   Hanhaechi = 'hanhaechi',
 }
@@ -64,7 +64,7 @@ export const COLOR_SCHEME_STYLES: { [scheme: string]: Styles } = {
 };
 
 export const THEME_OPTIONS = {
-  cardTheme: [CardTheme.XCards, CardTheme.Paul, CardTheme.Hanhaechi],
+  cardTheme: [CardTheme.Classic, CardTheme.Paul, CardTheme.Hanhaechi],
   colorScheme: [
     ColorScheme.Classic,
     ColorScheme.Night,
@@ -76,7 +76,7 @@ export const THEME_OPTIONS = {
 };
 
 export const DEFAULT_THEME: Theme = {
-  cardTheme: CardTheme.XCards,
+  cardTheme: CardTheme.Classic,
   colorScheme: ColorScheme.Classic,
 };
 
