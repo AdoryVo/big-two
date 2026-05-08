@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add [four-color deck](https://en.wikipedia.org/wiki/Four-color_deck) theme
 - 13/26-card hands option for two player games (per feedback request)
 - More themes - Lunar new year theme!
 - 🌏 Localization - language features for diverse player bases (Indonesian, Chinese, etc.)
