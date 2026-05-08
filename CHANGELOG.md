@@ -17,6 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved bot skill
 - More to come soon!
 
+## [1.7.0] - 2026-05-08
+
+### Changed
+
+- Classic card theme to use better quality images per [xCards](https://github.com/Xadeck/xCards)
+- Addressed React Server Components CVE vulnerabilities via updating Next version
+
 ## [1.6.0] - 2026-03-29
 
 ### Added
@@ -148,6 +155,8 @@ Apologies if updates have been slow, work has been busy lately. 😅
 - All existing functionality as of 10-22-2023
 
 [unreleased]: https://github.com/AdoryVo/big-two/compare/v1.1.0...HEAD
+[1.7.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.7.0
+[1.6.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.6.0
 [1.5.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.5.0
 [1.4.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.4.0
 [1.3.1]: https://github.com/AdoryVo/big-two/releases/tag/v1.3.1
