@@ -96,11 +96,13 @@ export default async function handler(
         console.error(err);
       });
   } else {
-    // Majority not yet reached — save vote
+    // Majority not yet reached — save vote.
+    // Use an atomic array append so simultaneous votes from different players
+    // can't clobber each other (a read-modify-write `set` would lose one).
     await prisma.game.update({
       where: { id },
       data: {
-        earlyEndVotes: { set: updatedVotes },
+        earlyEndVotes: { push: player.index },
       },
     });
   }
