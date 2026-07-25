@@ -235,7 +235,7 @@ export default function Home() {
                           title="Lobby creation"
                           textAlign="right"
                         >
-                          {new Date(lobby.createdAt).toLocaleString()}
+                          {lobby.createdAt.toLocaleString()}
                         </Text>
                         <Text
                           fontSize="sm"
@@ -243,7 +243,7 @@ export default function Home() {
                           title="Latest lobby/game start"
                           textAlign="right"
                         >
-                          {new Date(lobby.startedAt).toLocaleString()}
+                          {lobby.startedAt.toLocaleString()}
                         </Text>
                       </Box>
                     </Flex>

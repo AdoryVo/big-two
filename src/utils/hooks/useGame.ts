@@ -1,8 +1,12 @@
-import type { GameWithPlayers } from '@utils/prisma';
+import type { GameWithPlayers, GameWithPlayersResponse } from '@utils/prisma';
+import { deserializeGameWithPlayers } from '@utils/prisma';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
-const getFetcher = (url: string) => fetch(url).then((res) => res.json());
+const getFetcher = (url: string) =>
+  fetch(url)
+    .then((res) => res.json() as Promise<GameWithPlayersResponse>)
+    .then(deserializeGameWithPlayers);
 
 export default function useGame() {
   const router = useRouter();
