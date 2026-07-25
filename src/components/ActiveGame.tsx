@@ -21,7 +21,7 @@ import {
   comboFlyOriginForSeat,
   comboPlayVariants,
   opponentDealVariants,
-} from '@utils/cardMotion';
+} from '@utils/card-motion';
 import { useHandDealIntro } from '@utils/hooks/useHandDealIntro';
 import useIsTabletAndAbove from '@utils/hooks/useIsTabletAndAbove';
 import type { GameWithPlayers } from '@utils/prisma';

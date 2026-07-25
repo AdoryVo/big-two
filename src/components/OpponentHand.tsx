@@ -1,6 +1,6 @@
 import { Box, Stack } from '@chakra-ui/react';
 import type { Player } from '@prisma/client';
-import { opponentDealVariants } from '@utils/cardMotion';
+import { opponentDealVariants } from '@utils/card-motion';
 import { useHandDealIntro } from '@utils/hooks/useHandDealIntro';
 import { motion } from 'framer-motion';
 
