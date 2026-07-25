@@ -20,10 +20,9 @@ function DeselectAllButton({
       boxShadow="lg"
       borderRadius="full"
       isDisabled={isDisabled}
-      _hover={{ transform: 'translateY(-1px)', boxShadow: 'xl' }}
-      _active={{ transform: 'translateY(0)' }}
+      _hover={{ boxShadow: 'xl', backgroundColor: 'orange.600' }}
       _disabled={{ opacity: 0.5, cursor: 'not-allowed', boxShadow: 'sm' }}
-      transition="box-shadow 0.15s ease, transform 0.15s ease"
+      transition="background-color 0.15s ease,box-shadow 0.15s ease, transform 0.15s ease"
       onClick={(e) => {
         e.preventDefault();
         onDeselectAll();
