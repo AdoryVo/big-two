@@ -6,7 +6,7 @@ const SUIT_SYMBOLS: Record<string, string> = {
 };
 
 /** Turns internal labels like `4;diamonds` into `4♦` for UI copy. */
-export function formatCardForDisplay(card: string): string {
+export function formatCard(card: string): string {
   const parts = card.split(';');
   if (parts.length < 2) return card;
   const [rank, suit] = parts;
@@ -14,6 +14,6 @@ export function formatCardForDisplay(card: string): string {
   return sym ? `${rank}${sym}` : card;
 }
 
-export function formatComboForDisplay(cards: string[]): string {
-  return cards.map(formatCardForDisplay).join(', ');
+export function formatCards(cards: string[]): string {
+  return cards.map(formatCard).join(', ');
 }

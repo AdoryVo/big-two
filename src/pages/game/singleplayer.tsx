@@ -18,10 +18,7 @@ import Preferences from '@components/Preferences';
 import Version from '@components/Version';
 import WaitingLobby from '@components/WaitingLobby';
 import { Action, type ActionData } from '@utils/actions';
-import {
-  formatCardForDisplay,
-  formatComboForDisplay,
-} from '@utils/formatCardDisplay';
+import { formatCard, formatCards } from '@utils/card-formatting';
 import useIsTabletAndAbove from '@utils/hooks/useIsTabletAndAbove';
 import { useStore } from '@utils/hooks/useStore';
 import type { GameWithPlayers } from '@utils/prisma';
@@ -266,7 +263,7 @@ export default function SingleplayerGame() {
     if (result === -2) {
       let errorMessage = 'Invalid with the current combo - try another combo!';
       if (game.currentPlayer.hand.includes(game.lowestCard ?? '')) {
-        errorMessage = `You must play a combo with the lowest card (${formatCardForDisplay(game.lowestCard ?? '')})!`;
+        errorMessage = `You must play a combo with the lowest card (${formatCard(game.lowestCard ?? '')})!`;
       }
       toast({
         title: 'Invalid combination',
@@ -285,7 +282,7 @@ export default function SingleplayerGame() {
       playedPlayer.hand = gameInstance.util.cards_to_strings(
         gameInstance.players[currentPlayerIndex].hand,
       );
-      play_description = `${playedPlayer.name} played ${formatComboForDisplay(combo ?? [])}!`;
+      play_description = `${playedPlayer.name} played ${formatCards(combo ?? [])}!`;
     } else {
       const instanceFinishedPlayer = gameInstance.players[result];
       const finishedPlayer = newGame.players[result];
@@ -294,7 +291,7 @@ export default function SingleplayerGame() {
       finishedPlayer.points += instanceFinishedPlayer.score;
       play_description = `🏅 ${
         finishedPlayer.name
-      } finished their hand with ${formatComboForDisplay(combo ?? [])}!`;
+      } finished their hand with ${formatCards(combo ?? [])}!`;
     }
 
     newGame.combo = gameInstance.util.cards_to_strings(
