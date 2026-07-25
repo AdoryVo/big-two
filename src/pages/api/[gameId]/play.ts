@@ -104,6 +104,7 @@ export default async function handler(
       passedPlayers: Array.from(gameInstance.passed_players),
       earlyEndVotes: {
         set:
+          // If the player finished, remove them from the early end votes.
           result !== -1
             ? game.earlyEndVotes.filter((idx) => idx !== result)
             : game.earlyEndVotes,
