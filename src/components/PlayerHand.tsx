@@ -1,6 +1,5 @@
 import { Box, Button, Grid, GridItem, HStack, Stack } from '@chakra-ui/react';
 import { useState } from 'react';
-import { MdClose } from 'react-icons/md';
 
 import { overlapStyles } from './ActiveGame';
 import CardImage from './CardImage';
@@ -20,7 +19,6 @@ function DeselectAllButton({
       fontWeight="bold"
       boxShadow="lg"
       borderRadius="full"
-      leftIcon={<MdClose size={18} aria-hidden />}
       isDisabled={isDisabled}
       _hover={{ transform: 'translateY(-1px)', boxShadow: 'xl' }}
       _active={{ transform: 'translateY(0)' }}
