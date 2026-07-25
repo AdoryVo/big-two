@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved bot skill
 - More to come soon!
 
+## 1.6.0 - 2026-07-24
+
+### Added
+
+- Card motion animations! (Pull request #36)
+
 ## [1.5.0] - 2026-02-02
 
 Happy new years everyone, thanks for playing Big Two in 2025 and providing feedback through our [Feedback Form]! 🥳

@@ -140,34 +140,6 @@ export default function Home() {
           </NextLink>
         </Box>
         <Box>
-          <Text {...styles.text} mb={1}>
-            <b>
-              🧧 Happy Lunar New Year players, enjoy the newly released{' '}
-              <Link
-                href="https://github.com/AdoryVo/big-two/blob/main/CHANGELOG.md"
-                target="_blank"
-                textDecoration="underline"
-              >
-                v1.5.0
-              </Link>
-              ! 🥳
-            </b>
-            <br />👋 If you've been enjoying <b>Big Two</b>, donations towards
-            database/server costs
-            <br />
-            to keep the site ad-free and supporting thousands of users are
-            greatly appreciated!
-            <br />
-            Feedback & suggestions via{' '}
-            <Link
-              href="https://forms.gle/jPd276dcsLVPswBZ7"
-              target="_blank"
-              textDecoration="underline"
-            >
-              this form
-            </Link>{' '}
-            are also appreciated!
-          </Text>
           {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Ko-fi button widget */}
           <div dangerouslySetInnerHTML={{ __html: KOFI_WIDGET }} />
         </Box>
