@@ -104,7 +104,7 @@ export default function PlayerHand({
       ) : (
         <Box>
           {onDeselectAll && (
-            <Box mb="1.75em" position="relative" zIndex={3}>
+            <Box mb="1.75em" position="relative" zIndex={2}>
               <DeselectAllButton
                 onDeselectAll={onDeselectAll}
                 isDisabled={comboToPlay.size === 0}
