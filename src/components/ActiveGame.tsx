@@ -156,8 +156,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           {remainingPlayers.length > 1 && (
             <Text>
               Turn order goes clockwise!
-              <br />
-              To end early, use the Game Info menu.
+              <br />🆕 To end early, use the Game Info menu.
             </Text>
           )}
 
