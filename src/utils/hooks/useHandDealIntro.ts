@@ -1,5 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
+export const MAX_DEAL_DURATION_MS = 1100;
+
 /**
  * Per-component deal stagger. Parent passes `skipDealIntro` when this tab has
  * already seen this deal (sessionStorage), so refresh does not replay. Do not
@@ -54,7 +56,10 @@ export function useHandDealIntro(
       return;
     }
 
-    const ms = Math.min(1100, 120 + Math.max(handLength, 1) * 42);
+    const ms = Math.min(
+      MAX_DEAL_DURATION_MS,
+      120 + Math.max(handLength, 1) * 42,
+    );
     const t = window.setTimeout(() => {
       introConsumedRef.current = dealStamp;
       setPlayIntro(false);

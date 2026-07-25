@@ -18,6 +18,7 @@ import Preferences from '@components/Preferences';
 import Version from '@components/Version';
 import WaitingLobby from '@components/WaitingLobby';
 import { Action, type ActionData } from '@utils/actions';
+import { MAX_DEAL_DURATION_MS } from '@utils/hooks/useHandDealIntro';
 import useIsTabletAndAbove from '@utils/hooks/useIsTabletAndAbove';
 import { useStore } from '@utils/hooks/useStore';
 import type { GameWithPlayers } from '@utils/prisma';
@@ -449,9 +450,15 @@ export default function SingleplayerGame() {
           startedAt: new Date(),
         };
         setGame(newGame);
-        if (newGame.currentPlayer?.id.includes('bot')) playBots(newGame);
-
         setGameInProgress(true);
+
+        // Prevent deal animation from happening twice by waiting for
+        // animation before bots start playing.
+        if (newGame.currentPlayer?.id.includes('bot')) {
+          setTimeout(() => {
+            playBots(newGame);
+          }, MAX_DEAL_DURATION_MS);
+        }
         break;
       }
       case Action.End: {
