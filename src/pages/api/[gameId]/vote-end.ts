@@ -53,6 +53,7 @@ export default async function handler(
       (a, b) => a.hand.length - b.hand.length,
     );
 
+    // Group players with the same hand size together and assign them the same rank.
     let nextRank = alreadyFinished.length + 1;
     let i = 0;
     while (i < unfinished.length) {
