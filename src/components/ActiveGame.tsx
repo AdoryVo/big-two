@@ -236,6 +236,10 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
     setComboToPlay(comboToPlay);
   }
 
+  function handleDeselectAll() {
+    setComboToPlay(new Set());
+  }
+
   /* Given index of a player, return the position it should be displayed in relative to the
    * user's player index - the user's player should always be displayed at the bottom, then the
    * rest of the players should be displayed in order, clockwise.
@@ -261,7 +265,10 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
         <Box>
           <Divider my={1} />
           {remainingPlayers.length > 1 && (
-            <Text>Turn order goes clockwise!</Text>
+            <Text>
+              Turn order goes clockwise!
+              <br />🆕 To end early, use the Game Info menu.
+            </Text>
           )}
 
           {game.id === SOLO_GAME_ID && (
@@ -374,7 +381,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                       <Text fontWeight="bold">
                         {player.gameId !== SOLO_GAME_ID &&
                           playerEmojis[player.index]}{' '}
-                        {player.name}
+                        {player.name} ({player.hand.length})
                         <br />
                         {player.index === roundLeaderIndex && '🎩'}
                         {game.passedPlayers.includes(player.index) && '⏭️'}
@@ -394,6 +401,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                   cardSpacing={cardSpacing}
                   isTabletAndAbove={isTabletAndAbove}
                   handleClick={handleClick}
+                  onDeselectAll={handleDeselectAll}
                   dealStamp={dealStamp}
                   skipDealIntro={skipDealIntro}
                 >
@@ -521,6 +529,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
                   cardSpacing={cardSpacing}
                   isTabletAndAbove={isTabletAndAbove}
                   handleClick={handleClick}
+                  onDeselectAll={handleDeselectAll}
                   dealStamp={dealStamp}
                   skipDealIntro={skipDealIntro}
                 >
@@ -610,11 +619,21 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
           <Text mb={2}>
             Points have been awarded to players in the scoreboard!
             <br />
-            Click the button below to finalize the game & return to the lobby.
+            Start another round with the same players, or return to the lobby.
           </Text>
-          <Button onClick={() => handleAction(Action.End)} colorScheme="blue">
-            Return to the lobby
-          </Button>
+          <Stack direction={{ base: 'column', sm: 'row' }} spacing={3}>
+            {game.players.length >= 2 && (
+              <Button
+                onClick={() => handleAction(Action.PlayAgain)}
+                colorScheme="green"
+              >
+                Play again
+              </Button>
+            )}
+            <Button onClick={() => handleAction(Action.End)} colorScheme="blue">
+              Return to the lobby
+            </Button>
+          </Stack>
         </Box>
       )}
 

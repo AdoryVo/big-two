@@ -18,6 +18,7 @@ import Preferences from '@components/Preferences';
 import Version from '@components/Version';
 import WaitingLobby from '@components/WaitingLobby';
 import { Action, type ActionData } from '@utils/actions';
+import { formatCard, formatCards } from '@utils/card-formatting';
 import useIsTabletAndAbove from '@utils/hooks/useIsTabletAndAbove';
 import { useStore } from '@utils/hooks/useStore';
 import type { GameWithPlayers } from '@utils/prisma';
@@ -80,6 +81,7 @@ function gameToGameWithPlayers(game?: Game | undefined): GameWithPlayers {
     players: [],
     currentPlayer: null,
     passedPlayers: Array.from(initial_game.passed_players),
+    earlyEndVotes: [],
     lastPlaymaker: initial_game.last_playmaker,
     backupNext: initial_game.backup_next,
     createdAt: new Date(),
@@ -262,7 +264,7 @@ export default function SingleplayerGame() {
     if (result === -2) {
       let errorMessage = 'Invalid with the current combo - try another combo!';
       if (game.currentPlayer.hand.includes(game.lowestCard ?? '')) {
-        errorMessage = `You must play a combo with the lowest card (${game.lowestCard})!`;
+        errorMessage = `You must play a combo with the lowest card (${formatCard(game.lowestCard ?? '')})!`;
       }
       toast({
         title: 'Invalid combination',
@@ -281,7 +283,7 @@ export default function SingleplayerGame() {
       playedPlayer.hand = gameInstance.util.cards_to_strings(
         gameInstance.players[currentPlayerIndex].hand,
       );
-      play_description = `${playedPlayer.name} played ${combo?.join(', ')}!`;
+      play_description = `${playedPlayer.name} played ${formatCards(combo ?? [])}!`;
     } else {
       const instanceFinishedPlayer = gameInstance.players[result];
       const finishedPlayer = newGame.players[result];
@@ -290,7 +292,7 @@ export default function SingleplayerGame() {
       finishedPlayer.points += instanceFinishedPlayer.score;
       play_description = `🏅 ${
         finishedPlayer.name
-      } finished their hand with ${combo?.join(', ')}!`;
+      } finished their hand with ${formatCards(combo ?? [])}!`;
     }
 
     newGame.combo = gameInstance.util.cards_to_strings(
@@ -417,21 +419,38 @@ export default function SingleplayerGame() {
         if (newGame) playBots(newGame);
         break;
       }
+      case Action.PlayAgain:
       case Action.Start: {
+        // PlayAgain resumes with the same players/settings but must drop in-round
+        // fields from the finished hand to avoid state spillover; Start uses the lobby snapshot
+        // which is already clean, so we avoid an extra shallow copy.
+        const sourceGame: GameWithPlayers =
+          action === Action.PlayAgain
+            ? {
+                ...game,
+                combo: [],
+                lowestCard: null,
+                currentPlayer: null,
+                passedPlayers: [],
+                lastPlaymaker: null,
+                backupNext: null,
+              }
+            : game;
+
         const newGameInstance = new Game(
-          game.players.length,
-          game.settings.rules,
+          sourceGame.players.length,
+          sourceGame.settings.rules,
           undefined,
-          game.settings.deckCount,
+          sourceGame.settings.deckCount,
         );
 
-        const newPlayers = [...game.players];
-        const rng = Math.floor(Math.random() * game.players.length - 1);
-        for (let i = 0; i < game.players.length; i++) {
+        const newPlayers = [...sourceGame.players];
+        const rng = Math.floor(Math.random() * sourceGame.players.length - 1);
+        for (let i = 0; i < sourceGame.players.length; i++) {
           const storedPlayer = newPlayers[i];
           const instancePlayer = newGameInstance.players[i];
 
-          storedPlayer.index = (i + rng) % game.players.length;
+          storedPlayer.index = (i + rng) % sourceGame.players.length;
           storedPlayer.hand = newGameInstance.util.cards_to_strings(
             instancePlayer.hand,
           );
@@ -440,11 +459,11 @@ export default function SingleplayerGame() {
         }
 
         const newGame: GameWithPlayers = {
-          ...game,
+          ...sourceGame,
           lowestCard: newGameInstance.util.card_to_string(
             newGameInstance.lowest_card,
           ),
-          currentPlayer: game.players[newGameInstance.current_player],
+          currentPlayer: newPlayers[newGameInstance.current_player],
           players: newPlayers,
           startedAt: new Date(),
         };
@@ -488,7 +507,7 @@ export default function SingleplayerGame() {
   }
 
   return (
-    <Box {...styles.bg} minH="100vh" p={5}>
+    <Box {...styles.bg} minH="100vh" p={5} sx={{ userSelect: 'none' }}>
       <NextSeo title={`${getPageTitle()} | Big Two`} />
       <Version {...styles.text} />
       <BasePage

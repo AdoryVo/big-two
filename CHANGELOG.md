@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add [four-color deck](https://en.wikipedia.org/wiki/Four-color_deck) theme
 - 13/26-card hands option for two player games (per feedback request)
 - More themes - Lunar new year theme!
 - 🌏 Localization - language features for diverse player bases (Indonesian, Chinese, etc.)
@@ -16,6 +17,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add bot players option for multiplayer games
 - Improved bot skill
 - More to come soon!
+
+## [1.7.0] - 2026-05-08
+
+### Changed
+
+- Classic card theme to use better quality images per [xCards](https://github.com/Xadeck/xCards)
+- Addressed React Server Components CVE vulnerabilities via updating Next version
+
+## [1.6.0] - 2026-03-29
+
+### Added
+
+- **Play again** after a game ends: start a new hand without leaving the room (singleplayer keeps the same local lobby; multiplayer chains end + start via the API).
 
 ## [1.5.0] - 2026-02-02
 
@@ -142,6 +156,8 @@ Apologies if updates have been slow, work has been busy lately. 😅
 - All existing functionality as of 10-22-2023
 
 [unreleased]: https://github.com/AdoryVo/big-two/compare/v1.1.0...HEAD
+[1.7.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.7.0
+[1.6.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.6.0
 [1.5.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.5.0
 [1.4.0]: https://github.com/AdoryVo/big-two/releases/tag/v1.4.0
 [1.3.1]: https://github.com/AdoryVo/big-two/releases/tag/v1.3.1

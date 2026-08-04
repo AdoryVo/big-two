@@ -16,6 +16,7 @@ export default async function handler(
       lowestCard: null,
       currentPlayer: { disconnect: true },
       passedPlayers: { set: [] },
+      earlyEndVotes: { set: [] },
       lastPlaymaker: null,
       backupNext: null,
     },

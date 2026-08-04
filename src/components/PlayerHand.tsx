@@ -1,4 +1,4 @@
-import { Box, Button, Grid, GridItem, Stack } from '@chakra-ui/react';
+import { Box, Button, Grid, GridItem, HStack, Stack } from '@chakra-ui/react';
 import { handDealVariants } from '@utils/cardMotion';
 import { useHandDealIntro } from '@utils/hooks/useHandDealIntro';
 import { motion } from 'framer-motion';
@@ -7,6 +7,30 @@ import { useState } from 'react';
 import { overlapStyles } from './ActiveGame';
 import CardImage from './CardImage';
 
+function DeselectAllButton({
+  onDeselectAll,
+  isDisabled,
+}: {
+  onDeselectAll: () => void;
+  isDisabled: boolean;
+}) {
+  return (
+    <Button
+      size="sm"
+      colorScheme="orange"
+      variant="solid"
+      fontWeight="bold"
+      boxShadow="lg"
+      borderRadius="full"
+      isDisabled={isDisabled}
+      _disabled={{ opacity: 0.5, cursor: 'not-allowed', boxShadow: 'sm' }}
+      onClick={onDeselectAll}
+    >
+      Deselect all
+    </Button>
+  );
+}
+
 interface Props {
   hand: string[];
   children?: React.ReactNode;
@@ -14,6 +38,7 @@ interface Props {
   cardSpacing: string;
   isTabletAndAbove: boolean;
   handleClick: (card: string) => void;
+  onDeselectAll?: () => void;
   /** Bumps when a new hand is dealt so entrance animations replay. Keys use slot index so duplicate card strings (multi-deck) stay unique. */
   dealStamp?: string;
   /** When true (e.g. tab refresh on same deal), skip deal stagger. */
@@ -27,6 +52,7 @@ export default function PlayerHand({
   cardSpacing,
   isTabletAndAbove,
   handleClick,
+  onDeselectAll,
   dealStamp = '',
   skipDealIntro = false,
 }: Props) {
@@ -46,7 +72,21 @@ export default function PlayerHand({
             zIndex={2}
             width={{ base: '95%', md: 'auto' }}
           >
-            <Stack direction="row">
+            {onDeselectAll && (
+              <HStack
+                justify="flex-end"
+                px={1}
+                mb="1.75em"
+                position="relative"
+                zIndex={3}
+              >
+                <DeselectAllButton
+                  onDeselectAll={onDeselectAll}
+                  isDisabled={comboToPlay.size === 0}
+                />
+              </HStack>
+            )}
+            <Stack direction="row" position="relative" zIndex={1}>
               {hand.map((card, index) => (
                 <motion.div
                   key={`${dealStamp}::${index}::${card}`}
@@ -72,7 +112,15 @@ export default function PlayerHand({
         </Box>
       ) : (
         <Box>
-          <Stack direction="row">
+          {onDeselectAll && (
+            <Box mb="1.75em" position="relative" zIndex={2}>
+              <DeselectAllButton
+                onDeselectAll={onDeselectAll}
+                isDisabled={comboToPlay.size === 0}
+              />
+            </Box>
+          )}
+          <Stack direction="row" position="relative" zIndex={1}>
             {hand.map((card, index) => (
               <motion.div
                 key={`${dealStamp}::${index}::${card}`}

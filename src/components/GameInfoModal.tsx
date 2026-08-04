@@ -9,14 +9,17 @@ import {
   ModalOverlay,
   useDisclosure,
 } from '@chakra-ui/react';
+import type { Action, ActionData } from '@utils/actions';
 import type { GameWithPlayers } from '@utils/prisma';
 import GameInfo from './GameInfo';
 
 interface Props {
   game: GameWithPlayers;
+  handleAction?: (action: Action, data?: ActionData) => void;
+  playerId?: string;
 }
 
-export default function GameInfoModal({ game }: Props) {
+export default function GameInfoModal({ game, handleAction, playerId }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
@@ -37,7 +40,11 @@ export default function GameInfoModal({ game }: Props) {
           <ModalHeader>Game Info</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <GameInfo game={game} />
+            <GameInfo
+              game={game}
+              handleAction={handleAction}
+              playerId={playerId}
+            />
           </ModalBody>
 
           <ModalFooter>
