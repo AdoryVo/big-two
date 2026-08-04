@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved bot skill
 - More to come soon!
 
+<<<<<<< HEAD
 ## [1.7.0] - 2026-05-08
 
 ### Changed
@@ -30,6 +31,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Play again** after a game ends: start a new hand without leaving the room (singleplayer keeps the same local lobby; multiplayer chains end + start via the API).
+=======
+## 1.6.0 - 2026-07-24
+
+### Added
+
+- Card motion animations! (Pull request #36)
+>>>>>>> 61e851d1fd2af4e0bf20d077ff92accc43fce436
 
 ## [1.5.0] - 2026-02-02
 

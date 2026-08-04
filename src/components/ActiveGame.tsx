@@ -21,7 +21,7 @@ import {
   comboFlyOriginForSeat,
   comboPlayVariants,
   opponentDealVariants,
-} from '@utils/cardMotion';
+} from '@utils/card-motion';
 import { useHandDealIntro } from '@utils/hooks/useHandDealIntro';
 import useIsTabletAndAbove from '@utils/hooks/useIsTabletAndAbove';
 import type { GameWithPlayers } from '@utils/prisma';
@@ -129,13 +129,6 @@ function MobileOpponentCards({
   );
 }
 
-function dealStampFromStartedAt(
-  startedAt: GameWithPlayers['startedAt'],
-): string {
-  if (!startedAt) return '';
-  return typeof startedAt === 'string' ? startedAt : startedAt.toISOString();
-}
-
 export default function ActiveGame({ game, playerId, handleAction }: Props) {
   const isTabletAndAbove = useIsTabletAndAbove();
 
@@ -163,7 +156,7 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
   /** Set of emojis to be randomly chosen from for player icons. */
   const playerEmojis = PLAYER_EMOJIS[game.id.length % PLAYER_EMOJIS.length];
 
-  const dealStamp = dealStampFromStartedAt(game.startedAt);
+  const dealStamp = game.startedAt.toISOString();
   /** Disambiguates duplicate card strings (multi-deck) and stabilizes AnimatePresence keys per trick. */
   const comboRowKey = game.combo.join('|');
 

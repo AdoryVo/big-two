@@ -1,5 +1,5 @@
 import { Box, Button, Grid, GridItem, HStack, Stack } from '@chakra-ui/react';
-import { handDealVariants } from '@utils/cardMotion';
+import { handDealVariants } from '@utils/card-motion';
 import { useHandDealIntro } from '@utils/hooks/useHandDealIntro';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
