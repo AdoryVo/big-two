@@ -1,6 +1,9 @@
 import type { ContainerProps } from '@chakra-ui/react';
 import {
+  Alert,
+  AlertDescription,
   Box,
+  Button,
   Link as ChakraLink,
   Container,
   Divider,
@@ -197,6 +200,7 @@ export default function Game() {
         break;
       case Action.Start:
       case Action.End:
+      case Action.VoteEnd:
         ky.patch(url);
         break;
       case Action.PlayAgain: {
@@ -278,6 +282,46 @@ export default function Game() {
           </ChakraLink>
         </Text>
 
+        {gameInProgress &&
+          game.earlyEndVotes.length > 0 &&
+          (() => {
+            const remaining = game.players.filter((p) => p.finishedRank === 0);
+            const needed = Math.floor(remaining.length / 2) + 1;
+            const thisPlayer = game.players.find(
+              (p) => playerId && p.id === playerId,
+            );
+            const canVote =
+              thisPlayer &&
+              thisPlayer.finishedRank === 0 &&
+              !game.earlyEndVotes.includes(thisPlayer.index);
+            return (
+              <Alert
+                status="warning"
+                borderRadius="md"
+                mb={3}
+                py={2}
+                flexDirection="column"
+                alignItems="start"
+              >
+                <AlertDescription>
+                  <Text fontWeight="bold" fontSize="sm">
+                    🏳️ Early end: {game.earlyEndVotes.length}/{needed} votes
+                  </Text>
+                  {canVote && (
+                    <Button
+                      size="xs"
+                      colorScheme="pink"
+                      mt={1}
+                      onClick={() => handleAction(Action.VoteEnd)}
+                    >
+                      Vote to end early
+                    </Button>
+                  )}
+                </AlertDescription>
+              </Alert>
+            );
+          })()}
+
         {gameInProgress ? (
           <ActiveGame
             game={game}
@@ -293,11 +337,19 @@ export default function Game() {
         )}
 
         {isTabletAndAbove && gameInProgress ? (
-          <GameInfoModal game={game} />
+          <GameInfoModal
+            game={game}
+            handleAction={handleAction}
+            playerId={playerId}
+          />
         ) : (
           <>
             <Divider my={5} />
-            <GameInfo game={game} />
+            <GameInfo
+              game={game}
+              handleAction={gameInProgress ? handleAction : undefined}
+              playerId={playerId}
+            />
           </>
         )}
       </BasePage>

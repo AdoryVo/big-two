@@ -80,6 +80,7 @@ function gameToGameWithPlayers(game?: Game | undefined): GameWithPlayers {
     players: [],
     currentPlayer: null,
     passedPlayers: Array.from(initial_game.passed_players),
+    earlyEndVotes: [],
     lastPlaymaker: initial_game.last_playmaker,
     backupNext: initial_game.backup_next,
     createdAt: new Date(),

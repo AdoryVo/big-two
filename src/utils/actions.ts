@@ -9,6 +9,7 @@ export enum Action {
   Play = 'play',
   AddBot = 'addBot',
   RemoveBot = 'removeBot',
+  VoteEnd = 'vote-end',
 }
 
 export interface ActionData {

@@ -154,7 +154,10 @@ export default function ActiveGame({ game, playerId, handleAction }: Props) {
         <Box>
           <Divider my={1} />
           {remainingPlayers.length > 1 && (
-            <Text>Turn order goes clockwise!</Text>
+            <Text>
+              Turn order goes clockwise!
+              <br />🆕 To end early, use the Game Info menu.
+            </Text>
           )}
 
           {game.id === SOLO_GAME_ID && (

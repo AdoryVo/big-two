@@ -19,6 +19,7 @@ model Game {
   players       Player[] @relation("Players")
   currentPlayer Player?  @relation("CurrentTurn")
   passedPlayers Int[]    @default([])
+  earlyEndVotes Int[]    @default([])
   lastPlaymaker Int?
   backupNext    Int?
 
