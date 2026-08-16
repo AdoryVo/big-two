@@ -1,8 +1,5 @@
 import Game from '@big-two/Game';
-import {
-  formatCard,
-  formatCards,
-} from '@utils/card-formatting';
+import { formatCard, formatCards } from '@utils/card-formatting';
 import prisma from '@utils/prisma';
 import pusher, { Event } from '@utils/pusher';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -43,8 +40,7 @@ export default async function handler(
   if (result === -2) {
     let errorMessage = 'Invalid with the current combo - try another combo!';
     if (game.currentPlayer.hand.includes(game.lowestCard ?? '')) {
-      const shown =
-        game.lowestCard != null ? formatCard(game.lowestCard) : '';
+      const shown = game.lowestCard != null ? formatCard(game.lowestCard) : '';
       errorMessage = `You must play a combo with the lowest card (${shown})!`;
     }
     res.status(422).end(errorMessage);

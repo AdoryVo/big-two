@@ -49,7 +49,7 @@ export default function CardImage({
         borderRadius: '0.33em',
         backgroundColor: 'white',
         cursor: 'pointer',
-        transform: selected ? 'translate(0, -1em)' : '',
+        marginTop: selected ? '-1em' : undefined,
         position: 'relative',
         ...style,
       }}
