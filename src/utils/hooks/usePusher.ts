@@ -6,7 +6,7 @@ export function usePusher() {
 
   if (!pusher) {
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY || '', {
-      cluster: 'us3',
+      cluster: process.env.NEXT_PUBLIC_PUSHER_APP_CLUSTER || '',
     });
     setPusher(pusher);
     return pusher;
