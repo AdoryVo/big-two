@@ -20,4 +20,22 @@ const gameWithPlayers = Prisma.validator<Prisma.GameDefaultArgs>()({
 });
 export type GameWithPlayers = Prisma.GameGetPayload<typeof gameWithPlayers>;
 
+export type GameWithPlayersResponse = Omit<
+  GameWithPlayers,
+  'createdAt' | 'startedAt'
+> & {
+  createdAt: string;
+  startedAt: string;
+};
+
+export function deserializeGameWithPlayers(
+  game: GameWithPlayersResponse,
+): GameWithPlayers {
+  return {
+    ...game,
+    createdAt: new Date(game.createdAt),
+    startedAt: new Date(game.startedAt),
+  };
+}
+
 export default prisma;

@@ -1,5 +1,8 @@
 import { Box, Stack } from '@chakra-ui/react';
 import type { Player } from '@prisma/client';
+import { opponentDealVariants } from '@utils/card-motion';
+import { useHandDealIntro } from '@utils/hooks/useHandDealIntro';
+import { motion } from 'framer-motion';
 
 import CardImage from './CardImage';
 
@@ -32,9 +35,21 @@ interface Props {
   position: number;
   player: Player;
   roundLeaderIndex: number | null;
+  dealStamp?: string;
+  skipDealIntro?: boolean;
 }
 
-export default function OpponentHand({ position, player }: Props) {
+export default function OpponentHand({
+  position,
+  player,
+  dealStamp = '',
+  skipDealIntro = false,
+}: Props) {
+  const playDealIntro = useHandDealIntro(
+    skipDealIntro,
+    dealStamp,
+    player.hand.length,
+  );
   const spacing = {
     marginInlineStart: position % 2 ? '0' : '-3.4em',
     marginTop: position % 2 ? '-6.7em' : '0',
@@ -45,8 +60,15 @@ export default function OpponentHand({ position, player }: Props) {
       <Box position="fixed" {...HAND_STYLES[position]}>
         <Stack direction={position % 2 ? 'column' : 'row'}>
           {player.hand.map((card, cardIndex) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: Cards have no unique ID's
-            <Box key={card + cardIndex} {...(cardIndex === 0 ? {} : spacing)}>
+            <motion.div
+              // biome-ignore lint/suspicious/noArrayIndexKey: slot index disambiguates identical card strings (multi-deck)
+              key={`${dealStamp}::${position}::${cardIndex}`}
+              custom={cardIndex}
+              variants={opponentDealVariants}
+              initial={playDealIntro ? 'hidden' : false}
+              animate="show"
+              style={cardIndex === 0 ? undefined : spacing}
+            >
               <CardImage
                 card={card}
                 style={{
@@ -55,7 +77,7 @@ export default function OpponentHand({ position, player }: Props) {
                   transform: `rotate(${HAND_ROTATIONS[position]}deg)`,
                 }}
               />
-            </Box>
+            </motion.div>
           ))}
         </Stack>
       </Box>
